@@ -1,9 +1,9 @@
 import './App.css'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { UserContextProvider } from './context/UserContext'
-import Home from './components/pages/Home'
-import Login from './components/pages/Login';
-import Signup from './components/pages/Signup';
+import Home from './pages/Home'
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
 
