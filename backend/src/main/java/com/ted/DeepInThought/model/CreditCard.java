@@ -5,22 +5,24 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
-@Table(name = "CREDIT_CARD")
+@Table(name = "CREDITCARD")
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreditCard {
     @Id
-    private String id;
-    private String cardNumber;
-    private String cvv;
+    private String id = UUID.randomUUID().toString();
+    private Long cardNumber;
+    private Long cvv;
     private String name;
     private String address;
     private String city;
     private String state;
     private String zipcode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tenantId", nullable = false)
     @JsonBackReference
     private Tenant tenant;
@@ -33,19 +35,19 @@ public class CreditCard {
         this.id = id;
     }
 
-    public String getCardNumber() {
+    public Long getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(Long cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public String getCvv() {
+    public Long getCvv() {
         return cvv;
     }
 
-    public void setCvv(String cvv) {
+    public void setCvv(Long cvv) {
         this.cvv = cvv;
     }
 

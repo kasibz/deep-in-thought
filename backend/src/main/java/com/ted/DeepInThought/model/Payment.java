@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PAYMENT")
@@ -13,19 +14,75 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Payment {
     @Id
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private boolean isPaid;
     private LocalDateTime datePaid;
     private LocalDateTime dateDue;
     private Long amount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "creditCreditId", nullable = false)
     @JsonBackReference(value = "payment-creditCard")
     private CreditCard creditCard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tenantId", nullable = false)
     @JsonBackReference
     private Tenant tenant;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+
+    public LocalDateTime getDatePaid() {
+        return datePaid;
+    }
+
+    public void setDatePaid(LocalDateTime datePaid) {
+        this.datePaid = datePaid;
+    }
+
+    public LocalDateTime getDateDue() {
+        return dateDue;
+    }
+
+    public void setDateDue(LocalDateTime dateDue) {
+        this.dateDue = dateDue;
+    }
+
+    public Long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
 }

@@ -11,7 +11,7 @@ public class UserRequest {
     String lastName;
     String password;
     String email;
-    String phoneNumber;
+    Long phoneNumber;
 
     public String getFirstName() {
         return firstName;
@@ -45,11 +45,11 @@ public class UserRequest {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

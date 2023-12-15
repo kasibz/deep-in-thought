@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "CONTRACT")
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Contract {
     @Id
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private Long length;
     private LocalDate startDate;
     private LocalDate stopDate;
