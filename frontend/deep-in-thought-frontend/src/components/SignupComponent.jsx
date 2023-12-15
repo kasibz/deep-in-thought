@@ -1,5 +1,4 @@
 import { Box, Button, Container, TextField } from "@mui/material"
-import { useState } from "react"
 
 const SignupComponent = ({userSingupInfo, setUserSingupInfo}) => {
 
