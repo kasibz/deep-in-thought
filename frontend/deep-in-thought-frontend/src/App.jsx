@@ -2,9 +2,8 @@ import './App.css'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { UserContextProvider } from './context/UserContext'
 import Home from './pages/Home'
-import Login from './pages/Login';
 import Signup from './pages/Signup';
-
+// import AbcIcon from '@mui/icons-material/Abc';
 function App() {
 
   const router = createBrowserRouter([
@@ -13,7 +12,6 @@ function App() {
       element: <Outlet/>,
       children: [
         {path:'/', element: <Home/>},
-        {path:'/login', element: <Login/>},
         {path:'/signup', element: <Signup/>},
       ]
     }
