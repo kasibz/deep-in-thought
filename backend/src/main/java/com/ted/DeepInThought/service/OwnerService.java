@@ -14,4 +14,6 @@ public class OwnerService extends BaseService<Owner, String> {
     public OwnerService(OwnerRepository ownerRepository) {
         super(ownerRepository);
     }
+
+    // make the service for all properties here as in the logic
 }

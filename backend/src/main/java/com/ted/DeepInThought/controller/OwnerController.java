@@ -3,42 +3,22 @@ package com.ted.DeepInThought.controller;
 import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
-public class OwnerController {
+@RequestMapping("/owner")
+public class OwnerController extends BaseController<Owner, String> {
 
+    // eventually, PUT method will need to be custom here by use of the instantiated
+    // OwnerService, but that service also needs the logic for this PUT request
+    // by use of a DTO
     @Autowired
-    private OwnerService ownerService;
-
-    @GetMapping("/owner")
-    public ResponseEntity<List<Owner>> getAllOwners() {
-        try {
-            List<Owner> ownerList = ownerService.getAll();
-
-            if (ownerList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(ownerList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public OwnerController(OwnerService ownerService) {
+        super(ownerService);
     }
 
-    @PostMapping("/owner")
-    public ResponseEntity<Owner> addOwner(@RequestBody Owner newOwner) {
-        try {
-            return new ResponseEntity<>(ownerService.save(newOwner), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // call the service and incorporate the DTO
+
+
 }

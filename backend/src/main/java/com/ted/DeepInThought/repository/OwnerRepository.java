@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OwnerRepository extends JpaRepository<Owner, String> {
+    // ex: I need to get all properties for an Owner. Write the function here
 }
