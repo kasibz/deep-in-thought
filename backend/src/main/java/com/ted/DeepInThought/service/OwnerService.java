@@ -5,22 +5,13 @@ import com.ted.DeepInThought.repository.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
-public class OwnerService {
+public class OwnerService extends BaseService<Owner, String> {
 
+//    We are extending the base Service and using the super constructor to reuse
+//    the baseService methods but doing so with a different repository passed as an argument
     @Autowired
-    private OwnerRepository ownerRepo;
-
-    public List<Owner> getAllOwners() {
-        List<Owner> ownerList = new ArrayList<>();
-        ownerRepo.findAll().forEach(ownerList::add);
-        return ownerList;
-    }
-
-    public Owner addOwner(Owner newOwner) {
-        return ownerRepo.save(newOwner);
+    public OwnerService(OwnerRepository ownerRepository) {
+        super(ownerRepository);
     }
 }

@@ -21,7 +21,7 @@ public class OwnerController {
     @GetMapping("/owner")
     public ResponseEntity<List<Owner>> getAllOwners() {
         try {
-            List<Owner> ownerList = ownerService.getAllOwners();
+            List<Owner> ownerList = ownerService.getAll();
 
             if (ownerList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -36,7 +36,7 @@ public class OwnerController {
     @PostMapping("/owner")
     public ResponseEntity<Owner> addOwner(@RequestBody Owner newOwner) {
         try {
-            return new ResponseEntity<>(ownerService.addOwner(newOwner), HttpStatus.OK);
+            return new ResponseEntity<>(ownerService.save(newOwner), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
