@@ -1,19 +1,13 @@
-package com.ted.DeepInThought.model;
+package com.ted.DeepInThought.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
-@Entity
-@Table(name = "CREDITCARD")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreditCard {
-    @Id
-    private String id = UUID.randomUUID().toString();
+public class CreditCardRequest {
     private Long cardNumber;
     private Long cvv;
     private String name;
@@ -21,19 +15,6 @@ public class CreditCard {
     private String city;
     private String state;
     private String zip;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "tenantId", nullable = false)
-    @JsonBackReference
-    private Tenant tenant;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getCardNumber() {
         return cardNumber;
@@ -83,19 +64,12 @@ public class CreditCard {
         this.state = state;
     }
 
+
     public String getZip() {
         return zip;
     }
 
     public void setZip(String zip) {
         this.zip = zip;
-    }
-
-    public Tenant getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
     }
 }

@@ -12,6 +12,5 @@ public class ContractService extends BaseService<Contract, String> {
     public ContractService(ContractRepository contractRepository) {
         super(contractRepository);
     }
-
     // add edit function after testing other routes
 }
