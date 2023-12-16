@@ -45,16 +45,6 @@ public abstract class BaseController<T, ID> {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public ResponseEntity<T> create(@RequestBody T entity) {
-        try {
-            T savedEntity = service.save(entity);
-            return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable ID id) {
         try {

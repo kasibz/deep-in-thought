@@ -4,6 +4,7 @@ import com.ted.DeepInThought.dto.PropertyRequest;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,12 @@ public class PropertyController extends BaseController<Property, String>{
 
     @PostMapping
     public ResponseEntity<Property> create(@RequestBody PropertyRequest propertyRequest) {
-
+        try {
+           Property newProperty = propertyService.saveFromPropertyDTO(propertyRequest);
+           return new ResponseEntity<>(newProperty, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

@@ -38,9 +38,8 @@ public class PropertyService extends BaseService<Property, String>{
             newProperty.setType(propertyRequest.getType());
             newProperty.setOwner(existingOwner);
 
-            return newProperty;
-        } else {
-            throw new Error("Owner not found with id: " + propertyRequest.getOwnerId());
+            return propertyRepo.save(newProperty);
         }
+        throw new Error("Owner not found with id: " + propertyRequest.getOwnerId());
     }
 }

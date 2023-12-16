@@ -30,7 +30,7 @@ public class OwnerController extends BaseController<Owner, String> {
             Owner updatedOwner = ownerService.editOwner(id, ownerRequest);
             return new ResponseEntity<>(updatedOwner, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
