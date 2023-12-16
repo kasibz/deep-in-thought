@@ -17,7 +17,7 @@ public class CreditCard {
     private Long cardNumber;
     private Long cvv;
     private String name;
-    private String address;
+    private String streetAddress;
     private String city;
     private String state;
     private String zip;
@@ -59,12 +59,12 @@ public class CreditCard {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getCity() {

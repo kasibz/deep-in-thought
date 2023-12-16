@@ -11,10 +11,12 @@ public class CreditCardRequest {
     private Long cardNumber;
     private Long cvv;
     private String name;
-    private String address;
+    private String streetAddress;
     private String city;
     private String state;
     private String zip;
+
+    private String tenantId;
 
     public Long getCardNumber() {
         return cardNumber;
@@ -40,12 +42,12 @@ public class CreditCardRequest {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getCity() {
@@ -71,5 +73,13 @@ public class CreditCardRequest {
 
     public void setZip(String zip) {
         this.zip = zip;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

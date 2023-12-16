@@ -1,8 +1,6 @@
 package com.ted.DeepInThought.controller;
 
-import com.ted.DeepInThought.dto.PropertyRequest;
 import com.ted.DeepInThought.dto.TenantRequest;
-import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,4 @@ public class TenantController extends BaseController<Tenant, String> {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }

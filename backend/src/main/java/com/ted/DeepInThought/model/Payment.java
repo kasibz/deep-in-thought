@@ -21,7 +21,7 @@ public class Payment {
     private Long amount;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "creditCreditId", nullable = false)
+    @JoinColumn(name = "creditCardId", nullable = false)
     @JsonBackReference(value = "payment-creditCard")
     private CreditCard creditCard;
 

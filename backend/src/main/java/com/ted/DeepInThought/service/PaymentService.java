@@ -1,9 +1,17 @@
 package com.ted.DeepInThought.service;
 
+import com.ted.DeepInThought.dto.PaymentRequest;
+import com.ted.DeepInThought.model.CreditCard;
 import com.ted.DeepInThought.model.Payment;
+import com.ted.DeepInThought.model.Tenant;
+import com.ted.DeepInThought.repository.CreditCardRepository;
 import com.ted.DeepInThought.repository.PaymentRepository;
+import com.ted.DeepInThought.repository.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PaymentService extends BaseService<Payment, String> {
@@ -14,7 +22,41 @@ public class PaymentService extends BaseService<Payment, String> {
     private PaymentRepository paymentRepo;
 
     @Autowired
+    private CreditCardRepository creditCardRepo;
+
+    @Autowired
+    private TenantRepository tenantRepo;
+
+    @Autowired
     public PaymentService(PaymentRepository paymentRepository) {
         super(paymentRepository);
+    }
+
+    public Payment saveFromPaymentDTO(PaymentRequest paymentRequest) {
+        Optional<CreditCard> creditCardData = creditCardRepo.findById(paymentRequest.getCreditCardId());
+        Optional<Tenant> tenantData = tenantRepo.findById(paymentRequest.getTenantId());
+
+        if (creditCardData.isEmpty()) {
+            throw new Error("Credit Card not found with id: " + paymentRequest.getCreditCardId());
+        }
+
+        if (tenantData.isEmpty()) {
+            throw new Error("Tenant not found with id: " + paymentRequest.getTenantId());
+        }
+
+        CreditCard existingCreditCard = creditCardData.get();
+        Tenant existingTenant = tenantData.get();
+
+        Payment newPayment = new Payment();
+        String uuid = UUID.randomUUID().toString();
+        newPayment.setId(uuid);
+        newPayment.setPaid(paymentRequest.isPaid());
+        newPayment.setDatePaid(paymentRequest.getDatePaid());
+        newPayment.setDateDue(paymentRequest.getDateDue());
+        newPayment.setAmount(paymentRequest.getAmount());
+        newPayment.setCreditCard(existingCreditCard);
+        newPayment.setTenant(existingTenant);
+
+        return paymentRepo.save(newPayment);
     }
 }
