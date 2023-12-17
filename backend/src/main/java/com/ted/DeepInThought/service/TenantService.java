@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,5 +76,21 @@ public class TenantService extends BaseService<Tenant, String>{
             return tenantData.get();
         }
         throw new Error("Tenant not found with email " + email);
+    }
+
+    public Map<String, String> validateByEmail(TenantRequest tenantRequest) {
+        Map<String, String> responseBody = new HashMap<>();
+        Optional<Tenant> tenantData = tenantRepo.findByEmail(tenantRequest.getEmail());
+
+        if (tenantData.isPresent()) {
+            Tenant existingTenant = tenantData.get();
+
+            if (tenantRequest.getPassword().equals(existingTenant.getPassword())) {
+                responseBody.put("message", "User is authenticated");
+                responseBody.put("tenantId", existingTenant.getId());
+                return responseBody;
+            }
+        }
+        throw new EntityNotFoundException("Incorrect email or password");
     }
 }
