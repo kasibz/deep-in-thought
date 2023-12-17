@@ -22,10 +22,6 @@ public abstract class BaseService<T, ID> {
         return repository.findById(id);
     }
 
-    public T save(T entity) {
-        return repository.save(entity);
-    }
-
     public void deleteById(ID id) {
         repository.deleteById(id);
     }

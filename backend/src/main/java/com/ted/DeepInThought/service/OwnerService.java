@@ -1,9 +1,12 @@
 package com.ted.DeepInThought.service;
 
 import com.ted.DeepInThought.dto.OwnerRequest;
+import com.ted.DeepInThought.model.Contract;
 import com.ted.DeepInThought.model.Owner;
+import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +22,15 @@ public class OwnerService extends BaseService<Owner, String> {
     @Autowired
     public OwnerService(OwnerRepository ownerRepository) {
         super(ownerRepository);
+    }
+
+    public Owner save(Owner owner) {
+        // check if email is unique
+        Optional<Owner> ownerData = ownerRepo.findByEmail(owner.getEmail());
+        if (ownerData.isPresent()) {
+            throw new DuplicateKeyException(owner.getEmail() + " owner already exists");
+        }
+        return ownerRepo.save(owner);
     }
 
     // make the service for all properties here as in the logic
@@ -45,5 +57,14 @@ public class OwnerService extends BaseService<Owner, String> {
         } else {
             throw new Error("Owner not found with id: " + id);
         }
+    }
+
+    public Owner getByEmail(String email) {
+        Optional<Owner> ownerData = ownerRepo.findByEmail(email);
+
+        if (ownerData.isPresent()) {
+            return ownerData.get();
+        }
+        throw new Error("Owner not found with email " + email);
     }
 }
