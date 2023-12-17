@@ -2,12 +2,13 @@ package com.ted.DeepInThought.repository;
 
 import com.ted.DeepInThought.model.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface OwnerRepository extends JpaRepository<Owner, String> {
+    // ex: I need to get all properties for an Owner. Write the function here
 
-    @Query(value = "ALTER SESSION SET JDBC_QUERY_RESULT_FORMAT='JSON'", nativeQuery = true)
-    void setJSON();
+    Optional<Owner> findByEmail(String email);
 }

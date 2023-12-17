@@ -1,35 +1,66 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
+import com.ted.DeepInThought.model.Contract;
 import com.ted.DeepInThought.model.Owner;
-import com.ted.DeepInThought.repository.OwnerRepository;
+import com.ted.DeepInThought.model.Tenant;
+import com.ted.DeepInThought.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class OwnerController {
+@RequestMapping("/owner")
+public class OwnerController extends BaseController<Owner, String> {
 
     @Autowired
-    private OwnerRepository ownerRepo;
+    private OwnerService ownerService;
 
-    @GetMapping("/owner")
-    public ResponseEntity<List<Owner>> getAllOwners() {
+    // eventually, PUT method will need to be custom here by use of the instantiated
+    // OwnerService, but that service also needs the logic for this PUT request
+    // by use of a DTO
+    @Autowired
+    public OwnerController(OwnerService ownerService) {
+        super(ownerService);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Owner> getByEmail(@PathVariable String email) {
         try {
-            List<Owner> ownerList = new ArrayList<>();
-            ownerRepo.findAll().forEach(ownerList::add);
-
-            if (ownerList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(ownerList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Owner existingOwner = ownerService.getByEmail(email);
+            return new ResponseEntity<>(existingOwner, HttpStatus.OK);
+        } catch (Error e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping
+    public ResponseEntity<Owner> create(@RequestBody Owner owner) {
+        try {
+            return new ResponseEntity<>(ownerService.save(owner), HttpStatus.CREATED);
+        } catch (DuplicateKeyException e) {
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("error", e.getMessage());
+            return new ResponseEntity<>(headers, HttpStatus.CONFLICT);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // call the service and incorporate the DTO
+    @PutMapping("/{id}")
+    public ResponseEntity<Owner> updateOwner(@PathVariable String id, @RequestBody OwnerRequest ownerRequest) {
+        try {
+            Owner updatedOwner = ownerService.editOwner(id, ownerRequest);
+            return new ResponseEntity<>(updatedOwner, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
