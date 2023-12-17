@@ -6,10 +6,9 @@ import com.ted.DeepInThought.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/property")
@@ -23,6 +22,16 @@ public class PropertyController extends BaseController<Property, String>{
         super(propertyService);
     }
 
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<Property>> getAllByOwnerId(@PathVariable String id) {
+        try {
+            List<Property> propertyList = propertyService.getAllbyOwnerId(id);
+            return new ResponseEntity<>(propertyList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Property> create(@RequestBody PropertyRequest propertyRequest) {
         try {
@@ -32,5 +41,4 @@ public class PropertyController extends BaseController<Property, String>{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
 }

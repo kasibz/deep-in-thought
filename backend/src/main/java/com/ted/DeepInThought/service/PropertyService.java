@@ -8,6 +8,8 @@ import com.ted.DeepInThought.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,5 +43,15 @@ public class PropertyService extends BaseService<Property, String>{
             return propertyRepo.save(newProperty);
         }
         throw new Error("Owner not found with id: " + propertyRequest.getOwnerId());
+    }
+
+    public List<Property> getAllbyOwnerId(String ownerId) {
+        List<Property> propertyList = new ArrayList<>();
+        propertyRepo.findByOwnerId(ownerId).forEach(propertyList::add);
+
+        if (!propertyList.isEmpty()) {
+            return propertyList;
+        }
+        throw new Error("No properties found with owner with id: " + ownerId);
     }
 }
