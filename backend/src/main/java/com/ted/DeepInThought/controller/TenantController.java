@@ -1,6 +1,8 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.TenantRequest;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.service.TenantService;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tenant")
@@ -42,6 +48,17 @@ public class TenantController extends BaseController<Tenant, String> {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> validateTenant(@RequestBody TenantRequest tenantRequest) {
+        try {
+            return new ResponseEntity<>(tenantService.validateByEmail(tenantRequest), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", e.getMessage());
+            return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/email/{email}")
     public ResponseEntity<Tenant> getByEmail(@PathVariable String email) {
         try {
@@ -51,4 +68,6 @@ public class TenantController extends BaseController<Tenant, String> {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
 }
