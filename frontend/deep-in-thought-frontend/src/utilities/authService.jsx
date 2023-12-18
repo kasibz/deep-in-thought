@@ -6,7 +6,8 @@ import api from "./axiosConfig";
 
 const authService = {
     // Need to adjust with the correct API address.
-    login: (userInfo) => api.post('/', userInfo),
+    ownerLogin: (userInfo) => api.post('/owner/login', userInfo),
+    tenantLogin: (userInfo) => api.post('/tenant/login', userInfo),
     ownerSignup: (userInfo) => api.post('/owner', userInfo),
     residentSignup: (userInfo) => api.post('/resident', userInfo),
     updateOwnerInfo: () => api.put('/'),

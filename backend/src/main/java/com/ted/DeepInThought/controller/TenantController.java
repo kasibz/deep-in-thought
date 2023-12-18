@@ -81,4 +81,13 @@ public class TenantController extends BaseController<Tenant, String> {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tenant> putTenant(@PathVariable String id, @RequestBody TenantRequest tenantRequest) {
+        try {
+            return new ResponseEntity<>(tenantService.editTenant(id, tenantRequest), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
