@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/tenant")
 public class TenantController extends BaseController<Tenant, String> {
 
