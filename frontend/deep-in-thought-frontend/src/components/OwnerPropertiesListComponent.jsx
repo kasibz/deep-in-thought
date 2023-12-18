@@ -1,15 +1,18 @@
-import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, ListItem } from '@mui/material';
+import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useMyPropertyContext } from './../context/PropertyContext';
+import AddPropertyDialog from './dialogs/AddPropertyDialog';
 
+//placement data for properties list
 const myProperties = [
     { id: 1, name: 'Lakeside Condo', type: 'Condo', address: '123 Lakeview St' },
     { id: 2, name: 'Downtown Loft', type: 'Loft', address: '456 Citycenter Ave' },
 ];
 
 const OwnerPropertyComponent = () => {
-    const [selectedProperty, setSelectedProperty] = useState(null);
 
+    // navigate hook to allow navigate to different routes
     const navigate = useNavigate();
 
     // open and close state variable for dialog
@@ -21,6 +24,9 @@ const OwnerPropertyComponent = () => {
         type: '',
         address: ''
     });
+
+    // calling property context state variables
+    const {ownerProperty, addOwnerProperty} = useMyPropertyContext();
 
     const onClickOpenDialog = () => {
         // Open the dialog
@@ -42,11 +48,9 @@ const OwnerPropertyComponent = () => {
     };
 
     const onSubmitAddProproperty = () => {
-
         console.log(newProperty);
         // Reset the form
         setNewProperty({ name: '', type: '', address: '' });
-        // Close the dialog
         setOpen(false);
     };
 
@@ -75,43 +79,13 @@ const OwnerPropertyComponent = () => {
             </List>
 
             {/* Add Property Dialog */}
-            <Dialog open={open} onClose={onClickCloseDialog}>
-                <DialogTitle>Add New Property</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        fullWidth
-                        variant="standard"
-                        value={newProperty.name}
-                        onChange={onChangeAddPropertyTextField}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="type"
-                        label="Type"
-                        fullWidth
-                        variant="standard"
-                        value={newProperty.type}
-                        onChange={onChangeAddPropertyTextField}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="address"
-                        label="Address"
-                        fullWidth
-                        variant="standard"
-                        value={newProperty.address}
-                        onChange={onChangeAddPropertyTextField}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onClickCloseDialog}>Cancel</Button>
-                    <Button onClick={onSubmitAddProproperty}>Submit</Button>
-                </DialogActions>
-            </Dialog>
+            <AddPropertyDialog                 
+                open={open} 
+                onClose={onClickCloseDialog} 
+                newProperty={newProperty} 
+                onChange={onChangeAddPropertyTextField} 
+                onSubmit={onSubmitAddProproperty} 
+            />
         </Container>
     );
 }
