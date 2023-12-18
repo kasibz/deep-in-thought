@@ -1,8 +1,6 @@
 package com.ted.DeepInThought.controller;
 
-import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.TenantRequest;
-import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.service.TenantService;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")

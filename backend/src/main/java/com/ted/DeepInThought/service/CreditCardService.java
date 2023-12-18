@@ -40,7 +40,7 @@ public class CreditCardService extends BaseService<CreditCard, String>{
             newCreditCard.setStreetAddress(creditCardRequest.getStreetAddress());
             newCreditCard.setCity(creditCardRequest.getCity());
             newCreditCard.setState(creditCardRequest.getState());
-            newCreditCard.setZip(creditCardRequest.getZip());
+            newCreditCard.setZipcode(creditCardRequest.getZipcode());
             newCreditCard.setTenant(existingTenant);
 
             return creditCardRepo.save(newCreditCard);

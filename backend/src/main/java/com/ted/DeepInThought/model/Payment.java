@@ -25,11 +25,6 @@ public class Payment {
     @JsonBackReference(value = "payment-creditCard")
     private CreditCard creditCard;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "tenantId", nullable = false)
-    @JsonBackReference
-    private Tenant tenant;
-
     public String getId() {
         return id;
     }
@@ -76,13 +71,5 @@ public class Payment {
 
     public void setCreditCard(CreditCard creditCard) {
         this.creditCard = creditCard;
-    }
-
-    public Tenant getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
     }
 }

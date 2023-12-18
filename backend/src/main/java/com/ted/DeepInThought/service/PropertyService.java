@@ -38,6 +38,10 @@ public class PropertyService extends BaseService<Property, String>{
             newProperty.setId(uuid);
             newProperty.setName(propertyRequest.getName());
             newProperty.setType(propertyRequest.getType());
+            newProperty.setStreetAddress(propertyRequest.getStreetAddress());
+            newProperty.setCity(propertyRequest.getCity());
+            newProperty.setState(propertyRequest.getState());
+            newProperty.setZipcode(propertyRequest.getZipcode());
             newProperty.setOwner(existingOwner);
 
             return propertyRepo.save(newProperty);

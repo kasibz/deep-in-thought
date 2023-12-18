@@ -34,18 +34,12 @@ public class PaymentService extends BaseService<Payment, String> {
 
     public Payment saveFromPaymentDTO(PaymentRequest paymentRequest) {
         Optional<CreditCard> creditCardData = creditCardRepo.findById(paymentRequest.getCreditCardId());
-        Optional<Tenant> tenantData = tenantRepo.findById(paymentRequest.getTenantId());
 
         if (creditCardData.isEmpty()) {
             throw new Error("Credit Card not found with id: " + paymentRequest.getCreditCardId());
         }
 
-        if (tenantData.isEmpty()) {
-            throw new Error("Tenant not found with id: " + paymentRequest.getTenantId());
-        }
-
         CreditCard existingCreditCard = creditCardData.get();
-        Tenant existingTenant = tenantData.get();
 
         Payment newPayment = new Payment();
         String uuid = UUID.randomUUID().toString();
@@ -55,7 +49,6 @@ public class PaymentService extends BaseService<Payment, String> {
         newPayment.setDateDue(paymentRequest.getDateDue());
         newPayment.setAmount(paymentRequest.getAmount());
         newPayment.setCreditCard(existingCreditCard);
-        newPayment.setTenant(existingTenant);
 
         return paymentRepo.save(newPayment);
     }
