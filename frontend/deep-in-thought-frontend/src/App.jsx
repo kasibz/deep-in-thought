@@ -5,8 +5,6 @@ import Home from './pages/Home'
 import Signup from './pages/Signup';
 import Tenant from './pages/Tenant';
 import TenantPayment from './pages/TenantPayment';
-import OwnerPropertyDetail from './pages/OwnerPropertyDetail';
-import { PropertyProvider } from './context/PropertyContext';
 
 function App() {
 
@@ -19,17 +17,14 @@ function App() {
         {path:'/signup', element: <Signup/>},
         {path:'/tenant', element:<Tenant/>},
         {path:'/tenantPayment', element:<TenantPayment/>},
-        {path:'/property/:id', element:<OwnerPropertyDetail/>},
       ]
     }
   ])
 
   return (
     <UserContextProvider>
-      <PropertyProvider>
-        <RouterProvider router={router}>
-        </RouterProvider>
-      </PropertyProvider>
+      <RouterProvider router={router}>
+      </RouterProvider>
     </UserContextProvider>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import LoginComponent from "../components/LoginComponent"
-import OwnerPropertyComponent from "../components/OwnerPropertiesListComponent";
+import OwnerPropertyComponent from "../components/OwnerPropertyComponent";
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
 const Home = () => {
