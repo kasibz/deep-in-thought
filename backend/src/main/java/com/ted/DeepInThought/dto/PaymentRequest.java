@@ -15,7 +15,6 @@ public class PaymentRequest {
     private LocalDateTime dateDue;
     private Long amount;
     private String creditCardId;
-    private String tenantId;
 
     public boolean isPaid() {
         return isPaid;
@@ -55,13 +54,5 @@ public class PaymentRequest {
 
     public void setCreditCardId(String creditCardId) {
         this.creditCardId = creditCardId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 }

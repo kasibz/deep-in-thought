@@ -11,10 +11,11 @@ public class CreditCardRequest {
     private Long cardNumber;
     private Long cvv;
     private String name;
+    private String type;
     private String streetAddress;
     private String city;
     private String state;
-    private String zip;
+    private String zipcode;
 
     private String tenantId;
 
@@ -66,13 +67,20 @@ public class CreditCardRequest {
         this.state = state;
     }
 
-
-    public String getZip() {
-        return zip;
+    public String getType() {
+        return type;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
     public String getTenantId() {
