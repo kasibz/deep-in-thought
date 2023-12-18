@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import LoginComponent from "../components/LoginComponent"
 import OwnerPropertyComponent from "../components/OwnerPropertiesListComponent";
 import authService from "../utilities/authService";
@@ -7,15 +7,33 @@ import { UserContext } from "../context/UserContext";
 import Tenant from './Tenant';
 
 const Home = () => {
+    // user context variables
+    const { addUser, user } = UserContext()
+
+    //loading variable 
+    const [isLoading, setIsLoading] = useState(true);
+
+    //persist data using useEffect
+    useEffect(() => {
+        const ownerId = localStorage.getItem('ownerId');
+        const tenantId = localStorage.getItem('tenantId');
+
+        if (ownerId) {
+            addUser({ ownerId });
+        } else if (tenantId) {
+            addUser({ tenantId });
+        }
+
+        // Set loading to false after checking
+        setIsLoading(false); 
+    }, []);
+
     const [userLoginInfo, setUserLoginInfo] = useState({
         email: "",
         password: ""
     })
 
     const [userTypeChecked, setUserTypeChecked] = useState(false);
-
-    // user context variables
-    const { addUser, user } = UserContext()
 
     const loginRequest = async () => {
         if (userTypeChecked) {
@@ -46,11 +64,16 @@ const Home = () => {
             }
         }
     }
-    console.log(user)
+
+    // display none when loading variable is true
+    if (isLoading) {
+        return <div></div>; 
+    }
+
     return (
         <>
-            {user.length === 0 ? 
-                <LoginComponent 
+            {user.length === 0 ?
+                <LoginComponent
                     userLoginInfo={userLoginInfo}
                     setUserLoginInfo={setUserLoginInfo}
                     setUserTypeChecked={setUserTypeChecked}
@@ -62,8 +85,8 @@ const Home = () => {
             }
         </>
     );
-    
-    
+
+
 }
 
 export default Home
