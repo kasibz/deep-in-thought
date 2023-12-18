@@ -1,5 +1,6 @@
 import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, ListItem } from '@mui/material';
 import { Fragment, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const myProperties = [
     { id: 1, name: 'Lakeside Condo', type: 'Condo', address: '123 Lakeview St' },
@@ -8,7 +9,9 @@ const myProperties = [
 
 const OwnerPropertyComponent = () => {
     const [selectedProperty, setSelectedProperty] = useState(null);
-    
+
+    const navigate = useNavigate();
+
     // open and close state variable for dialog
     const [open, setOpen] = useState(false);
 
@@ -31,6 +34,7 @@ const OwnerPropertyComponent = () => {
 
     const onClickProperty = (property) => {
         console.log(property);
+        navigate(`/property/${property.id}`)
     };
 
     const onChangeAddPropertyTextField = (e) => {
