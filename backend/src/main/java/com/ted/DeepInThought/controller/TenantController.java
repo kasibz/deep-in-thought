@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -69,5 +70,14 @@ public class TenantController extends BaseController<Tenant, String> {
         }
     }
 
-
+    @GetMapping("/property/{id}")
+    public ResponseEntity<List<Tenant>> getByPropertyId(@PathVariable String id) {
+        try {
+            return new ResponseEntity<>(tenantService.getAllByPropertyId(id), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

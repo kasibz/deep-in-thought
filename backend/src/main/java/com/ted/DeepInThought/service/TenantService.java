@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TenantService extends BaseService<Tenant, String>{
@@ -92,5 +89,15 @@ public class TenantService extends BaseService<Tenant, String>{
             }
         }
         throw new EntityNotFoundException("Incorrect email or password");
+    }
+
+    public List<Tenant> getAllByPropertyId(String propertyId) {
+        List<Tenant> tenantList = new ArrayList<>();
+        tenantRepo.findByPropertyId(propertyId).forEach(tenantList::add);
+
+        if (!tenantList.isEmpty()) {
+            return tenantList;
+        }
+        throw new EntityNotFoundException("No Tenants for this Property");
     }
 }
