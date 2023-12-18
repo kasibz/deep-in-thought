@@ -12,7 +12,7 @@ public class Tenant extends User{
     private Property property;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "contractId", nullable = false)
+    @JoinColumn(name = "contractId")
     @JsonBackReference
     private Contract contract;
 

@@ -39,18 +39,12 @@ public class TenantService extends BaseService<Tenant, String>{
         }
 
         Optional<Property> propertyData = propertyRepo.findById(tenantRequest.getPropertyId());
-        Optional<Contract> contractData = contractRepo.findById(tenantRequest.getContractId());
 
         if (propertyData.isEmpty()) {
             throw new EntityNotFoundException("Property not found with id: " + tenantRequest.getPropertyId());
         }
 
-        if (contractData.isEmpty()) {
-            throw new EntityNotFoundException("Contract not found with id: " + tenantRequest.getContractId());
-        }
-
         Property existingProperty = propertyData.get();
-        Contract existingContract = contractData.get();
 
         Tenant newTenant = new Tenant();
         String uuid = UUID.randomUUID().toString();
@@ -61,7 +55,6 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setEmail(tenantRequest.getEmail());
         newTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
         newTenant.setProperty(existingProperty);
-        newTenant.setContract(existingContract);
 
         return tenantRepo.save(newTenant);
     }
