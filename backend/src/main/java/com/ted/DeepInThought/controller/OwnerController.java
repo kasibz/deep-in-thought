@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/owner")
 public class OwnerController extends BaseController<Owner, String> {
 
