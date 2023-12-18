@@ -17,10 +17,11 @@ public class CreditCard {
     private Long cardNumber;
     private Long cvv;
     private String name;
+    private String type = "Credit Card";
     private String streetAddress;
     private String city;
     private String state;
-    private String zip;
+    private String zipcode;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tenantId", nullable = false)
@@ -83,12 +84,20 @@ public class CreditCard {
         this.state = state;
     }
 
-    public String getZip() {
-        return zip;
+    public String getType() {
+        return type;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
     public Tenant getTenant() {
