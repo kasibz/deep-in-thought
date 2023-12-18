@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Checkbox, FormControlLabel, Link } from "@mui/material";
 
-const LoginComponent = ({ userLoginInfo, setUserLoginInfo, setUserTypeChecked }) => {
+const LoginComponent = ({ userLoginInfo, setUserLoginInfo, setUserTypeChecked, loginRequest }) => {
 
     const onChangeUserInfo = (e) => {
         const { name, value } = e.target;
@@ -14,8 +14,9 @@ const LoginComponent = ({ userLoginInfo, setUserLoginInfo, setUserTypeChecked })
         }))
     }
 
-    const onSubmitLogin = (e) => {
-        e.preventDefault;
+    const onSubmitLogin = async (e) => {
+        e.preventDefault()
+        await loginRequest()
     }
 
     const onChangeCheckBox = (e) => {
