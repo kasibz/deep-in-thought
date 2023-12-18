@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/property")
 public class PropertyController extends BaseController<Property, String>{
 
@@ -23,7 +22,6 @@ public class PropertyController extends BaseController<Property, String>{
         super(propertyService);
     }
 
-    // get all properties under one owner
     @GetMapping("/owner/{id}")
     public ResponseEntity<List<Property>> getAllByOwnerId(@PathVariable String id) {
         try {
