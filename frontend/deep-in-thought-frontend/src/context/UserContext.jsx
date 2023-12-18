@@ -8,7 +8,7 @@ export const UserContextProvider = ({children}) => {
     const [user, setUser] = useState([]);
     
     const addUser = (currentUser) => {
-        setUser([...user, currentUser])
+        setUser([currentUser])
     };
 
     return (

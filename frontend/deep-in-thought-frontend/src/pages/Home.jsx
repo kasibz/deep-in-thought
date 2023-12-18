@@ -18,38 +18,52 @@ const Home = () => {
     const { addUser, user } = UserContext()
 
     const loginRequest = async () => {
-        try {
-            const response = await authService.ownerLogin(userLoginInfo)
-            console.log(response)
-            if (response.status == 200) {
-                addUser({
-                    ownerId: response.data.ownerId
-                });
-                localStorage.setItem('ownerId', response.data.ownerId)
+        if (userTypeChecked) {
+            try {
+                const response = await authService.ownerLogin(userLoginInfo)
+                console.log(response)
+                if (response.status == 200) {
+                    addUser({
+                        ownerId: response.data.ownerId
+                    });
+                    localStorage.setItem('ownerId', response.data.ownerId)
+                }
+            } catch (error) {
+                console.log(error)
             }
-        } catch (error) {
-            console.log(error)
+        } else {
+            try {
+                const response = await authService.tenantLogin(userLoginInfo)
+                console.log(response)
+                if (response.status == 200) {
+                    addUser({
+                        tenantId: response.data.tenantId
+                    });
+                    localStorage.setItem('tenantId', response.data.tenantId)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
     console.log(user)
     return (
         <>
-            {user.length == 0 &&
-                <LoginComponent userLoginInfo={userLoginInfo}
+            {user.length === 0 ? 
+                <LoginComponent 
+                    userLoginInfo={userLoginInfo}
                     setUserLoginInfo={setUserLoginInfo}
                     setUserTypeChecked={setUserTypeChecked}
                     loginRequest={loginRequest}
-                />}
-
-            {user[0] && user[0].ownerId
-                ? <OwnerPropertyComponent />
-                : user
-                    ? null
+                />
+                : user[0].ownerId
+                    ? <OwnerPropertyComponent />
                     : <Tenant />
             }
-
         </>
-    )
+    );
+    
+    
 }
 
 export default Home
