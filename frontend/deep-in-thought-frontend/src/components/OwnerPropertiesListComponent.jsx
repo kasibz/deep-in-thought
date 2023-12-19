@@ -7,6 +7,8 @@ import propertyService from '../utilities/propertyService';
 import { UserContext } from './../context/UserContext';
 
 const OwnerPropertyComponent = () => {
+    // calling user context
+    const { user } = UserContext();
 
     // navigate hook to allow navigate to different routes
     const navigate = useNavigate();
@@ -18,29 +20,36 @@ const OwnerPropertyComponent = () => {
     const [newProperty, setNewProperty] = useState({
         name: '',
         type: '',
-        address: ''
+        streetAddress: '',
+        city: '',
+        state: '',
+        zipcode: '',
+        ownerId: user[0].ownerId,
     });
 
     // calling property context state variables
     const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
 
-    // calling user context
-    const { user } = UserContext();
+    //loading variable 
+    const [isLoading, setIsLoading] = useState(true);
 
+    // get list of owner's list of properties and persist data
     useEffect(() => {
         const getOwnerProperties = async () => {
             try {
                 const response = await propertyService.getAllPropertiesByIdForOwner(user[0].ownerId)
-                console.log(response)
+                // console.log(response)
                 if (response.status === 200) {
                     addOwnerProperty(response.data)
                 }
+                setIsLoading(false); // Set loading to false once data has bee fetched
             } catch (error) {
                 console.log(error)
+                setIsLoading(false); // Set loading to false once data has bee fetched
             }
         }
         getOwnerProperties()
-    }, [])
+    }, [open]) // whenever there is a change in this variable, this useEffect will be triggered.
 
     const onClickOpenDialog = () => {
         // Open the dialog
@@ -61,13 +70,24 @@ const OwnerPropertyComponent = () => {
         setNewProperty({ ...newProperty, [e.target.name]: e.target.value });
     };
 
-    const onSubmitAddProproperty = () => {
+    const onSubmitAddProproperty = async () => {
         console.log(newProperty);
-        // Reset the form
-        setNewProperty({ name: '', type: '', address: '' });
-        setOpen(false);
+        try {
+            const addPropertyResponse = await propertyService.addProperty(newProperty);
+            console.log(addPropertyResponse)
+            if (addPropertyResponse.status === 201) {
+                setOpen(false);
+            } else {
+                alert('something is wrong. This need to be changed')
+            }
+        } catch (error) {
+            console.log(error)
+        }
     };
-
+    // display none when loading variable is true
+    if (isLoading) {
+        return <div></div>; 
+    }
     return (
         <Container>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
