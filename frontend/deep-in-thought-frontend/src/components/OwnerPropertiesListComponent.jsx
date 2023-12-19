@@ -1,8 +1,10 @@
 import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMyPropertyContext } from './../context/PropertyContext';
 import AddPropertyDialog from './dialogs/AddPropertyDialog';
+import propertyService from '../utilities/propertyService';
+import { UserContext } from './../context/UserContext';
 
 //placement data for properties list
 const myProperties = [
@@ -26,7 +28,18 @@ const OwnerPropertyComponent = () => {
     });
 
     // calling property context state variables
-    const {ownerProperty, addOwnerProperty} = useMyPropertyContext();
+    const {ownerProperties, setOwnerProperties} = useMyPropertyContext();
+
+    // calling user context
+    const { user } = UserContext();
+    console.log(user[0].ownerId)
+    useEffect(()=>{
+        const getOwnerProperties = async () => {
+            const response = await propertyService.getAllPropertiesByIdForOwner(user[0].ownerId)
+
+        }
+        getOwnerProperties()
+    }, [])
 
     const onClickOpenDialog = () => {
         // Open the dialog
