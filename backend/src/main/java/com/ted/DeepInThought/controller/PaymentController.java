@@ -39,7 +39,7 @@ public class PaymentController extends BaseController<Payment, String> {
     public ResponseEntity<List<PaymentRepository.PaymentWithAssociations>> getAllPaymentsByProperty(@PathVariable String id) {
         try {
             return new ResponseEntity<>(paymentService.getAllPaymentsByPropertyId(id), HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

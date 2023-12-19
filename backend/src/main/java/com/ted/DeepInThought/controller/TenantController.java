@@ -94,7 +94,7 @@ public class TenantController extends BaseController<Tenant, String> {
         try {
             TenantRepository.TenantWithContract tenantWithContract = tenantService.getContractByTenantId(id);
             return new ResponseEntity<>(tenantWithContract, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -58,10 +58,6 @@ public class PaymentService extends BaseService<Payment, String> {
     }
 
     public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
-        List<PaymentRepository.PaymentWithAssociations> paymentList = paymentRepo.findAllPaymentsByProperty(propertyId);
-        if(!paymentList.isEmpty()) {
-            return paymentList;
-        }
-        throw new EntityNotFoundException("No Payments for this property");
+        return paymentRepo.findAllPaymentsByProperty(propertyId);
     }
 }

@@ -41,7 +41,7 @@ public class PropertyController extends BaseController<Property, String>{
            Property newProperty = propertyService.saveFromPropertyDTO(propertyRequest);
            return new ResponseEntity<>(newProperty, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
