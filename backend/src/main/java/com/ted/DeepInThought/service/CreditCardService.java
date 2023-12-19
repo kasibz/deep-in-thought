@@ -8,6 +8,8 @@ import com.ted.DeepInThought.repository.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,5 +48,11 @@ public class CreditCardService extends BaseService<CreditCard, String>{
             return creditCardRepo.save(newCreditCard);
         }
         throw new Error("Tenant not found with id: " + creditCardRequest.getTenantId());
+    }
+
+    public List<CreditCard> getAllbyTenantId(String tenantId) {
+        List<CreditCard> creditCardList = new ArrayList<>();
+        creditCardRepo.findByTenantId(tenantId).forEach(creditCardList::add);
+        return creditCardList;
     }
 }

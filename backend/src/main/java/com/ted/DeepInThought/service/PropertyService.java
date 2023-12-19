@@ -53,10 +53,6 @@ public class PropertyService extends BaseService<Property, String>{
     public List<Property> getAllbyOwnerId(String ownerId) {
         List<Property> propertyList = new ArrayList<>();
         propertyRepo.findByOwnerId(ownerId).forEach(propertyList::add);
-
-        if (!propertyList.isEmpty()) {
-            return propertyList;
-        }
-        throw new EntityNotFoundException("No properties found with owner with id: " + ownerId);
+        return propertyList;
     }
 }
