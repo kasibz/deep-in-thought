@@ -3,6 +3,7 @@ package com.ted.DeepInThought.controller;
 import com.ted.DeepInThought.dto.PropertyRequest;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.service.PropertyService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class PropertyController extends BaseController<Property, String>{
         try {
             List<Property> propertyList = propertyService.getAllbyOwnerId(id);
             return new ResponseEntity<>(propertyList, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -134,4 +134,13 @@ public class TenantService extends BaseService<Tenant, String>{
         }
         throw new EntityNotFoundException("No Tenants for this Property");
     }
+
+    // retrieving an associated contract with a tenant
+    public TenantRepository.TenantWithContract getContractByTenantId(String tenantId) {
+        TenantRepository.TenantWithContract tenantWithContract = tenantRepo.findContractByTenantId(tenantId);
+        if (tenantWithContract != null) {
+            return tenantWithContract;
+        }
+        throw new EntityNotFoundException("No Contract found for Tenant with Id " + tenantId);
+    }
 }
