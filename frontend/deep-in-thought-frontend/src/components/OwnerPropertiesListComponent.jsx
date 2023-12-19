@@ -6,12 +6,6 @@ import AddPropertyDialog from './dialogs/AddPropertyDialog';
 import propertyService from '../utilities/propertyService';
 import { UserContext } from './../context/UserContext';
 
-//placement data for properties list
-const myProperties = [
-    { id: 1, name: 'Lakeside Condo', type: 'Condo', address: '123 Lakeview St' },
-    { id: 2, name: 'Downtown Loft', type: 'Loft', address: '456 Citycenter Ave' },
-];
-
 const OwnerPropertyComponent = () => {
 
     // navigate hook to allow navigate to different routes
@@ -28,15 +22,22 @@ const OwnerPropertyComponent = () => {
     });
 
     // calling property context state variables
-    const {ownerProperties, setOwnerProperties} = useMyPropertyContext();
+    const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
 
     // calling user context
     const { user } = UserContext();
-    console.log(user[0].ownerId)
-    useEffect(()=>{
-        const getOwnerProperties = async () => {
-            const response = await propertyService.getAllPropertiesByIdForOwner(user[0].ownerId)
 
+    useEffect(() => {
+        const getOwnerProperties = async () => {
+            try {
+                const response = await propertyService.getAllPropertiesByIdForOwner(user[0].ownerId)
+                console.log(response)
+                if (response.status === 200) {
+                    addOwnerProperty(response.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
         getOwnerProperties()
     }, [])
@@ -73,17 +74,17 @@ const OwnerPropertyComponent = () => {
                 My Properties
             </Typography>
             <List>
-                {myProperties.map((property, index) => (
+                {ownerProperties && ownerProperties.length > 0 ? ownerProperties[0].map((property, index) => (
                     <Fragment key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
                             <ListItemText
                                 primary={property.name}
-                                secondary={`Type: ${property.type} - Address: ${property.address}`}
+                                secondary={`Type: ${property.type} - Address: ${property.streetAddress} ${property.city} ${property.state} ${property.zipcode}`}
                             />
                         </ListItemButton>
-                        {index !== myProperties.length - 1 && <Divider />}
+                        {index !== ownerProperties.length - 1 && <Divider />}
                     </Fragment>
-                ))}
+                )) : <div>You currently have no properties listed. Click here to add your first property</div>}
                 <ListItem>
                     <Button onClick={onClickOpenDialog} variant="outlined" fullWidth>
                         Add Property
@@ -92,12 +93,12 @@ const OwnerPropertyComponent = () => {
             </List>
 
             {/* Add Property Dialog */}
-            <AddPropertyDialog                 
-                open={open} 
-                onClose={onClickCloseDialog} 
-                newProperty={newProperty} 
-                onChange={onChangeAddPropertyTextField} 
-                onSubmit={onSubmitAddProproperty} 
+            <AddPropertyDialog
+                open={open}
+                onClose={onClickCloseDialog}
+                newProperty={newProperty}
+                onChange={onChangeAddPropertyTextField}
+                onSubmit={onSubmitAddProproperty}
             />
         </Container>
     );
