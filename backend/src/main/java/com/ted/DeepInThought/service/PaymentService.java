@@ -1,7 +1,9 @@
 package com.ted.DeepInThought.service;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PaymentRequest;
 import com.ted.DeepInThought.model.CreditCard;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Payment;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.CreditCardRepository;
@@ -55,6 +57,28 @@ public class PaymentService extends BaseService<Payment, String> {
         newPayment.setCreditCard(existingCreditCard);
 
         return paymentRepo.save(newPayment);
+    }
+
+    public Payment editPayment(String id, PaymentRequest paymentRequest) {
+        Optional<Payment> paymentData = paymentRepo.findById(id);
+
+        if (paymentData.isPresent()) {
+            Payment existingPayment = paymentData.get();
+
+            if (paymentRequest.getDatePaid() != null) {
+                existingPayment.setDatePaid(paymentRequest.getDatePaid());
+            }
+            if (paymentRequest.getDateDue() != null) {
+                existingPayment.setDateDue(paymentRequest.getDateDue());
+            }
+            if (paymentRequest.getAmount() != null) {
+                existingPayment.setAmount(paymentRequest.getAmount());
+            }
+
+            return paymentRepo.save(existingPayment); // Save the updated payment and return it
+        } else {
+            throw new Error("Payment not found with id: " + id);
+        }
     }
 
     public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
