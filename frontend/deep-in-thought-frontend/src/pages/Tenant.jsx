@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from "react";
 import * as React from 'react';
 import Button from '@mui/material/Button';
 
+import ErrorSnackbar from "../components/snackbar/ErrorSnackBar";
+
 import CreditCardPaymentDialog from "../components/dialogs/CreditCardPaymentDialog";
 import RentPaymentDialog from "../components/dialogs/RentPaymentDialog";
 
