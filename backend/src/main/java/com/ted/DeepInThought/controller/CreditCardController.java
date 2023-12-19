@@ -31,4 +31,14 @@ public class CreditCardController extends BaseController<CreditCard, String> {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CreditCard> updateCreditCard(@PathVariable String id, @RequestBody CreditCardRequest creditCardRequest) {
+        try {
+            CreditCard updatedCreditCard = creditCardService.editCreditCard(id, creditCardRequest);
+            return new ResponseEntity<>(updatedCreditCard, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

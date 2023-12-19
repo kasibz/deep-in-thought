@@ -1,6 +1,8 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.ContractRequest;
 import com.ted.DeepInThought.model.Contract;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.service.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,16 @@ public class ContractController extends BaseController<Contract, String>{
     public ResponseEntity<Contract> create(@RequestBody Contract contract) {
         try {
             return new ResponseEntity<>(contractService.save(contract), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Contract> updateContract(@PathVariable String id, @RequestBody ContractRequest contractRequest) {
+        try {
+            Contract updatedContract = contractService.editContract(id, contractRequest);
+            return new ResponseEntity<>(updatedContract, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
