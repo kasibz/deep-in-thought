@@ -7,9 +7,13 @@ import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.CreditCardRepository;
 import com.ted.DeepInThought.repository.PaymentRepository;
 import com.ted.DeepInThought.repository.TenantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,5 +55,13 @@ public class PaymentService extends BaseService<Payment, String> {
         newPayment.setCreditCard(existingCreditCard);
 
         return paymentRepo.save(newPayment);
+    }
+
+    public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
+        List<PaymentRepository.PaymentWithAssociations> paymentList = paymentRepo.findAllPaymentsByProperty(propertyId);
+        if(!paymentList.isEmpty()) {
+            return paymentList;
+        }
+        throw new EntityNotFoundException("No Payments for this property");
     }
 }
