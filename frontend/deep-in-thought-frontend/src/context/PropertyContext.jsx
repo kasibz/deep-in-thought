@@ -5,12 +5,12 @@ const MyPropertyContext = createContext();
 export const useMyPropertyContext = () => useContext(MyPropertyContext);
 
 export const PropertyProvider = ({ children }) => {
-    const [ownerProperty, setOwnerProperty] = useState([]);
+    const [ownerProperties, setOwnerProperties] = useState([]);
     const [tenantProperty, setTenantProperty] = useState([]);
 
     // Function to add a property for the owner
-    const addOwnerProperty = property => {
-        setOwnerProperty(prevProperties => [...prevProperties, property]);
+    const addOwnerProperty = (property) => {
+        setOwnerProperties([property]);
     };
 
     // Function to add a property for the tenant
@@ -20,7 +20,7 @@ export const PropertyProvider = ({ children }) => {
 
     return (
         <MyPropertyContext.Provider value={{ 
-            ownerProperty, 
+            ownerProperties, 
             addOwnerProperty, 
             tenantProperty, 
             addTenantProperty 
