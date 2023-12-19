@@ -5,6 +5,7 @@ import com.ted.DeepInThought.dto.PropertyRequest;
 import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.service.PropertyService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class PropertyController extends BaseController<Property, String>{
         try {
             List<Property> propertyList = propertyService.getAllbyOwnerId(id);
             return new ResponseEntity<>(propertyList, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -42,7 +43,7 @@ public class PropertyController extends BaseController<Property, String>{
            Property newProperty = propertyService.saveFromPropertyDTO(propertyRequest);
            return new ResponseEntity<>(newProperty, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

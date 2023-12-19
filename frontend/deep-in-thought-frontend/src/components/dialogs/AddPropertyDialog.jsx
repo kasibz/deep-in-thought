@@ -26,11 +26,38 @@ const AddPropertyDialog = ({ open, onClose, newProperty, onChange, onSubmit }) =
                 />
                 <TextField
                     margin="dense"
-                    name="address"
-                    label="Address"
+                    name="streetAddress"
+                    label="Street"
                     fullWidth
                     variant="standard"
-                    value={newProperty.address}
+                    value={newProperty.streetAddress}
+                    onChange={onChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="city"
+                    label="City"
+                    fullWidth
+                    variant="standard"
+                    value={newProperty.city}
+                    onChange={onChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="state"
+                    label="State"
+                    fullWidth
+                    variant="standard"
+                    value={newProperty.state}
+                    onChange={onChange}
+                />
+                <TextField
+                    margin="dense"
+                    name="zipcode"
+                    label="Zipcode"
+                    fullWidth
+                    variant="standard"
+                    value={newProperty.zipcode}
                     onChange={onChange}
                 />
             </DialogContent>

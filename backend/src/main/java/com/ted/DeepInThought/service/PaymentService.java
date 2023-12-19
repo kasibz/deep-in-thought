@@ -9,9 +9,13 @@ import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.CreditCardRepository;
 import com.ted.DeepInThought.repository.PaymentRepository;
 import com.ted.DeepInThought.repository.TenantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -75,5 +79,9 @@ public class PaymentService extends BaseService<Payment, String> {
         } else {
             throw new Error("Payment not found with id: " + id);
         }
+    }
+
+    public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
+        return paymentRepo.findAllPaymentsByProperty(propertyId);
     }
 }

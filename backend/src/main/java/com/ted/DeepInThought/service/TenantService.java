@@ -128,10 +128,15 @@ public class TenantService extends BaseService<Tenant, String>{
     public List<Tenant> getAllByPropertyId(String propertyId) {
         List<Tenant> tenantList = new ArrayList<>();
         tenantRepo.findByPropertyId(propertyId).forEach(tenantList::add);
+        return tenantList;
+    }
 
-        if (!tenantList.isEmpty()) {
-            return tenantList;
+    // retrieving an associated contract with a tenant
+    public TenantRepository.TenantWithContract getContractByTenantId(String tenantId) {
+        TenantRepository.TenantWithContract tenantWithContract = tenantRepo.findContractByTenantId(tenantId);
+        if (tenantWithContract != null) {
+            return tenantWithContract;
         }
-        throw new EntityNotFoundException("No Tenants for this Property");
+        throw new EntityNotFoundException("No Contract found for Tenant with Id " + tenantId);
     }
 }

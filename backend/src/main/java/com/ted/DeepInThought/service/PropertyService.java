@@ -6,6 +6,7 @@ import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.repository.OwnerRepository;
 import com.ted.DeepInThought.repository.PropertyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,10 +85,6 @@ public class PropertyService extends BaseService<Property, String>{
     public List<Property> getAllbyOwnerId(String ownerId) {
         List<Property> propertyList = new ArrayList<>();
         propertyRepo.findByOwnerId(ownerId).forEach(propertyList::add);
-
-        if (!propertyList.isEmpty()) {
-            return propertyList;
-        }
-        throw new Error("No properties found with owner with id: " + ownerId);
+        return propertyList;
     }
 }

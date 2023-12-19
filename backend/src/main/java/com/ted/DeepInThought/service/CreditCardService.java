@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,5 +93,11 @@ public class CreditCardService extends BaseService<CreditCard, String>{
         } else {
             throw new EntityNotFoundException("Credit Card not found with id: " + id);
         }
+    }
+
+    public List<CreditCard> getAllbyTenantId(String tenantId) {
+        List<CreditCard> creditCardList = new ArrayList<>();
+        creditCardRepo.findByTenantId(tenantId).forEach(creditCardList::add);
+        return creditCardList;
     }
 }

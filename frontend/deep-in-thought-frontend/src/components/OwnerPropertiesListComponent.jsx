@@ -1,16 +1,14 @@
 import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMyPropertyContext } from './../context/PropertyContext';
 import AddPropertyDialog from './dialogs/AddPropertyDialog';
-
-//placement data for properties list
-const myProperties = [
-    { id: 1, name: 'Lakeside Condo', type: 'Condo', address: '123 Lakeview St' },
-    { id: 2, name: 'Downtown Loft', type: 'Loft', address: '456 Citycenter Ave' },
-];
+import propertyService from '../utilities/propertyService';
+import { UserContext } from './../context/UserContext';
 
 const OwnerPropertyComponent = () => {
+    // calling user context
+    const { user } = UserContext();
 
     // navigate hook to allow navigate to different routes
     const navigate = useNavigate();
@@ -22,11 +20,36 @@ const OwnerPropertyComponent = () => {
     const [newProperty, setNewProperty] = useState({
         name: '',
         type: '',
-        address: ''
+        streetAddress: '',
+        city: '',
+        state: '',
+        zipcode: '',
+        ownerId: user[0].ownerId,
     });
 
     // calling property context state variables
-    const {ownerProperty, addOwnerProperty} = useMyPropertyContext();
+    const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
+
+    //loading variable 
+    const [isLoading, setIsLoading] = useState(true);
+
+    // get list of owner's list of properties and persist data
+    useEffect(() => {
+        const getOwnerProperties = async () => {
+            try {
+                const response = await propertyService.getAllPropertiesByIdForOwner(user[0].ownerId)
+                // console.log(response)
+                if (response.status === 200) {
+                    addOwnerProperty(response.data)
+                }
+                setIsLoading(false); // Set loading to false once data has bee fetched
+            } catch (error) {
+                console.log(error)
+                setIsLoading(false); // Set loading to false once data has bee fetched
+            }
+        }
+        getOwnerProperties()
+    }, [open]) // whenever there is a change in this variable, this useEffect will be triggered.
 
     const onClickOpenDialog = () => {
         // Open the dialog
@@ -47,30 +70,41 @@ const OwnerPropertyComponent = () => {
         setNewProperty({ ...newProperty, [e.target.name]: e.target.value });
     };
 
-    const onSubmitAddProproperty = () => {
+    const onSubmitAddProproperty = async () => {
         console.log(newProperty);
-        // Reset the form
-        setNewProperty({ name: '', type: '', address: '' });
-        setOpen(false);
+        try {
+            const addPropertyResponse = await propertyService.addProperty(newProperty);
+            console.log(addPropertyResponse)
+            if (addPropertyResponse.status === 201) {
+                setOpen(false);
+            } else {
+                alert('something is wrong. This need to be changed')
+            }
+        } catch (error) {
+            console.log(error)
+        }
     };
-
+    // display none when loading variable is true
+    if (isLoading) {
+        return <div></div>; 
+    }
     return (
         <Container>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
                 My Properties
             </Typography>
             <List>
-                {myProperties.map((property, index) => (
+                {ownerProperties && ownerProperties.length > 0 ? ownerProperties[0].map((property, index) => (
                     <Fragment key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
                             <ListItemText
                                 primary={property.name}
-                                secondary={`Type: ${property.type} - Address: ${property.address}`}
+                                secondary={`Type: ${property.type} - Address: ${property.streetAddress} ${property.city} ${property.state} ${property.zipcode}`}
                             />
                         </ListItemButton>
-                        {index !== myProperties.length - 1 && <Divider />}
+                        {index !== ownerProperties.length - 1 && <Divider />}
                     </Fragment>
-                ))}
+                )) : <div>You currently have no properties listed. Click here to add your first property</div>}
                 <ListItem>
                     <Button onClick={onClickOpenDialog} variant="outlined" fullWidth>
                         Add Property
@@ -79,12 +113,12 @@ const OwnerPropertyComponent = () => {
             </List>
 
             {/* Add Property Dialog */}
-            <AddPropertyDialog                 
-                open={open} 
-                onClose={onClickCloseDialog} 
-                newProperty={newProperty} 
-                onChange={onChangeAddPropertyTextField} 
-                onSubmit={onSubmitAddProproperty} 
+            <AddPropertyDialog
+                open={open}
+                onClose={onClickCloseDialog}
+                newProperty={newProperty}
+                onChange={onChangeAddPropertyTextField}
+                onSubmit={onSubmitAddProproperty}
             />
         </Container>
     );
