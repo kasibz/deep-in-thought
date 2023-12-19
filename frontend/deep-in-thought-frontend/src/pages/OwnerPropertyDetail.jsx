@@ -3,22 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import PaymentHistoryDialog from "../components/dialogs/PaymentHistoryDialog";
 import ResidentInformationDialog from "../components/dialogs/ResidentInformationDialog";
-const mockPaymentHistory = [
-    {
-        datePaid: "2023-01-15",
-        dateDue: "2023-01-10",
-        amount: 1200,
-        method: "Credit Card",
-        residentName: "John Doe"
-    },
-    {
-        datePaid: "2023-02-15",
-        dateDue: "2023-02-10",
-        amount: 1200,
-        method: "Bank Transfer",
-        residentName: "Jane Smith"
-    },
-];
+import propertyService from "../utilities/propertyService";
+import paymentService from "../utilities/paymentService";
+
 const mockResidentInfo = {
     firstName: "John",
     lastName: "Doe",
@@ -27,37 +14,51 @@ const mockResidentInfo = {
 };
 
 const OwnerPropertyDetail = () => {
-    const { id } = useParams();
+    const { propertyId } = useParams();
     const [property, setProperty] = useState(null);
     const [isPaymentHistoryDialogOpen, setIsPaymentHistoryDialogOpen] = useState(false);
     const [isResidentInfoDialogOpen, setIsResidentInfoDialogOpen] = useState(false);
 
-    console.log(id)
+    //loading variable 
+    const [isLoading, setIsLoading] = useState(true);
+
     // Mock data
-    const paymentHistory = mockPaymentHistory; // Replace with actual data fetching in production
+    // const paymentHistory = mockPaymentHistory; // Replace with actual data fetching in production
     const residentInfo = mockResidentInfo; // Replace with actual data fetching in production
 
-    // ... existing functions ...
+    const [paymentHistory, setPaymentHistory] = useState([])
+
     useEffect(() => {
         // Fetch the property data based on the ID
         const fetchProperty = async () => {
-            const data = await getPropertyData(id);
-            setProperty(data);
+            try {
+                const response = await propertyService.getPropertyByIdForOwner(propertyId);
+                if(response.status === 200){
+                    setProperty(response.data);
+                }
+                setIsLoading(false)
+            } catch (error) {
+                console.log(error)
+                setIsLoading(false)
+            }
         };
 
         fetchProperty();
-    }, [id]);
 
-    // Placeholder function
-    const getPropertyData = async (propertyId) => {
-        return {
-            id: propertyId,
-            name: 'Sample Property',
-            type: 'Condo',
-            address: '123 Sample Street'
+        const requestPaymentHistory = async () => {
+            try {
+                const response = await paymentService.getPaymentHistory(propertyId);
+                if (response.status === 200){
+                    setPaymentHistory(response.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         };
-    };
 
+        requestPaymentHistory(); // Call it here within useEffect
+    }, [propertyId]);
+    console.log(paymentHistory)
     const onClickAddResident = () => {
 
     };
@@ -78,9 +79,10 @@ const OwnerPropertyDetail = () => {
         setIsResidentInfoDialogOpen(false);
     };
     
-    
-    // If there is no property information, then display loading...
-    if (!property) return <div>Loading...</div>;
+    // display none when loading variable is true
+    if (isLoading) {
+        return <div></div>; 
+    }
 
     return (
         <Container>
@@ -88,7 +90,10 @@ const OwnerPropertyDetail = () => {
                 <CardContent>
                     <Typography variant="h5">{property.name}</Typography>
                     <Typography>Type: {property.type}</Typography>
-                    <Typography>Address: {property.address}</Typography>
+                    <Typography>Street: {property.streetAddress}</Typography>
+                    <Typography>City: {property.city}</Typography>
+                    <Typography>State: {property.state}</Typography>
+                    <Typography>Zipcode: {property.zipcode}</Typography>
                 </CardContent>
             </Card>
 
