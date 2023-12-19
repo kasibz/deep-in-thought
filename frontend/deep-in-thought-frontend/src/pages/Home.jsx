@@ -45,6 +45,7 @@ const Home = () => {
                         ownerId: response.data.ownerId
                     });
                     localStorage.setItem('ownerId', response.data.ownerId)
+                    setUserTypeChecked(false)
                 }
             } catch (error) {
                 console.log(error)

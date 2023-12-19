@@ -10,9 +10,11 @@ export const UserContextProvider = ({children}) => {
     const addUser = (currentUser) => {
         setUser([currentUser])
     };
-
+    const deleteUser = () => {
+        setUser([])
+    }
     return (
-        <MyContext.Provider value={{addUser, user}}>
+        <MyContext.Provider value={{addUser, user, deleteUser}}>
             {children}
         </MyContext.Provider>
     )
