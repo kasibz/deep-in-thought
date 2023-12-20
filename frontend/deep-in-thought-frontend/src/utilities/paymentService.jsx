@@ -8,7 +8,7 @@ const paymentService = {
     // Need to adjust with the correct API address.
     makePayment: (info) => api.post('/payment', info),
     getPaymentInfo: (id) => api.get(`/payment/${id}`),
-    getPaymentHistory: (id) => api.get(`/resident/${id}`)
+    getPaymentHistory: (id) => api.get(`/payment/property/${id}`),
 }
 
 export default paymentService

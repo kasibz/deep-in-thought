@@ -20,7 +20,7 @@ function App() {
         {path:'/signup', element: <Signup/>},
         {path:'/tenant', element:<Tenant/>},
         {path:'/tenantPayment', element:<TenantPayment/>},
-        {path:'/property/:id', element:<OwnerPropertyDetail/>},
+        {path:'/property/:propertyId', element:<OwnerPropertyDetail/>},
       ]
     }
   ])
