@@ -1,8 +1,12 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PaymentRequest;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Payment;
+import com.ted.DeepInThought.repository.PaymentRepository;
 import com.ted.DeepInThought.service.PaymentService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/payment")
@@ -33,4 +39,22 @@ public class PaymentController extends BaseController<Payment, String> {
         }
     }
 
+    @GetMapping("/property/{id}")
+    public ResponseEntity<List<PaymentRepository.PaymentWithAssociations>> getAllPaymentsByProperty(@PathVariable String id) {
+        try {
+            return new ResponseEntity<>(paymentService.getAllPaymentsByPropertyId(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> updatePayment(@PathVariable String id, @RequestBody PaymentRequest paymentRequest) {
+        try {
+            Payment updatedPayment = paymentService.editPayment(id, paymentRequest);
+            return new ResponseEntity<>(updatedPayment, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

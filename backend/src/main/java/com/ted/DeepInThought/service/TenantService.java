@@ -40,18 +40,12 @@ public class TenantService extends BaseService<Tenant, String>{
         }
 
         Optional<Property> propertyData = propertyRepo.findById(tenantRequest.getPropertyId());
-        Optional<Contract> contractData = contractRepo.findById(tenantRequest.getContractId());
 
         if (propertyData.isEmpty()) {
             throw new EntityNotFoundException("Property not found with id: " + tenantRequest.getPropertyId());
         }
 
-        if (contractData.isEmpty()) {
-            throw new EntityNotFoundException("Contract not found with id: " + tenantRequest.getContractId());
-        }
-
         Property existingProperty = propertyData.get();
-        Contract existingContract = contractData.get();
 
         Tenant newTenant = new Tenant();
         String uuid = UUID.randomUUID().toString();
@@ -62,7 +56,6 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setEmail(tenantRequest.getEmail());
         newTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
         newTenant.setProperty(existingProperty);
-        newTenant.setContract(existingContract);
 
         return tenantRepo.save(newTenant);
     }
@@ -74,5 +67,76 @@ public class TenantService extends BaseService<Tenant, String>{
             return tenantData.get();
         }
         throw new Error("Tenant not found with email " + email);
+    }
+
+    public Tenant editTenant(String id, TenantRequest tenantRequest) {
+        Optional<Tenant> tenantData = tenantRepo.findById(id);
+
+        if (tenantData.isPresent()) {
+
+            Tenant existingTenant = tenantData.get();
+
+            if (tenantRequest.getFirstName() != null) {
+                existingTenant.setFirstName(tenantRequest.getFirstName());
+            }
+            if (tenantRequest.getLastName() != null) {
+                existingTenant.setLastName(tenantRequest.getLastName());
+            }
+            if (tenantRequest.getPassword() != null) {
+                existingTenant.setPassword(tenantRequest.getPassword());
+            }
+            if (tenantRequest.getPhoneNumber() != null) {
+                existingTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
+            }
+            if (tenantRequest.getPropertyId() != null) {
+                Optional<Property> propertyData = propertyRepo.findById(tenantRequest.getPropertyId());
+                if (propertyData.isPresent()) {
+                    Property existingProperty = propertyData.get();
+                    existingTenant.setProperty(existingProperty);
+                }
+            }
+            if (tenantRequest.getContractId() != null) {
+                Optional<Contract> contractData = contractRepo.findById(tenantRequest.getContractId());
+                if (contractData.isPresent()) {
+                    Contract existingContract = contractData.get();
+                    existingTenant.setContract(existingContract);
+                }
+            }
+
+            return tenantRepo.save(existingTenant);
+        }
+        throw new EntityNotFoundException("Tenant does not exist");
+    }
+
+
+    public Map<String, String> validateByEmail(TenantRequest tenantRequest) {
+        Map<String, String> responseBody = new HashMap<>();
+        Optional<Tenant> tenantData = tenantRepo.findByEmail(tenantRequest.getEmail());
+
+        if (tenantData.isPresent()) {
+            Tenant existingTenant = tenantData.get();
+
+            if (tenantRequest.getPassword().equals(existingTenant.getPassword())) {
+                responseBody.put("message", "User is authenticated");
+                responseBody.put("tenantId", existingTenant.getId());
+                return responseBody;
+            }
+        }
+        throw new EntityNotFoundException("Incorrect email or password");
+    }
+
+    public List<Tenant> getAllByPropertyId(String propertyId) {
+        List<Tenant> tenantList = new ArrayList<>();
+        tenantRepo.findByPropertyId(propertyId).forEach(tenantList::add);
+        return tenantList;
+    }
+
+    // retrieving an associated contract with a tenant
+    public TenantRepository.TenantWithContract getContractByTenantId(String tenantId) {
+        TenantRepository.TenantWithContract tenantWithContract = tenantRepo.findContractByTenantId(tenantId);
+        if (tenantWithContract != null) {
+            return tenantWithContract;
+        }
+        throw new EntityNotFoundException("No Contract found for Tenant with Id " + tenantId);
     }
 }

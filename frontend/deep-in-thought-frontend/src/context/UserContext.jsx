@@ -8,11 +8,13 @@ export const UserContextProvider = ({children}) => {
     const [user, setUser] = useState([]);
     
     const addUser = (currentUser) => {
-        setUser([...user, currentUser])
+        setUser([currentUser])
     };
-
+    const deleteUser = () => {
+        setUser([])
+    }
     return (
-        <MyContext.Provider value={{addUser, user}}>
+        <MyContext.Provider value={{addUser, user, deleteUser}}>
             {children}
         </MyContext.Provider>
     )

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/creditcard")
 public class CreditCardController extends BaseController<CreditCard, String> {
@@ -23,11 +25,31 @@ public class CreditCardController extends BaseController<CreditCard, String> {
         super(creditCardService);
     }
 
+    @GetMapping("/tenant/{id}")
+    public ResponseEntity<List<CreditCard>> getAllByTenantId(@PathVariable String id) {
+        try {
+            List<CreditCard> creditCardList = creditCardService.getAllbyTenantId(id);
+            return new ResponseEntity<>(creditCardList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<CreditCard> create(@RequestBody CreditCardRequest creditCardRequest) {
         try {
             CreditCard newCreditCard = creditCardService.saveFromCreditCardDTO(creditCardRequest);
             return new ResponseEntity<>(newCreditCard, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CreditCard> updateCreditCard(@PathVariable String id, @RequestBody CreditCardRequest creditCardRequest) {
+        try {
+            CreditCard updatedCreditCard = creditCardService.editCreditCard(id, creditCardRequest);
+            return new ResponseEntity<>(updatedCreditCard, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

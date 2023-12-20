@@ -8,7 +8,7 @@ const propertyService = {
     // Need to adjust with the correct API address.
     addProperty: (property) => api.post('/property', property),
     getPropertyByIdForOwner: (id) => api.get(`/property/${id}`),
-    getAllPropertiesByIdForOwner: (id) => api.get(`/properties${id}`),
+    getAllPropertiesByIdForOwner: (id) => api.get(`/property/owner/${id}`),
     getPropertyByIdForResident: (id) => api.get(`/property/${id}`),
 }
 

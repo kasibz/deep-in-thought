@@ -1,15 +1,21 @@
 package com.ted.DeepInThought.service;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PaymentRequest;
 import com.ted.DeepInThought.model.CreditCard;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Payment;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.CreditCardRepository;
 import com.ted.DeepInThought.repository.PaymentRepository;
 import com.ted.DeepInThought.repository.TenantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,18 +40,12 @@ public class PaymentService extends BaseService<Payment, String> {
 
     public Payment saveFromPaymentDTO(PaymentRequest paymentRequest) {
         Optional<CreditCard> creditCardData = creditCardRepo.findById(paymentRequest.getCreditCardId());
-        Optional<Tenant> tenantData = tenantRepo.findById(paymentRequest.getTenantId());
 
         if (creditCardData.isEmpty()) {
             throw new Error("Credit Card not found with id: " + paymentRequest.getCreditCardId());
         }
 
-        if (tenantData.isEmpty()) {
-            throw new Error("Tenant not found with id: " + paymentRequest.getTenantId());
-        }
-
         CreditCard existingCreditCard = creditCardData.get();
-        Tenant existingTenant = tenantData.get();
 
         Payment newPayment = new Payment();
         String uuid = UUID.randomUUID().toString();
@@ -55,8 +55,33 @@ public class PaymentService extends BaseService<Payment, String> {
         newPayment.setDateDue(paymentRequest.getDateDue());
         newPayment.setAmount(paymentRequest.getAmount());
         newPayment.setCreditCard(existingCreditCard);
-        newPayment.setTenant(existingTenant);
 
         return paymentRepo.save(newPayment);
+    }
+
+    public Payment editPayment(String id, PaymentRequest paymentRequest) {
+        Optional<Payment> paymentData = paymentRepo.findById(id);
+
+        if (paymentData.isPresent()) {
+            Payment existingPayment = paymentData.get();
+
+            if (paymentRequest.getDatePaid() != null) {
+                existingPayment.setDatePaid(paymentRequest.getDatePaid());
+            }
+            if (paymentRequest.getDateDue() != null) {
+                existingPayment.setDateDue(paymentRequest.getDateDue());
+            }
+            if (paymentRequest.getAmount() != null) {
+                existingPayment.setAmount(paymentRequest.getAmount());
+            }
+
+            return paymentRepo.save(existingPayment); // Save the updated payment and return it
+        } else {
+            throw new Error("Payment not found with id: " + id);
+        }
+    }
+
+    public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
+        return paymentRepo.findAllPaymentsByProperty(propertyId);
     }
 }
