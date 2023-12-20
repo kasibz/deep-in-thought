@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react"
 import LoginComponent from "../components/LoginComponent"
 import OwnerPropertyComponent from "../components/OwnerPropertiesListComponent";
-import authService from "../utilities/authService";
-import { UserContext } from "../context/UserContext";
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-import Tenant from './Tenant';
 
 const Home = () => {
     // user context variables
@@ -32,7 +29,6 @@ const Home = () => {
         email: "",
         password: ""
     })
-
     const [userTypeChecked, setUserTypeChecked] = useState(false);
 
     const loginRequest = async () => {

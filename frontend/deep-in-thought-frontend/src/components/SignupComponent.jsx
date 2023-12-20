@@ -1,21 +1,18 @@
 import { Box, Button, Container, TextField } from "@mui/material"
 
-const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) => {
+const SignupComponent = ({userSingupInfo, setUserSingupInfo}) => {
 
     const onChangeUserSignupInfo = (e) => {
         const { name, value } = e.target;
-        // update phoneNumber to Number type
-        const updatedValue = name === 'phoneNumber' ? Number(value) : value;
-        setUserSingupInfo(prevState => ({
-            ...prevState,
-            [name]: updatedValue
-        }));
+        setUserSingupInfo(() => ({
+            ...userSingupInfo,
+            [name]: value
+        }))
     }
 
-    const onSubmitSignup = async (e) => {
-        e.preventDefault()
+    const onSubmitSignup = (e) => {
+        e.preventDefault;
         console.log(userSingupInfo)
-        await registerRequest();
     }
 
     return (
@@ -82,7 +79,7 @@ const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) =
                         label="Phone Number"
                         name="phoneNumber"
                         onChange={onChangeUserSignupInfo}
-                        type="number"
+                        type="text"
                     />
                     <Button
                         type="submit"
