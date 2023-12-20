@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
     // native queries from snowflake only work with interfaces if you use snake case -_-
     public interface PaymentWithAssociations {
         String getId();
-        LocalDateTime getDate_paid();
-        LocalDateTime getDate_due();
+        LocalDate getDate_paid();
+        LocalDate getDate_due();
         Long getAmount();
         String getFirst_name();
         String getLast_name();

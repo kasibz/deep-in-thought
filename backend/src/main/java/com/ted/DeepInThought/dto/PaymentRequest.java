@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,8 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PaymentRequest {
     private boolean isPaid;
-    private LocalDateTime datePaid;
-    private LocalDateTime dateDue;
+    private LocalDate datePaid;
+    private LocalDate dateDue;
     private Long amount;
     private String creditCardId;
 
@@ -24,19 +25,19 @@ public class PaymentRequest {
         isPaid = paid;
     }
 
-    public LocalDateTime getDatePaid() {
+    public LocalDate getDatePaid() {
         return datePaid;
     }
 
-    public void setDatePaid(LocalDateTime datePaid) {
+    public void setDatePaid(LocalDate datePaid) {
         this.datePaid = datePaid;
     }
 
-    public LocalDateTime getDateDue() {
+    public LocalDate getDateDue() {
         return dateDue;
     }
 
-    public void setDateDue(LocalDateTime dateDue) {
+    public void setDateDue(LocalDate dateDue) {
         this.dateDue = dateDue;
     }
 
