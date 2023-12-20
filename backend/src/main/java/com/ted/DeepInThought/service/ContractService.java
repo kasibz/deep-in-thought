@@ -1,23 +1,12 @@
 package com.ted.DeepInThought.service;
 
 import com.ted.DeepInThought.dto.ContractRequest;
-import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.model.Contract;
-import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.repository.ContractRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ContractService extends BaseService<Contract, String> {
