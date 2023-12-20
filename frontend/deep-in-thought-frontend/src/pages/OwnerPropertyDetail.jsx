@@ -6,7 +6,6 @@ import ResidentInformationDialog from "../components/dialogs/ResidentInformation
 import propertyService from "../utilities/propertyService";
 import paymentService from "../utilities/paymentService";
 import tenantService from "../utilities/tenantService";
-import AddResidentDialog from "../components/dialogs/AddResidentDialog";
 import CreateContractDialog from "../components/dialogs/CreateContractDialog";
 
 const OwnerPropertyDetail = () => {
@@ -15,7 +14,6 @@ const OwnerPropertyDetail = () => {
 
     const [isPaymentHistoryDialogOpen, setIsPaymentHistoryDialogOpen] = useState(false);
     const [isResidentInfoDialogOpen, setIsResidentInfoDialogOpen] = useState(false);
-    const [isAddResidentDialogOpen, setIsAddResidentDialogOpen] = useState(false);
     const [isCreateContractDialogOpen, setIsCreateContractDialogOpen] = useState(false);
 
     //loading variable 
@@ -80,14 +78,6 @@ const OwnerPropertyDetail = () => {
         setIsCreateContractDialogOpen(false)
     }
 
-    const onClickOpenAddResidentDialog = () => {
-        setIsAddResidentDialogOpen(true);
-    };
-
-    const onClickCloseAddResidentDialog = () => {
-        setIsAddResidentDialogOpen(false);
-    };
-
     const onClickOpenPaymentHistoryDialog = () => {
         setIsPaymentHistoryDialogOpen(true);
     };
@@ -121,13 +111,9 @@ const OwnerPropertyDetail = () => {
                     <Typography>Zipcode: {property.zipcode}</Typography>
                 </CardContent>}
             </Card>
-            {!residentInfo && <Button variant="outlined" fullWidth onClick={onClickOpenAddResidentDialog}>
-                Add Resident
+            {!residentInfo && <Button variant="outlined" fullWidth onClick={onClickOpenCreateContractDialog}>
+            Create Contract
             </Button>}
-
-            <Button variant="outlined" fullWidth onClick={onClickOpenCreateContractDialog} sx={{ mt: 2 }}>
-                Create Contract
-            </Button>
 
             <Button variant="outlined" fullWidth onClick={onClickOpenResidentDialog} sx={{ mt: 2 }}>
                 View Resident Information
@@ -138,10 +124,6 @@ const OwnerPropertyDetail = () => {
             </Button>
 
             {/* Dialogs */}
-            <AddResidentDialog
-                open={isAddResidentDialogOpen}
-                onClose={onClickCloseAddResidentDialog}
-            />
             <CreateContractDialog
                 open={isCreateContractDialogOpen} 
                 onClose={onClickCloseCreateContractDialog}

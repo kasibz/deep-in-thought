@@ -1,6 +1,7 @@
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { useState } from 'react';
 import tenantService from '../utilities/tenantService';
+import { useNavigate } from 'react-router-dom';
 
 const CreateResident = () => {
     // resident register information
@@ -9,13 +10,10 @@ const CreateResident = () => {
         lastName: '',
         password: '',
         email: '',
-        phone: ''
+        phoneNumber: ''
     });
 
-    const residentRegisterRequest = async () => {
-        const response = await tenantService.register(resident);
-        console.log(response)
-    }
+    const navigate = useNavigate()
 
     const onChangeResidentInfo = (e) => {
         setResident({ ...resident, [e.target.name]: e.target.value });
@@ -24,10 +22,13 @@ const CreateResident = () => {
     const onSubmitRegister = async (e) => {
         e.preventDefault()
         console.log(resident);
-        
+
         try {
             const response = await tenantService.register(resident);
-            console.log(response)
+            if (response.status === 201){
+                alert('Successfully Created new resident user. do not for get to change this alert thing Ho Jong')
+                navigate('/')
+            }
         } catch (error) {
             console.log(error)
         }
@@ -83,7 +84,7 @@ const CreateResident = () => {
                 />
                 <TextField
                     margin="dense"
-                    name="phone"
+                    name="phoneNumber"
                     label="Phone Number"
                     fullWidth
                     variant="standard"
