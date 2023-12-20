@@ -8,6 +8,9 @@ import api from "./axiosConfig";
 
 const tenantService = {
     login: (userInfo) => api.post('/tenant/login', userInfo),
+    register: (tenantInfo) => api.post('/tenant', tenantInfo),
+    getTenantByProperty: (propertyId) => api.get(`/tenant/property/${propertyId}`),
+    getAllTenant: () => api.get('/tenant')
   };
 
 export default tenantService

@@ -1,11 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, DialogActions, Button } from '@mui/material';
-import paymentService from '../../utilities/paymentService';
-import { useParams } from 'react-router';
-import { useEffect } from 'react';
 
 const PaymentHistoryDialog = ({ open, onClose, paymentHistory }) => {
-    const { propertyId } = useParams();
-    console.log(paymentHistory)
+
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Payment History</DialogTitle>

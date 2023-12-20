@@ -5,35 +5,30 @@ import PaymentHistoryDialog from "../components/dialogs/PaymentHistoryDialog";
 import ResidentInformationDialog from "../components/dialogs/ResidentInformationDialog";
 import propertyService from "../utilities/propertyService";
 import paymentService from "../utilities/paymentService";
-
-const mockResidentInfo = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    phone: "123-456-7890"
-};
+import tenantService from "../utilities/tenantService";
+import AddResidentDialog from "../components/dialogs/AddResidentDialog";
+import CreateContractDialog from "../components/dialogs/CreateContractDialog";
 
 const OwnerPropertyDetail = () => {
     const { propertyId } = useParams();
     const [property, setProperty] = useState(null);
+
     const [isPaymentHistoryDialogOpen, setIsPaymentHistoryDialogOpen] = useState(false);
     const [isResidentInfoDialogOpen, setIsResidentInfoDialogOpen] = useState(false);
+    const [isAddResidentDialogOpen, setIsAddResidentDialogOpen] = useState(false);
+    const [isCreateContractDialogOpen, setIsCreateContractDialogOpen] = useState(false);
 
     //loading variable 
     const [isLoading, setIsLoading] = useState(true);
 
-    // Mock data
-    // const paymentHistory = mockPaymentHistory; // Replace with actual data fetching in production
-    const residentInfo = mockResidentInfo; // Replace with actual data fetching in production
-
     const [paymentHistory, setPaymentHistory] = useState([])
-
+    const [residentInfo, setResidentInfo] = useState([])
     useEffect(() => {
         // Fetch the property data based on the ID
         const fetchProperty = async () => {
             try {
                 const response = await propertyService.getPropertyByIdForOwner(propertyId);
-                if(response.status === 200){
+                if (response.status === 200) {
                     setProperty(response.data);
                 }
                 setIsLoading(false)
@@ -45,22 +40,52 @@ const OwnerPropertyDetail = () => {
 
         fetchProperty();
 
+        // get payment history information
         const requestPaymentHistory = async () => {
             try {
                 const response = await paymentService.getPaymentHistory(propertyId);
-                if (response.status === 200){
+                if (response.status === 200) {
                     setPaymentHistory(response.data)
                 }
+                setIsLoading(false)
             } catch (error) {
                 console.log(error)
+                setIsLoading(false)
             }
         };
 
-        requestPaymentHistory(); // Call it here within useEffect
-    }, [propertyId]);
-    console.log(paymentHistory)
-    const onClickAddResident = () => {
+        requestPaymentHistory();
 
+        //get resident information by property
+        const requestResidentInformationByProperty = async () => {
+            try {
+                const response = await tenantService.getTenantByProperty(propertyId)
+                if (response.status === 200) {
+                    setResidentInfo(response.data[0]) // This need to be changed if there are more than one resident. Save as response.data
+                }
+                setIsLoading(false)
+            } catch (error) {
+                console.log(error)
+                setIsLoading(false)
+            }
+        }
+        requestResidentInformationByProperty()
+    }, [propertyId]);
+
+    const onClickOpenCreateContractDialog = () => {
+        setIsCreateContractDialogOpen(true)
+    }
+
+    const onClickCloseCreateContractDialog = () => {
+        setIsCreateContractDialogOpen(false)
+    }
+
+    const onClickOpenAddResidentDialog = () => {
+        setIsAddResidentDialogOpen(true);
+    };
+
+    const onClickCloseAddResidentDialog = () => {
+        setIsAddResidentDialogOpen(false);
     };
 
     const onClickOpenPaymentHistoryDialog = () => {
@@ -78,38 +103,49 @@ const OwnerPropertyDetail = () => {
     const onClickCloseResidentDialog = () => {
         setIsResidentInfoDialogOpen(false);
     };
-    
+
     // display none when loading variable is true
     if (isLoading) {
-        return <div></div>; 
+        return <div></div>;
     }
 
     return (
         <Container>
             <Card variant="outlined" sx={{ mb: 2 }}>
-                <CardContent>
+                {property && <CardContent>
                     <Typography variant="h5">{property.name}</Typography>
                     <Typography>Type: {property.type}</Typography>
                     <Typography>Street: {property.streetAddress}</Typography>
                     <Typography>City: {property.city}</Typography>
                     <Typography>State: {property.state}</Typography>
                     <Typography>Zipcode: {property.zipcode}</Typography>
-                </CardContent>
+                </CardContent>}
             </Card>
-
-            <Button variant="outlined" fullWidth onClick={onClickAddResident}>
+            {!residentInfo && <Button variant="outlined" fullWidth onClick={onClickOpenAddResidentDialog}>
                 Add Resident
-            </Button>
+            </Button>}
 
-            <Button variant="outlined" fullWidth onClick={onClickOpenPaymentHistoryDialog} sx={{ mt: 2 }}>
-                View Payment History
+            <Button variant="outlined" fullWidth onClick={onClickOpenCreateContractDialog} sx={{ mt: 2 }}>
+                Create Contract
             </Button>
 
             <Button variant="outlined" fullWidth onClick={onClickOpenResidentDialog} sx={{ mt: 2 }}>
                 View Resident Information
             </Button>
 
+            <Button variant="outlined" fullWidth onClick={onClickOpenPaymentHistoryDialog} sx={{ mt: 2 }}>
+                View Payment History
+            </Button>
+
             {/* Dialogs */}
+            <AddResidentDialog
+                open={isAddResidentDialogOpen}
+                onClose={onClickCloseAddResidentDialog}
+            />
+            <CreateContractDialog
+                open={isCreateContractDialogOpen} 
+                onClose={onClickCloseCreateContractDialog}
+            />
             <PaymentHistoryDialog
                 open={isPaymentHistoryDialogOpen}
                 onClose={onClickClosePaymentHistoryDialog}
