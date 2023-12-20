@@ -1,6 +1,8 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PropertyRequest;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.service.PropertyService;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,6 +44,16 @@ public class PropertyController extends BaseController<Property, String>{
            return new ResponseEntity<>(newProperty, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Property> updateProperty(@PathVariable String id, @RequestBody PropertyRequest propertyRequest) {
+        try {
+            Property updatedProperty = propertyService.editProperty(id, propertyRequest);
+            return new ResponseEntity<>(updatedProperty, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

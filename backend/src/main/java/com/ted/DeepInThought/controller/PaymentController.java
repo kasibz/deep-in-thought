@@ -1,6 +1,8 @@
 package com.ted.DeepInThought.controller;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PaymentRequest;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Payment;
 import com.ted.DeepInThought.repository.PaymentRepository;
 import com.ted.DeepInThought.service.PaymentService;
@@ -44,4 +46,13 @@ public class PaymentController extends BaseController<Payment, String> {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> updatePayment(@PathVariable String id, @RequestBody PaymentRequest paymentRequest) {
+        try {
+            Payment updatedPayment = paymentService.editPayment(id, paymentRequest);
+            return new ResponseEntity<>(updatedPayment, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

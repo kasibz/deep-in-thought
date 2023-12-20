@@ -4,13 +4,18 @@
  */
 
 import api from "./axiosConfig";
+import { UserContext } from "../context/UserContext";
 
 
+// const { addUser, user } = UserContext() 
 const tenantService = {
+     
     login: (userInfo) => api.post('/tenant/login', userInfo),
     register: (tenantInfo) => api.post('/tenant', tenantInfo),
     getTenantByProperty: (propertyId) => api.get(`/tenant/property/${propertyId}`),
     getAllTenant: () => api.get('/tenant')
+    // tenantInformation: () => api.get(`/tenant/${user.tenantId}`)
+
   };
 
 export default tenantService

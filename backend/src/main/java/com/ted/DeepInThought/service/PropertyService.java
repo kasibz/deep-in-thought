@@ -1,5 +1,6 @@
 package com.ted.DeepInThought.service;
 
+import com.ted.DeepInThought.dto.OwnerRequest;
 import com.ted.DeepInThought.dto.PropertyRequest;
 import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Property;
@@ -48,6 +49,37 @@ public class PropertyService extends BaseService<Property, String>{
             return propertyRepo.save(newProperty);
         }
         throw new Error("Owner not found with id: " + propertyRequest.getOwnerId());
+    }
+
+    public Property editProperty(String id, PropertyRequest propertyRequest) {
+        Optional<Property> propertyData = propertyRepo.findById(id);
+
+        if (propertyData.isPresent()) {
+            Property existingProperty = propertyData.get();
+
+            if (propertyRequest.getName() != null) {
+                existingProperty.setName(propertyRequest.getName());
+            }
+            if (propertyRequest.getType() != null) {
+                existingProperty.setType(propertyRequest.getType());
+            }
+            if (propertyRequest.getStreetAddress() != null) {
+                existingProperty.setStreetAddress(propertyRequest.getStreetAddress());
+            }
+            if (propertyRequest.getCity() != null) {
+                existingProperty.setCity(propertyRequest.getCity());
+            }
+            if (propertyRequest.getZipcode() != null) {
+                existingProperty.setZipcode(propertyRequest.getZipcode());
+            }
+            if (propertyRequest.getState() != null) {
+                existingProperty.setState(propertyRequest.getState());
+            }
+
+            return propertyRepo.save(existingProperty); // Save the updated property and return it
+        } else {
+            throw new Error("Property not found with id: " + id);
+        }
     }
 
     public List<Property> getAllbyOwnerId(String ownerId) {
