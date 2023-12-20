@@ -36,13 +36,9 @@ public class TenantController extends BaseController<Tenant, String> {
             Tenant newTenant = tenantService.saveFromTenantDTO(tenantRequest);
             return new ResponseEntity<>(newTenant, HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("error", e.getMessage());
-            return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (DuplicateKeyException e) {
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("error", e.getMessage());
-            return new ResponseEntity<>(headers, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -53,9 +49,7 @@ public class TenantController extends BaseController<Tenant, String> {
         try {
             return new ResponseEntity<>(tenantService.validateByEmail(tenantRequest), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("message", e.getMessage());
-            return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -64,7 +58,7 @@ public class TenantController extends BaseController<Tenant, String> {
         try {
             Tenant existingTenant = tenantService.getByEmail(email);
             return new ResponseEntity<>(existingTenant, HttpStatus.OK);
-        } catch (Error e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

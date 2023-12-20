@@ -58,7 +58,7 @@ public class TenantService extends BaseService<Tenant, String>{
         if (tenantData.isPresent()) {
             return tenantData.get();
         }
-        throw new Error("Tenant not found with email " + email);
+        throw new EntityNotFoundException("Tenant not found with email " + email);
     }
 
     public Tenant editTenant(String id, TenantRequest tenantRequest) {
