@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "TENANT")
 public class Tenant extends User{
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "propertyId", nullable = false)
+    @JoinColumn(name = "propertyId")
     @JsonBackReference(value = "tenant-property")
     private Property property;
 

@@ -68,7 +68,7 @@ public class OwnerService extends BaseService<Owner, String> {
         if (ownerData.isPresent()) {
             return ownerData.get();
         }
-        throw new Error("Owner not found with email " + email);
+        throw new EntityNotFoundException("Owner not found with email " + email);
     }
 
     public Map<String, String> validateByEmail(OwnerRequest ownerRequest) {
