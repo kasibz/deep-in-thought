@@ -8,6 +8,7 @@ import TenantPayment from './pages/TenantPayment';
 import OwnerPropertyDetail from './pages/OwnerPropertyDetail';
 import { PropertyProvider } from './context/PropertyContext';
 import Layout from './components/layout/Layout';
+import CreateResident from './pages/CreateResident';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         {path:'/tenant', element:<Tenant/>},
         {path:'/tenantPayment', element:<TenantPayment/>},
         {path:'/property/:propertyId', element:<OwnerPropertyDetail/>},
+        {path:'/createResident', element:<CreateResident/>},
       ]
     }
   ])
