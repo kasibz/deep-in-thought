@@ -5,6 +5,7 @@ import com.ted.DeepInThought.model.Contract;
 import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.service.OwnerService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/owner")
 public class OwnerController extends BaseController<Owner, String> {
 
@@ -49,6 +54,18 @@ public class OwnerController extends BaseController<Owner, String> {
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // validating on login
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> validateOwner(@RequestBody OwnerRequest ownerRequest) {
+        try {
+            return new ResponseEntity<>(ownerService.validateByEmail(ownerRequest), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", e.getMessage());
+            return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
         }
     }
 

@@ -1,7 +1,4 @@
 import { useContext, useState, useEffect } from "react";
-// import { UserContextProvider } from "../App";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { api } from "../utilities"; 
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import tenantService from "../utilities/tenantService";
@@ -69,7 +66,7 @@ const Tenant = () => {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-      };
+    };
 
     const onClickOpenCreditCardDialog = () => {
         setIsCreditCardDialogOpen(true);
@@ -108,8 +105,6 @@ const Tenant = () => {
             
             <div className="account-balance">
                 Current Account Balance: 
-                <p>$0.00
-                <Link to='/tenantPayment'><Button variant="outlined">Make Payment</Button></Link>
                 <p>
                 <Button variant="outlined" fullWidth onClick={onClickOpenCreditCardDialog}>Add Card</Button>
                 <Button variant="outlined" fullWidth onClick={onClickOpenExistingCreditCardDialog}>Pay Rent</Button>
@@ -117,6 +112,10 @@ const Tenant = () => {
                 </p>
             </div>
 
+            <CreditCardPaymentDialog
+                open={isCreditCardDialogOpen}
+                onClose={onClickCloseCreditCardDialog}
+                />
 
             {/* <RentPaymentDialog
                 open={isRentDialogOpen}
@@ -127,7 +126,6 @@ const Tenant = () => {
                 open={isExistingCreditCardDialogOpen}
                 onClose={onClickCloseExistingCreditCardDialog}
                 />  
-            {/* Navigate to payment page*/}
 
             
             <Box sx={{ width: '100%' }}>
@@ -141,7 +139,6 @@ const Tenant = () => {
                     <BottomNavigationAction label="Home" icon={<HomeOutlinedIcon />} />
                     <BottomNavigationAction label="Account" icon={<PermIdentityOutlinedIcon />} />
                     <BottomNavigationAction label="History" icon={<ReceiptLongOutlinedIcon />} />
-                    <BottomNavigationAction label="Payment" icon={<AttachMoneyOutlinedIcon />} />
                 </BottomNavigation>
             </Box>    
         </div>

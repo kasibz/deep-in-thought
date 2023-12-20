@@ -5,10 +5,13 @@ import com.ted.DeepInThought.model.Contract;
 import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.OwnerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -66,5 +69,21 @@ public class OwnerService extends BaseService<Owner, String> {
             return ownerData.get();
         }
         throw new Error("Owner not found with email " + email);
+    }
+
+    public Map<String, String> validateByEmail(OwnerRequest ownerRequest) {
+        Map<String, String> responseBody = new HashMap<>();
+        Optional<Owner> ownerData = ownerRepo.findByEmail(ownerRequest.getEmail());
+
+        if (ownerData.isPresent()) {
+            Owner existingOwner = ownerData.get();
+
+            if (ownerRequest.getPassword().equals(existingOwner.getPassword())) {
+                responseBody.put("message", "User is authenticated");
+                responseBody.put("ownerId", existingOwner.getId());
+                return responseBody;
+            }
+        }
+        throw new EntityNotFoundException("Incorrect email or password");
     }
 }

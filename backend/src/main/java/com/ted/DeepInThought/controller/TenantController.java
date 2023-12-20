@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/tenant")
 public class TenantController extends BaseController<Tenant, String> {
 
@@ -44,6 +45,17 @@ public class TenantController extends BaseController<Tenant, String> {
             return new ResponseEntity<>(headers, HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> validateTenant(@RequestBody TenantRequest tenantRequest) {
+        try {
+            return new ResponseEntity<>(tenantService.validateByEmail(tenantRequest), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", e.getMessage());
+            return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
         }
     }
 

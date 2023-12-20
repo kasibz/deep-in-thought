@@ -20,14 +20,17 @@ function App() {
         {path:'/signup', element: <Signup/>},
         {path:'/tenant', element:<Tenant/>},
         {path:'/tenantPayment', element:<TenantPayment/>},
+        {path:'/property/:id', element:<OwnerPropertyDetail/>},
       ]
     }
   ])
 
   return (
     <UserContextProvider>
-      <RouterProvider router={router}>
-      </RouterProvider>
+      <PropertyProvider>
+        <RouterProvider router={router}>
+        </RouterProvider>
+      </PropertyProvider>
     </UserContextProvider>
   )
 }
