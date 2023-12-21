@@ -47,7 +47,7 @@ function UserAccountComponent({ userData, userType }) {
     <div>
       {userData.firstName ? (
         <>
-          <h2>Modify Account</h2>
+          <h2>Edit Account</h2>
           <form onSubmit={handleSubmit}>
             <TextField
               id="outlined-basic-input"
@@ -72,6 +72,7 @@ function UserAccountComponent({ userData, userType }) {
                 id="outlined-basic-input"
                 size="small"
                 label="Email"
+                type="email"
                 onChange={handleChange}
                 name="email"
                 value={updatedUser.email}
@@ -80,9 +81,10 @@ function UserAccountComponent({ userData, userType }) {
             <p>
               <TextField
                 id="outlined-basic-input"
-                type="tel"
                 size="small"
                 label="Phone Number"
+                type="tel"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 onChange={handleChange}
                 name="phoneNumber"
                 value={updatedUser.phoneNumber}

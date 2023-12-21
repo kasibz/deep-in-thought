@@ -13,7 +13,25 @@ import EditAccountPage from "./pages/EditAccountPage";
 import ResetPassword from "./pages/ResetPassword";
 
 function App() {
-  const router = createBrowserRouter([
+  const ownerId = localStorage.getItem("ownerId");
+  const tenantId = localStorage.getItem("tenantId");
+
+  const defaultRouter = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <Layout>
+          <Outlet />
+        </Layout>
+      ),
+      children: [
+        { path: "/", element: <Home /> },
+        { path: "/signup", element: <Signup /> },
+      ],
+    },
+  ]);
+
+  const tenantRouter = createBrowserRouter([
     {
       path: "/",
       element: (
@@ -27,6 +45,22 @@ function App() {
         { path: "/signup", element: <Signup /> },
         { path: "/tenant", element: <Tenant /> },
         { path: "/tenantPayment", element: <TenantPayment /> },
+        { path: "/editAccount", element: <EditAccountPage /> },
+      ],
+    },
+  ]);
+
+  const ownerRouter = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <Layout>
+          <Outlet />
+        </Layout>
+      ),
+      children: [
+        { path: "/", element: <Home /> },
+        { path: "/signup", element: <Signup /> },
         { path: "/property/:propertyId", element: <OwnerPropertyDetail /> },
         { path: "/createResident", element: <CreateResident /> },
         { path: "/editAccount", element: <EditAccountPage /> },
@@ -37,7 +71,13 @@ function App() {
   return (
     <UserContextProvider>
       <PropertyProvider>
-        <RouterProvider router={router}></RouterProvider>
+        {tenantId ? (
+          <RouterProvider router={tenantRouter}></RouterProvider>
+        ) : ownerId ? (
+          <RouterProvider router={ownerRouter}></RouterProvider>
+        ) : (
+          <RouterProvider router={defaultRouter}></RouterProvider>
+        )}
       </PropertyProvider>
     </UserContextProvider>
   );
