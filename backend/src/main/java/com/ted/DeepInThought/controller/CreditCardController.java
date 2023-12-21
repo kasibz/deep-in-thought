@@ -3,6 +3,7 @@ package com.ted.DeepInThought.controller;
 import com.ted.DeepInThought.dto.CreditCardRequest;
 import com.ted.DeepInThought.model.CreditCard;
 import com.ted.DeepInThought.service.CreditCardService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CreditCardController extends BaseController<CreditCard, String> {
         try {
             List<CreditCard> creditCardList = creditCardService.getAllbyTenantId(id);
             return new ResponseEntity<>(creditCardList, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -48,8 +49,8 @@ public class CreditCardController extends BaseController<CreditCard, String> {
         try {
             CreditCard updatedCreditCard = creditCardService.editCreditCard(id, creditCardRequest);
             return new ResponseEntity<>(updatedCreditCard, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

@@ -42,7 +42,7 @@ public class PropertyController extends BaseController<Property, String>{
         try {
            Property newProperty = propertyService.saveFromPropertyDTO(propertyRequest);
            return new ResponseEntity<>(newProperty, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -52,7 +52,7 @@ public class PropertyController extends BaseController<Property, String>{
         try {
             Property updatedProperty = propertyService.editProperty(id, propertyRequest);
             return new ResponseEntity<>(updatedProperty, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
