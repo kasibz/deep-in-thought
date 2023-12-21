@@ -24,7 +24,6 @@ function EditAccountPage() {
 
   return (
     <div>
-      <h2>Edit Account</h2>
       {userData ? (
         <UserAccountComponent userData={userData} userType={userType} />
       ) : (
