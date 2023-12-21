@@ -88,13 +88,14 @@ const OwnerPropertyComponent = () => {
     if (isLoading) {
         return <div></div>; 
     }
+
     return (
         <Container>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
                 My Properties
             </Typography>
             <List>
-                {ownerProperties && ownerProperties.length > 0 ? ownerProperties[0].map((property, index) => (
+                {ownerProperties && ownerProperties.length > 0 ? ownerProperties.map((property, index) => (
                     <Fragment key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
                             <ListItemText

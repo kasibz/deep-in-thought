@@ -10,7 +10,7 @@ export const PropertyProvider = ({ children }) => {
 
     // Function to add a property for the owner
     const addOwnerProperty = (property) => {
-        setOwnerProperties([property]);
+        setOwnerProperties(property);
     };
 
     // Function to add a property for the tenant

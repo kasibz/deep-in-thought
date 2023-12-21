@@ -30,6 +30,11 @@ export const Navbar = () => {
                         Payment History
                     </Button>
                 }
+                {user.length > 0 && user[0].ownerId &&
+                    <Button component={Link} to="/createResident" color="inherit">
+                        Create Resident
+                    </Button>
+                }
                 <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
                 {user.length !== 0 && 
                     <Button color="inherit" onClick={onClickLogout}>

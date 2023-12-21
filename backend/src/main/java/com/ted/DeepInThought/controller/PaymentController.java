@@ -38,9 +38,18 @@ public class PaymentController extends BaseController<Payment, String> {
     }
 
     @GetMapping("/property/{id}")
-    public ResponseEntity<List<PaymentRepository.PaymentWithAssociations>> getAllPaymentsByProperty(@PathVariable String id) {
+    public ResponseEntity<List<PaymentRepository.PaymentsByPropertyId>> getAllPaymentsByProperty(@PathVariable String id) {
         try {
             return new ResponseEntity<>(paymentService.getAllPaymentsByPropertyId(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/tenant/{id}")
+    public ResponseEntity<List<PaymentRepository.PaymentsByTenantId>> getAllPaymentsByTenant(@PathVariable String id) {
+        try {
+            return new ResponseEntity<>(paymentService.getAllPaymentsByTenant(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,19 +1,21 @@
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, DialogActions, Button } from '@mui/material';
 
 const PaymentHistoryDialog = ({ open, onClose, paymentHistory }) => {
+
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Payment History</DialogTitle>
             <DialogContent>
                 <List>
-                    {paymentHistory.map((payment, index) => (
+                    {paymentHistory && paymentHistory.length > 0 ? paymentHistory.map((payment, index) => (
                         <ListItem key={index}>
-                            <ListItemText 
-                                primary={`Amount: $${payment.amount} | Method: ${payment.method}`}
-                                secondary={`Date Paid: ${payment.datePaid} | Due: ${payment.dateDue} | Resident: ${payment.residentName}`}
-                            />
-                        </ListItem>
-                    ))}
+                        <ListItemText
+                            primary={`Amount: $${payment.amount} | Method: ${payment.type}`}
+                            secondary={`Date Paid: ${payment.date_paid} | Due: ${payment.date_due
+                            } | Resident: ${payment.first_name}, ${payment.last_name}`}
+                        />
+                    </ListItem>
+                    )) : <div>No Payment History</div> }
                 </List>
             </DialogContent>
             <DialogActions>
