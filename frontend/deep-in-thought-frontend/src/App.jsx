@@ -10,6 +10,7 @@ import { PropertyProvider } from "./context/PropertyContext";
 import Layout from "./components/layout/Layout";
 import CreateResident from "./pages/CreateResident";
 import EditAccountPage from "./pages/EditAccountPage";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const ownerId = localStorage.getItem("ownerId");
@@ -38,8 +39,9 @@ function App() {
           <Outlet />
         </Layout>
       ),
-      children: [
+      children:[
         { path: "/", element: <Home /> },
+        {path:'/resetPassword', element: <ResetPassword/>},
         { path: "/signup", element: <Signup /> },
         { path: "/tenant", element: <Tenant /> },
         { path: "/tenantPayment", element: <TenantPayment /> },
@@ -63,7 +65,7 @@ function App() {
         { path: "/createResident", element: <CreateResident /> },
         { path: "/editAccount", element: <EditAccountPage /> },
       ],
-    },
+    }
   ]);
 
   return (

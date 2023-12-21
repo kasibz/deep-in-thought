@@ -17,35 +17,35 @@ export const Navbar = () => {
     navigate("/");
   };
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Button component={Link} to="/" color="inherit">
-          Deep in Thought
-        </Button>
-        {/*check user has at least one element and then access user.tenantId*/}
-        {user.length > 0 && user[0].tenantId && (
-          <Button component={Link} to="/tenantPayment" color="inherit">
-            Payment History
-          </Button>
-        )}
-        {user.length > 0 && user[0].ownerId && (
-          <Button component={Link} to="/createResident" color="inherit">
-            Create Resident
-          </Button>
-        )}
-        <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
-        {user[0] && (
-          <Button component={Link} to="/editAccount" color="inherit">
-            Edit Account
-          </Button>
-        )}
-        {user.length !== 0 && (
-          <Button color="inherit" onClick={onClickLogout}>
-            Logout
-          </Button>
-        )}
-      </Toolbar>
-    </AppBar>
-  );
-};
+    return (
+        <AppBar position="static">
+            <Toolbar>
+                <Button component={Link} to="/" color="inherit">
+                    Deep in Thought
+                </Button>
+                {/*check user has at least one element and then access user.tenantId*/}
+                {user.length > 0 && user[0].tenantId &&
+                    <Button component={Link} to="/tenantPayment" color="inherit">
+                        Payment History
+                    </Button>
+                }
+
+
+                <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
+{/*                                <Button component={Link} to="resetPassword" color="inherit"> */}
+{/*                                                     Reset Password */}
+{/*                                                 </Button> */}
+                {user.length !== 0 &&
+                <>
+                <Button component={Link} to="resetPassword" color="inherit">
+                                                                                                        Reset Password
+                                                                                                    </Button>
+                                    <Button color="inherit" onClick={onClickLogout}>
+                                        Logout
+                                    </Button>
+                </>
+                }
+            </Toolbar>
+        </AppBar>
+    );
+}
