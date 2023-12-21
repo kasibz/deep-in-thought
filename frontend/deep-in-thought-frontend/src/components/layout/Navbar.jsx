@@ -35,9 +35,11 @@ export const Navbar = () => {
           </Button>
         )}
         <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
-        <Button component={Link} to="/editAccount" color="inherit">
-          Edit Account
-        </Button>
+        {user[0] && (
+          <Button component={Link} to="/editAccount" color="inherit">
+            Edit Account
+          </Button>
+        )}
         {user.length !== 0 && (
           <Button color="inherit" onClick={onClickLogout}>
             Logout
