@@ -32,8 +32,8 @@ public class PaymentController extends BaseController<Payment, String> {
         try {
             Payment newPayment = paymentService.saveFromPaymentDTO(paymentRequest);
             return new ResponseEntity<>(newPayment, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -41,7 +41,7 @@ public class PaymentController extends BaseController<Payment, String> {
     public ResponseEntity<List<PaymentRepository.PaymentsByPropertyId>> getAllPaymentsByProperty(@PathVariable String id) {
         try {
             return new ResponseEntity<>(paymentService.getAllPaymentsByPropertyId(id), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -50,7 +50,7 @@ public class PaymentController extends BaseController<Payment, String> {
     public ResponseEntity<List<PaymentRepository.PaymentsByTenantId>> getAllPaymentsByTenant(@PathVariable String id) {
         try {
             return new ResponseEntity<>(paymentService.getAllPaymentsByTenant(id), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -60,8 +60,8 @@ public class PaymentController extends BaseController<Payment, String> {
         try {
             Payment updatedPayment = paymentService.editPayment(id, paymentRequest);
             return new ResponseEntity<>(updatedPayment, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

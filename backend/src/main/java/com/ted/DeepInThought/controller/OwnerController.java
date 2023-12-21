@@ -71,7 +71,7 @@ public class OwnerController extends BaseController<Owner, String> {
         try {
             Owner updatedOwner = ownerService.editOwner(id, ownerRequest);
             return new ResponseEntity<>(updatedOwner, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
