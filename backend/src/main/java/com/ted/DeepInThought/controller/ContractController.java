@@ -40,7 +40,7 @@ public class ContractController extends BaseController<Contract, String>{
         try {
             Contract updatedContract = contractService.editContract(id, contractRequest);
             return new ResponseEntity<>(updatedContract, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
