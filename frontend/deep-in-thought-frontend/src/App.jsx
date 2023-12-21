@@ -39,9 +39,9 @@ function App() {
           <Outlet />
         </Layout>
       ),
-      children:[
+      children: [
         { path: "/", element: <Home /> },
-        {path:'/resetPassword', element: <ResetPassword/>},
+        { path: "/resetPassword", element: <ResetPassword /> },
         { path: "/signup", element: <Signup /> },
         { path: "/tenant", element: <Tenant /> },
         { path: "/tenantPayment", element: <TenantPayment /> },
@@ -62,10 +62,11 @@ function App() {
         { path: "/", element: <Home /> },
         { path: "/signup", element: <Signup /> },
         { path: "/property/:propertyId", element: <OwnerPropertyDetail /> },
+        { path: "/resetPassword", element: <ResetPassword /> },
         { path: "/createResident", element: <CreateResident /> },
         { path: "/editAccount", element: <EditAccountPage /> },
       ],
-    }
+    },
   ]);
 
   return (
