@@ -16,6 +16,7 @@ const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) =
         e.preventDefault()
         console.log(userSingupInfo)
         await registerRequest();
+
     }
 
     return (

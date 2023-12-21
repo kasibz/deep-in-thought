@@ -42,7 +42,7 @@ public class PaymentService extends BaseService<Payment, String> {
         Optional<CreditCard> creditCardData = creditCardRepo.findById(paymentRequest.getCreditCardId());
 
         if (creditCardData.isEmpty()) {
-            throw new Error("Credit Card not found with id: " + paymentRequest.getCreditCardId());
+            throw new EntityNotFoundException("Credit Card not found with id: " + paymentRequest.getCreditCardId());
         }
 
         CreditCard existingCreditCard = creditCardData.get();
@@ -77,11 +77,15 @@ public class PaymentService extends BaseService<Payment, String> {
 
             return paymentRepo.save(existingPayment); // Save the updated payment and return it
         } else {
-            throw new Error("Payment not found with id: " + id);
+            throw new EntityNotFoundException("Payment not found with id: " + id);
         }
     }
 
-    public List<PaymentRepository.PaymentWithAssociations> getAllPaymentsByPropertyId(String propertyId) {
+    public List<PaymentRepository.PaymentsByPropertyId> getAllPaymentsByPropertyId(String propertyId) {
         return paymentRepo.findAllPaymentsByProperty(propertyId);
+    }
+
+    public List<PaymentRepository.PaymentsByTenantId> getAllPaymentsByTenant(String tenantId) {
+        return paymentRepo.findAllPaymentsByTenantId(tenantId);
     }
 }

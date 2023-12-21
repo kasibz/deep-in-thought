@@ -1,22 +1,21 @@
-import { Link, useNavigate } from "react-router-dom"
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import { Link, useNavigate } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import { Box, Button } from "@mui/material";
 import { UserContext } from "../../context/UserContext";
 
 export const Navbar = () => {
-    const navigate = useNavigate()
-    const { deleteUser, user } = UserContext()
+  const navigate = useNavigate();
+  const { deleteUser, user } = UserContext();
 
-    const onClickLogout = () => {
-        //clear localStorage
-        localStorage.clear()
-        //empty user state variable
-        deleteUser()
-        //navigate to home page
-        navigate('/')
-    }
+  const onClickLogout = () => {
+    //clear localStorage
+    localStorage.clear();
+    //empty user state variable
+    deleteUser();
+    //navigate to home page
+    navigate("/");
+  };
 
     return (
         <AppBar position="static">

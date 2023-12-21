@@ -58,7 +58,7 @@ public class OwnerService extends BaseService<Owner, String> {
 
             return ownerRepo.save(existingOwner); // Save the updated owner and return it
         } else {
-            throw new Error("Owner not found with id: " + id);
+            throw new EntityNotFoundException("Owner not found with id: " + id);
         }
     }
 
@@ -68,7 +68,7 @@ public class OwnerService extends BaseService<Owner, String> {
         if (ownerData.isPresent()) {
             return ownerData.get();
         }
-        throw new Error("Owner not found with email " + email);
+        throw new EntityNotFoundException("Owner not found with email " + email);
     }
 
     public Map<String, String> validateByEmail(OwnerRequest ownerRequest) {

@@ -3,6 +3,7 @@ package com.ted.DeepInThought.service;
 import com.ted.DeepInThought.dto.ContractRequest;
 import com.ted.DeepInThought.model.Contract;
 import com.ted.DeepInThought.repository.ContractRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class ContractService extends BaseService<Contract, String> {
 
             return contractRepo.save(existingContract); // Save the updated contract and return it
         } else {
-            throw new Error("Contract not found with id: " + id);
+            throw new EntityNotFoundException("Contract not found with id: " + id);
         }
     }
 

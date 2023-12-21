@@ -6,13 +6,15 @@
 import api from "./axiosConfig";
 import { UserContext } from "../context/UserContext";
 
-
-// const { addUser, user } = UserContext() 
+// const { addUser, user } = UserContext()
 const tenantService = {
-     
-    login: (userInfo) => api.post('/tenant/login', userInfo),
-    // tenantInformation: () => api.get(`/tenant/${user.tenantId}`)
+  login: (userInfo) => api.post("/tenant/login", userInfo),
+  register: (tenantInfo) => api.post("/tenant", tenantInfo),
+  getTenantByProperty: (propertyId) =>
+    api.get(`/tenant/property/${propertyId}`),
+  getAllTenant: () => api.get("/tenant"),
+  editTenant: (tenantId, obj) => api.put(`/tenant/${tenantId}`, obj),
+  // tenantInformation: () => api.get(`/tenant/${user.tenantId}`)
+};
 
-  };
-
-export default tenantService
+export default tenantService;

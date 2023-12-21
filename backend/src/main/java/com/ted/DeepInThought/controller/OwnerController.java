@@ -38,7 +38,7 @@ public class OwnerController extends BaseController<Owner, String> {
         try {
             Owner existingOwner = ownerService.getByEmail(email);
             return new ResponseEntity<>(existingOwner, HttpStatus.OK);
-        } catch (Error e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -48,9 +48,7 @@ public class OwnerController extends BaseController<Owner, String> {
         try {
             return new ResponseEntity<>(ownerService.save(owner), HttpStatus.CREATED);
         } catch (DuplicateKeyException e) {
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("error", e.getMessage());
-            return new ResponseEntity<>(headers, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -63,9 +61,7 @@ public class OwnerController extends BaseController<Owner, String> {
         try {
             return new ResponseEntity<>(ownerService.validateByEmail(ownerRequest), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("message", e.getMessage());
-            return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -75,7 +71,7 @@ public class OwnerController extends BaseController<Owner, String> {
         try {
             Owner updatedOwner = ownerService.editOwner(id, ownerRequest);
             return new ResponseEntity<>(updatedOwner, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

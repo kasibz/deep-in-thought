@@ -38,14 +38,7 @@ public class TenantService extends BaseService<Tenant, String>{
         if (tenantData.isPresent()) {
             throw new DuplicateKeyException(tenantRequest.getEmail() + " tenant already exists");
         }
-
-        Optional<Property> propertyData = propertyRepo.findById(tenantRequest.getPropertyId());
-
-        if (propertyData.isEmpty()) {
-            throw new EntityNotFoundException("Property not found with id: " + tenantRequest.getPropertyId());
-        }
-
-        Property existingProperty = propertyData.get();
+        // no longer need to assign a property or contract at creation
 
         Tenant newTenant = new Tenant();
         String uuid = UUID.randomUUID().toString();
@@ -55,7 +48,6 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setPassword(tenantRequest.getPassword());
         newTenant.setEmail(tenantRequest.getEmail());
         newTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
-        newTenant.setProperty(existingProperty);
 
         return tenantRepo.save(newTenant);
     }
@@ -66,7 +58,7 @@ public class TenantService extends BaseService<Tenant, String>{
         if (tenantData.isPresent()) {
             return tenantData.get();
         }
-        throw new Error("Tenant not found with email " + email);
+        throw new EntityNotFoundException("Tenant not found with email " + email);
     }
 
     public Tenant editTenant(String id, TenantRequest tenantRequest) {

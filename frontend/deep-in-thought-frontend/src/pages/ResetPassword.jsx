@@ -28,26 +28,25 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function ResetPassword() {
- const [password, setPassword] = useState('');
+ const [password, setPassword] = useState({
+  password: ""
+ });
  const [confirmPassword, setConfirmPassword] = useState('');
 
  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (password.password !== confirmPassword) {
       alert("Passwords don't match.");
       return;
     }
     const token = localStorage.getItem('ownerId');
-    console.log(typeof token);
 
     try {
       const response = await authService.updatePassword(token, password);
-      if (response.ok) {
+      if (response.status === 200) {
         alert('Password reset successfully.');
-      } else {
-        alert('Failed to reset password.');
-      }
+      } 
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
@@ -83,8 +82,8 @@ export default function ResetPassword() {
                  type="password"
                  id="password"
                  autoComplete="new-password"
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}
+                 value={password.password}
+                 onChange={(e) => setPassword({password: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12}>

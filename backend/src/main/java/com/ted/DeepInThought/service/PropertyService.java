@@ -48,7 +48,7 @@ public class PropertyService extends BaseService<Property, String>{
 
             return propertyRepo.save(newProperty);
         }
-        throw new Error("Owner not found with id: " + propertyRequest.getOwnerId());
+        throw new EntityNotFoundException("Owner not found with id: " + propertyRequest.getOwnerId());
     }
 
     public Property editProperty(String id, PropertyRequest propertyRequest) {
@@ -78,7 +78,7 @@ public class PropertyService extends BaseService<Property, String>{
 
             return propertyRepo.save(existingProperty); // Save the updated property and return it
         } else {
-            throw new Error("Property not found with id: " + id);
+            throw new EntityNotFoundException("Property not found with id: " + id);
         }
     }
 
