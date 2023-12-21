@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { UserContextProvider } from "./context/UserContext";
@@ -18,7 +17,6 @@ function App() {
   const tenantId = localStorage.getItem("tenantId");
 
   const defaultRouter = createBrowserRouter([
-
     {
       path: "/",
       element: (
