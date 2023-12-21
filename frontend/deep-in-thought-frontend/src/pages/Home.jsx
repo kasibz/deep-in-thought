@@ -70,7 +70,7 @@ const Home = () => {
 
   // display none when loading variable is true
   if (isLoading) {
-    return <div></div>;
+    return <div>its loading</div>;
   }
 
   return (
