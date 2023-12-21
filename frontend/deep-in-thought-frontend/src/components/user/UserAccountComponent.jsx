@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 function UserAccountComponent({ userData, userType }) {
@@ -92,6 +93,9 @@ function UserAccountComponent({ userData, userType }) {
             </p>
             <Button variant="contained" type="submit">
               Submit
+            </Button>
+            <Button component={Link} to="/resetPassword" variant="contained">
+              Reset Password
             </Button>
           </form>
         </>
