@@ -55,7 +55,7 @@ public class CreditCardService extends BaseService<CreditCard, String>{
 
             return creditCardRepo.save(newCreditCard);
         }
-        throw new Error("Tenant not found with id: " + creditCardRequest.getTenantId());
+        throw new EntityNotFoundException("Tenant not found with id: " + creditCardRequest.getTenantId());
     }
 
     public CreditCard editCreditCard(String id, CreditCardRequest creditCardRequest) {
