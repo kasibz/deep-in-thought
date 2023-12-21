@@ -30,11 +30,21 @@ export const Navbar = () => {
                         Payment History
                     </Button>
                 }
+
+
                 <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
-                {user.length !== 0 && 
-                    <Button color="inherit" onClick={onClickLogout}>
-                        Logout
-                    </Button>
+{/*                                <Button component={Link} to="resetPassword" color="inherit"> */}
+{/*                                                     Reset Password */}
+{/*                                                 </Button> */}
+                {user.length !== 0 &&
+                <>
+                <Button component={Link} to="resetPassword" color="inherit">
+                                                                                                        Reset Password
+                                                                                                    </Button>
+                                    <Button color="inherit" onClick={onClickLogout}>
+                                        Logout
+                                    </Button>
+                </>
                 }
             </Toolbar>
         </AppBar>

@@ -2,6 +2,7 @@ import './App.css'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { UserContextProvider } from './context/UserContext'
 import Home from './pages/Home'
+import ResetPassword from './pages/resetPassword';
 import Signup from './pages/Signup';
 import Tenant from './pages/Tenant';
 import TenantPayment from './pages/TenantPayment';
@@ -17,6 +18,7 @@ function App() {
       element:<Layout><Outlet/></Layout>,
       children: [
         {path:'/', element: <Home/>},
+        {path:'/resetPassword', element: <ResetPassword/>},
         {path:'/signup', element: <Signup/>},
         {path:'/tenant', element:<Tenant/>},
         {path:'/tenantPayment', element:<TenantPayment/>},
