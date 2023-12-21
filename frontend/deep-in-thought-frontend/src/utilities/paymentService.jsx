@@ -9,6 +9,7 @@ const paymentService = {
     makePayment: (info) => api.post('/payment', info),
     getPaymentInfo: (id) => api.get(`/payment/${id}`),
     getPaymentHistory: (id) => api.get(`/payment/property/${id}`),
+    getAllPaymnetHistoryByTenantId: (id) => api.get(`/payment/tenant/${id}`)
 }
 
 export default paymentService

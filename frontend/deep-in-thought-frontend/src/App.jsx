@@ -1,6 +1,6 @@
 import './App.css'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { UserContextProvider } from './context/UserContext'
+import { UserContext, UserContextProvider } from './context/UserContext'
 import Home from './pages/Home'
 import Signup from './pages/Signup';
 import Tenant from './pages/Tenant';
@@ -11,7 +11,6 @@ import Layout from './components/layout/Layout';
 import CreateResident from './pages/CreateResident';
 
 function App() {
-
   const router = createBrowserRouter([
     {
       path:"/",
