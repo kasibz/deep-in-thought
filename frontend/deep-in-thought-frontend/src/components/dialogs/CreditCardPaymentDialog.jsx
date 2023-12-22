@@ -70,6 +70,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         console.log(response);
         setCreditCardAdd(newCard);
         alert("Success");
+        return;
       } catch (error) {
         console.log(error);
         console.log("Post request error");
@@ -79,8 +80,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     alert("Invalid Credit Card");
   };
 
-  useEffect(() => {
-  }, [creditCardAdd]);
+  useEffect(() => {}, [creditCardAdd]);
 
   const clearFields = () => {
     setName("");
