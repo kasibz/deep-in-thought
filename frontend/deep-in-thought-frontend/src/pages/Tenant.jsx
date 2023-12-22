@@ -19,39 +19,14 @@ import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import TenantAccountComponent from "../components/tenant/TenantAccountComponent";
 import TenantHistoryComponent from "../components/tenant/TenantHistoryComponent";
 import api from "../utilities/axiosConfig";
-import paymentService from './../utilities/paymentService';
-
-function getDate() {
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
-  const date = today.getDate();
-  return `${month}/${date}/${year}`;
-}
-
-function rentDueDate() {
-  const today = new Date();
-  let month = today.getMonth() + 2;
-  const year = today.getFullYear() + 1;
-  let date = 1;
-
-  const formattedDate = date < 10 ? `0${date}` : date;
-  // Adjust the month if it's greater than 11
-  if (month > 11) {
-    month = month % 12; // Get the remainder after dividing by 12
-  }
-
-  // Convert month to a string with leading zero if needed
-  const formattedMonth = month < 10 ? `0${month}` : month;
-  return `${formattedMonth}/${formattedDate}/${year}`;
-}
+import paymentService from "./../utilities/paymentService";
+import { CircularProgress } from "@mui/material";
 
 const Tenant = () => {
   const { user } = UserContext();
   const [open, setOpen] = useState(true);
   const [tenantData, setTenantData] = useState([]);
   const [currentContract, setCurrentContract] = useState([]);
-  const [value, setValue] = useState("Home");
   const [isCreditCardDialogOpen, setIsCreditCardDialogOpen] = useState(false);
   const [isRentDialogOpen, setIsRentDialogOpen] = useState(false);
   const [isPayByCreditCardDialogOpen, setIsPayByCreditCardDialogOpen] =
@@ -59,22 +34,48 @@ const Tenant = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   //Payment History by tenantId
-  const [paymentInfo, setPaymentInfo] = useState([]);
+  const [existingPayments, setExistingPayments] = useState([]);
   //Payment due state variables
-  const [paymentDueInfo, setPaymentDueInfo] = useState([])
+  const [paymentDueInfo, setPaymentDueInfo] = useState([]);
 
   const [currentDate, setCurrentDate] = useState(getDate());
   const [rentDate, setRentDate] = useState(rentDueDate());
 
+  // helper functions
+  function getDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    return `${month}/${date}/${year}`;
+  }
+
+  function rentDueDate() {
+    const today = new Date();
+    let month = today.getMonth() + 2;
+    const year = today.getFullYear() + 1;
+    let date = 1;
+
+    const formattedDate = date < 10 ? `0${date}` : date;
+    // Adjust the month if it's greater than 11
+    if (month > 11) {
+      month = month % 12; // Get the remainder after dividing by 12
+    }
+
+    // Convert month to a string with leading zero if needed
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    return `${formattedMonth}/${formattedDate}/${year}`;
+  }
+
+  // api requests
   useEffect(() => {
     const getTenantData = async () => {
       let response = await api.get(`tenant/${user[0].tenantId}`);
       let data = response.data;
       setTenantData(data);
     };
-
     getTenantData();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -92,37 +93,31 @@ const Tenant = () => {
         let response = await api.get(`tenant/${user[0].tenantId}/contract`);
         let paymentData = response.data;
         //set contract info
-        console.log(currentContract)
+        console.log(currentContract);
         setCurrentContract(paymentData);
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     };
 
     getCurrentBalance();
-  }, []);
+  }, [currentContract, user]);
 
   //get payments by tenant ID
   useEffect(() => {
     const getPaymentInfo = async () => {
       try {
         let response = await api.get(`payment/tenant/${user[0].tenantId}`);
-        let balanceData = response.data;
-        console.log(balanceData)
-        if (balanceData.amount_paid === balanceData.rent_due){
-          setCurrentContract(prevContract => ({
-            ...prevContract,
-            rent: 0
-          }));
-        }
+        setExistingPayments(response.data);
+        console.log(response.data);
+        // so now amount_paid and rent_due are in existingPayments
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     };
 
     getPaymentInfo();
-  }, []);
+  }, [user]);
 
   {
     /* GET request for getting user information that is signed in */
@@ -188,62 +183,63 @@ const Tenant = () => {
       </header>
 
       {/* Display welcome message for user*/}
-      <h1>
-        Welcome {tenantData.firstName} {tenantData.lastName}
-      </h1>
+      {tenantData.firstName ? (
+        <h1>
+          Welcome {tenantData.firstName} {tenantData.lastName}
+        </h1>
+      ) : (
+        <CircularProgress />
+      )}
+
       <h2>Today's Date: {currentDate}</h2>
 
       {/* Display user balance information*/}
-      {value === "Home" ? (
-        <>
-          {/* If there is no contract, then display no balance due*/}
-          {currentContract && currentContract.length > 0 ?
-            <div className="account-balance">
-              {}
-              <h3> Current Account Rent Due: ${currentContract.rent}</h3>
-              <h3>Number of months remaining for payment: {currentContract.length}</h3>
-              <h3>Rent Due on: {rentDate}</h3>
-              <p>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={onClickOpenCreditCardDialog}
-                >
-                  Add Card
-                </Button>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={onClickOpenPayByCreditCardDialog}
-                >
-                  Pay Rent
-                </Button>
-                {/* <Button variant="outlined" fullWidth onClick={onClickOpenRentPaymentDialog}>Pay Rent</Button> */}
-              </p>
-            </div> : <div>no balance due</div>}
-          <CreditCardPaymentDialog
-            open={isCreditCardDialogOpen}
-            onClose={onClickCloseCreditCardDialog}
-          />
+      {/* If there is no contract, then display no balance due*/}
+      {currentContract.rent ? (
+        <div className="account-balance">
+          <h3> Current Account Rent Due: ${currentContract.rent}</h3>
+          <h3>
+            Number of months remaining for payment: {currentContract.length}
+          </h3>
+          <h3>Rent Due on: {rentDate}</h3>
+          <p>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={onClickOpenCreditCardDialog}
+            >
+              Add Card
+            </Button>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={onClickOpenPayByCreditCardDialog}
+            >
+              Pay Rent
+            </Button>
+            {/* <Button variant="outlined" fullWidth onClick={onClickOpenRentPaymentDialog}>Pay Rent</Button> */}
+          </p>
+        </div>
+      ) : (
+        <CircularProgress />
+      )}
+      <CreditCardPaymentDialog
+        open={isCreditCardDialogOpen}
+        onClose={onClickCloseCreditCardDialog}
+      />
 
-          {/* <RentPaymentDialog
+      {/* <RentPaymentDialog
                     open={isRentDialogOpen}
                     onClose={onClickCloseRentPaymentDialog}
                     /> */}
 
-          <PayByCreditCardDialog
-            open={isPayByCreditCardDialogOpen}
-            onClose={onClickClosePayByCreditCardDialog}
-          />
-        </>
-      ) : value === "Account" && tenantData ? (
-        <TenantAccountComponent tenantData={tenantData} />
-      ) : (
-        <TenantHistoryComponent />
-      )}
+      <PayByCreditCardDialog
+        open={isPayByCreditCardDialogOpen}
+        onClose={onClickClosePayByCreditCardDialog}
+      />
 
       <Box sx={{ width: "100%" }}>
-        <BottomNavigation
+        {/* <BottomNavigation
           showLabels
           value={value}
           onChange={(event, newValue) => {
@@ -265,7 +261,7 @@ const Tenant = () => {
             value="History"
             icon={<ReceiptLongOutlinedIcon />}
           />
-        </BottomNavigation>
+        </BottomNavigation> */}
       </Box>
     </div>
   );

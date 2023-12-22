@@ -3,6 +3,7 @@ import LoginComponent from "../components/LoginComponent";
 import OwnerPropertyComponent from "../components/OwnerPropertiesListComponent";
 import authService from "../utilities/authService";
 import { UserContext } from "../context/UserContext";
+import { CircularProgress } from "@mui/material";
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Tenant from "./Tenant";
 
@@ -70,7 +71,7 @@ const Home = () => {
 
   // display none when loading variable is true
   if (isLoading) {
-    return <div>its loading</div>;
+    return <CircularProgress />;
   }
 
   return (
