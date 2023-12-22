@@ -10,7 +10,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import authService from "../utilities/authService"
+import authService from "../utilities/authService";
+// import UpdatePasswordComponent from "../components/user/UpdatePasswordComponent";
 
 function Copyright(props) {
  return (
@@ -40,13 +41,23 @@ export default function ResetPassword() {
       alert("Passwords don't match.");
       return;
     }
-    const token = localStorage.getItem('ownerId');
+    const ownerExists = localStorage.getItem('ownerId') !== null;
+    const tenantExists = localStorage.getItem('tenantId') !== null;
+    let token, userRole;
+    if(ownerExists){
+        token = localStorage.getItem('ownerId');
+        userRole = "owner"
+    }
+    if(tenantExists){
+        token = localStorage.getItem('tenantId');
+        userRole = "tenant"
+    }
 
     try {
-      const response = await authService.updatePassword(token, password);
+      const response = await authService.updatePassword(token, password, userRole);
       if (response.status === 200) {
         alert('Password reset successfully.');
-      } 
+      }
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');

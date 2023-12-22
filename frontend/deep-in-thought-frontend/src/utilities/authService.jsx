@@ -12,7 +12,7 @@ const authService = {
     residentSignup: (userInfo) => api.post('/resident', userInfo),
     updateOwnerInfo: () => api.put('/'),
     updateResidentInfo: () => api.put('/'),
-    updatePassword: (userId, newPassword) => api.put(`/owner/${userId}`, newPassword)
+    updatePassword: (userId, newPassword, userRole) => api.put(`/${userRole}/${userId}`, newPassword)
   };
 
 export default authService
