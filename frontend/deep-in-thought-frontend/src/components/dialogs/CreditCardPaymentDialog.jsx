@@ -69,6 +69,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         console.log(response);
         setCreditCardAdd(newCard);
         alert("Success");
+        onClose();
         return;
       } catch (error) {
         console.log(error);
@@ -83,7 +84,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
   const handleSubmitCreditCardClick = () => {
     try {
       addCreditCard();
-      // onClose();
       clearFields();
     } catch (error) {
       alert(error.message);

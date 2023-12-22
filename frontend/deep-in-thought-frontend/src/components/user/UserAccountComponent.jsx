@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -23,7 +23,7 @@ function UserAccountComponent({ userData, userType }) {
       }
     );
     const data = await response.json();
-    console.log(data);
+    alert(data);
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +32,7 @@ function UserAccountComponent({ userData, userType }) {
       await editUser(updatedUser);
       // user Updated!
     } catch (error) {
-      console.error("error found", error);
+      alert("error found", error);
     }
   };
 
@@ -43,9 +43,8 @@ function UserAccountComponent({ userData, userType }) {
     });
   };
 
-  // take in data from the current tenant and do a request on their properties
   return (
-    <div>
+    <div className="general-box">
       {userData.firstName ? (
         <>
           <h2>Edit Account</h2>
@@ -85,18 +84,25 @@ function UserAccountComponent({ userData, userType }) {
                 size="small"
                 label="Phone Number"
                 type="tel"
-                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 onChange={handleChange}
                 name="phoneNumber"
                 value={updatedUser.phoneNumber}
               />
             </p>
-            <Button variant="contained" type="submit">
-              Submit
-            </Button>
-            <Button component={Link} to="/resetPassword" variant="contained">
-              Reset Password
-            </Button>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                width: 300,
+              }}
+            >
+              <Button variant="contained" type="submit">
+                Submit
+              </Button>
+              <Button component={Link} to="/resetPassword" variant="contained">
+                Reset Password
+              </Button>
+            </Box>
           </form>
         </>
       ) : (

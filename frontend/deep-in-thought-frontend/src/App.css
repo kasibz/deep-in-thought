@@ -48,3 +48,24 @@ body {
 .payment-received {
   color: #65b741;
 }
+
+.container {
+  padding: 6rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: auto;
+}
+
+.general-box {
+  border: 1px solid rgb(148, 148, 148);
+  border-radius: 0.5rem;
+  background-image: linear-gradient(to bottom right, white 40%, #ebebeb);
+  padding: 3rem 4rem 4rem 4rem;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+button {
+  margin: 0 1rem;
+}

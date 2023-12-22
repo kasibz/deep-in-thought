@@ -15,6 +15,7 @@ import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import ErrorSnackBar from "../snackbar/ErrorSnackBar";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -335,6 +336,7 @@ const PayByCreditCardDialog = (props) => {
         open={successSnackbar}
         autoHideDuration={3000}
         onClose={handleSuccessCloseSnackbar}
+        className="snackbar"
       >
         <MuiAlert
           elevation={6}
