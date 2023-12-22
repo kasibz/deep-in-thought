@@ -57,6 +57,7 @@ export default function ResetPassword() {
       const response = await authService.updatePassword(token, password, userRole);
       if (response.status === 200) {
         alert('Password reset successfully.');
+        document.location.href = "/";
       }
     } catch (error) {
       console.error('Error:', error);
