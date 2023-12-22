@@ -142,7 +142,7 @@ const Tenant = () => {
   };
 
   return (
-    <div>
+    <div className="tenant-container">
       <header>
         {showAlert && (
           <div className="alert">
@@ -171,66 +171,75 @@ const Tenant = () => {
           </div>
         )}
       </header>
+      <div className="general-box">
+        {/* Display welcome message for user*/}
+        {tenantData.firstName ? (
+          <h1>
+            Welcome {tenantData.firstName} {tenantData.lastName}
+          </h1>
+        ) : (
+          <CircularProgress />
+        )}
 
-      {/* Display welcome message for user*/}
-      {tenantData.firstName ? (
-        <h1>
-          Welcome {tenantData.firstName} {tenantData.lastName}
-        </h1>
-      ) : (
-        <CircularProgress />
-      )}
+        {/* Display user balance information*/}
+        {/* If there is no contract, then display no balance due*/}
+        {currentContract.rent ? (
+          <>
+            <h2>Today&apos;s Date: {currentDate}</h2>
+            <div className="account-balance">
+              {existingPayments[existingPayments.length - 1]?.date_paid ? (
+                <>
+                  <h3>
+                    Current Account Rent Due: $
+                    {existingPayments[existingPayments.length - 1].rent_due -
+                      existingPayments[existingPayments.length - 1].amount_paid}
+                  </h3>
+                  <h3 className="payment-received">
+                    Payment received on{" "}
+                    {existingPayments[existingPayments.length - 1].date_paid}{" "}
+                    Thank You!
+                  </h3>
+                </>
+              ) : (
+                <>
+                  <h3>Current Account Rent Due: ${currentContract.rent}</h3>
+                  <h3>Rent Due on: {rentDate}</h3>
+                </>
+              )}
+              <h3>
+                Number of months remaining for payment: {currentContract.length}
+              </h3>
 
-      {/* Display user balance information*/}
-      {/* If there is no contract, then display no balance due*/}
-      {currentContract.rent ? (
-        <>
-          <h2>Today&apos;s Date: {currentDate}</h2>
-          <div className="account-balance">
-            {existingPayments[existingPayments.length - 1]?.date_paid ? (
-              <>
-                <h3>
-                  Current Account Rent Due: $
-                  {existingPayments[existingPayments.length - 1].rent_due -
-                    existingPayments[existingPayments.length - 1].amount_paid}
-                </h3>
-                <h3 className="payment-received">
-                  Payment received on{" "}
-                  {existingPayments[existingPayments.length - 1].date_paid}{" "}
-                  Thank You!
-                </h3>
-              </>
-            ) : (
-              <>
-                <h3>Current Account Rent Due: ${currentContract.rent}</h3>
-                <h3>Rent Due on: {rentDate}</h3>
-              </>
-            )}
-            <h3>
-              Number of months remaining for payment: {currentContract.length}
-            </h3>
-
-            <p>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={onClickOpenCreditCardDialog}
-              >
-                Add Card
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={onClickOpenPayByCreditCardDialog}
-              >
-                Pay Rent
-              </Button>
-            </p>
-          </div>
-        </>
-      ) : (
-        <CircularProgress />
-      )}
+              <p>
+                <Box
+                  display="flex"
+                  width={500}
+                  justifyContent="space-around" // Add border for visualization
+                  margin={2}
+                  paddingTop={2} // Add padding for visualization
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={onClickOpenCreditCardDialog}
+                    style={{ width: "200px" }}
+                  >
+                    Add Card
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={onClickOpenPayByCreditCardDialog}
+                    style={{ width: "200px" }}
+                  >
+                    Pay Rent
+                  </Button>
+                </Box>
+              </p>
+            </div>
+          </>
+        ) : (
+          <CircularProgress />
+        )}
+      </div>
       <CreditCardPaymentDialog
         open={isCreditCardDialogOpen}
         onClose={onClickCloseCreditCardDialog}

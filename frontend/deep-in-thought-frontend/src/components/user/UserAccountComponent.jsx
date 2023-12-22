@@ -39,8 +39,8 @@ function UserAccountComponent({ userData, userType }) {
     }
     setUserUpdateResult({
       ...userUpdateResult,
-      success: true,
       failure: false,
+      success: true,
     });
   };
 
@@ -52,11 +52,6 @@ function UserAccountComponent({ userData, userType }) {
       await editUser(updatedUser);
     } catch (error) {
       //  user not Updated
-      setUserUpdateResult({
-        ...userUpdateResult,
-        failure: true,
-        success: false,
-      });
     }
     setSubmitClicked(false);
   };
