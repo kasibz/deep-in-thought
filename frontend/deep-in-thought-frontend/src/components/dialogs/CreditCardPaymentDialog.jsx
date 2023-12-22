@@ -80,7 +80,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
   };
 
   useEffect(() => {
-    console.log("Credit Cards: ", creditCardAdd);
   }, [creditCardAdd]);
 
   const clearFields = () => {
