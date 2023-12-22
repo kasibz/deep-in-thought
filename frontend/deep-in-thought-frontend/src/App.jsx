@@ -27,6 +27,7 @@ function App() {
       children: [
         { path: "/", element: <Home /> },
         { path: "/signup", element: <Signup /> },
+        { path: "/property/:propertyId", element: <OwnerPropertyDetail /> },
       ],
     },
   ]);

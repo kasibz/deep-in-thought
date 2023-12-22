@@ -24,10 +24,19 @@ export const Navbar = () => {
           Deep in Thought
         </Button>
         {/*check user has at least one element and then access user.tenantId*/}
+        {user.length > 0 && user[0].ownerId && (
+          <>
+        <Button component={Link} to="/createResident" color="inherit">
+              Create Resident Account
+            </Button>
+          </>
+        )}
         {user.length > 0 && user[0].tenantId && (
-          <Button component={Link} to="/tenantPayment" color="inherit">
-            Payment History
-          </Button>
+          <>
+            <Button component={Link} to="/tenantPayment" color="inherit">
+              Payment History
+            </Button>
+          </>
         )}
         <Box style={{ flexGrow: 1 }}></Box> {/* Spacer */}
         {user.length !== 0 && (
@@ -40,7 +49,7 @@ export const Navbar = () => {
             </Button>
           </>
         )}
-        {}
+        { }
       </Toolbar>
     </AppBar>
   );
