@@ -2,6 +2,7 @@ package com.ted.DeepInThought.service;
 
 import com.ted.DeepInThought.dto.TenantRequest;
 import com.ted.DeepInThought.model.Contract;
+import com.ted.DeepInThought.model.Owner;
 import com.ted.DeepInThought.model.Property;
 import com.ted.DeepInThought.model.Tenant;
 import com.ted.DeepInThought.repository.ContractRepository;
@@ -65,7 +66,6 @@ public class TenantService extends BaseService<Tenant, String>{
         Optional<Tenant> tenantData = tenantRepo.findById(id);
 
         if (tenantData.isPresent()) {
-
             Tenant existingTenant = tenantData.get();
 
             if (tenantRequest.getFirstName() != null) {
@@ -79,6 +79,19 @@ public class TenantService extends BaseService<Tenant, String>{
             }
             if (tenantRequest.getPhoneNumber() != null) {
                 existingTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
+            }
+            if (tenantRequest.getEmail() != null) {
+                Optional<Tenant> tenantEmailData = tenantRepo.findByEmail(tenantRequest.getEmail());
+
+                if (tenantEmailData.isPresent()) {
+                    Tenant existingEmailTenant = tenantEmailData.get();
+                    if (!existingEmailTenant.getId().equals(id)) {
+                        throw new DuplicateKeyException("User already exists with that email");
+                    }
+
+                }
+                existingTenant.setEmail(tenantRequest.getEmail());
+
             }
             if (tenantRequest.getPropertyId() != null) {
                 Optional<Property> propertyData = propertyRepo.findById(tenantRequest.getPropertyId());

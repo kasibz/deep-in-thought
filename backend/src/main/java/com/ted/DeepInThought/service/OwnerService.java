@@ -55,11 +55,24 @@ public class OwnerService extends BaseService<Owner, String> {
             if (ownerRequest.getPhoneNumber() != null) {
                 existingOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
             }
+            if (ownerRequest.getEmail() != null) {
+                Optional<Owner> ownerEmailData = ownerRepo.findByEmail(ownerRequest.getEmail());
+
+                if (ownerEmailData.isPresent()) {
+                    Owner existingEmailOwner = ownerEmailData.get();
+                    if (!existingEmailOwner.getId().equals(id)) {
+                        throw new DuplicateKeyException("User already exists with that email");
+                    }
+
+                }
+                existingOwner.setEmail(ownerRequest.getEmail());
+
+            }
 
             return ownerRepo.save(existingOwner); // Save the updated owner and return it
-        } else {
-            throw new EntityNotFoundException("Owner not found with id: " + id);
         }
+        throw new EntityNotFoundException("Owner not found with id: " + id);
+
     }
 
     public Owner getByEmail(String email) {
