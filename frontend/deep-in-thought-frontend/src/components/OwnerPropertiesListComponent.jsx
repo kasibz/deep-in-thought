@@ -5,6 +5,7 @@ import { useMyPropertyContext } from './../context/PropertyContext';
 import AddPropertyDialog from './dialogs/AddPropertyDialog';
 import propertyService from '../utilities/propertyService';
 import { UserContext } from './../context/UserContext';
+import SuccessSnackBar from './snackbar/SuccessSnackBar';
 
 const OwnerPropertyComponent = () => {
     // calling user context
@@ -29,7 +30,6 @@ const OwnerPropertyComponent = () => {
 
     // calling property context state variables
     const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
-
     //loading variable 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -70,12 +70,26 @@ const OwnerPropertyComponent = () => {
         setNewProperty({ ...newProperty, [e.target.name]: e.target.value });
     };
 
+    //snack bar state variables
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    //snack bar on close function
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
     const onSubmitAddProproperty = async () => {
         console.log(newProperty);
         try {
             const addPropertyResponse = await propertyService.addProperty(newProperty);
             console.log(addPropertyResponse)
             if (addPropertyResponse.status === 201) {
+                //snack bar message
+                setSnackbarMessage('Property added successfully!');
+                //set true to open snack bar
+                setSnackbarOpen(true);
+                // close dialog
                 setOpen(false);
             } else {
                 alert('something is wrong. This need to be changed')
@@ -86,7 +100,7 @@ const OwnerPropertyComponent = () => {
     };
     // display none when loading variable is true
     if (isLoading) {
-        return <div></div>; 
+        return <div></div>;
     }
 
     return (
@@ -120,6 +134,11 @@ const OwnerPropertyComponent = () => {
                 newProperty={newProperty}
                 onChange={onChangeAddPropertyTextField}
                 onSubmit={onSubmitAddProproperty}
+            />
+            <SuccessSnackBar
+                open={snackbarOpen}
+                message={snackbarMessage}
+                handleClose={handleCloseSnackbar}
             />
         </Container>
     );

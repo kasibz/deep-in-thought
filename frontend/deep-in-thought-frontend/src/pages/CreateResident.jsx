@@ -2,6 +2,7 @@ import { Button, TextField, Container, Typography } from '@mui/material';
 import { useState } from 'react';
 import tenantService from '../utilities/tenantService';
 import { useNavigate } from 'react-router-dom';
+import SuccessSnackBar from '../components/snackbar/SuccessSnackBar';
 
 const CreateResident = () => {
     // resident register information
@@ -19,6 +20,15 @@ const CreateResident = () => {
         setResident({ ...resident, [e.target.name]: e.target.value });
     };
 
+    //snack bar state variables
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    //snack bar on close function
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
     const onSubmitRegister = async (e) => {
         e.preventDefault()
         console.log(resident);
@@ -26,8 +36,14 @@ const CreateResident = () => {
         try {
             const response = await tenantService.register(resident);
             if (response.status === 201){
-                alert('Successfully Created new resident user. do not for get to change this alert thing Ho Jong')
-                navigate('/')
+                // set success snack bar
+                setSnackbarMessage('Successfully Created new resident user')
+                // open snack bar
+                setSnackbarOpen(true)
+                //wait 2 seconds until success message to pop up, then navigate to home page
+                setTimeout(() => {
+                    navigate('/')
+                }, 2000);
             }
         } catch (error) {
             console.log(error)
@@ -101,6 +117,11 @@ const CreateResident = () => {
                     Submit
                 </Button>
             </form>
+            <SuccessSnackBar
+                open={snackbarOpen}
+                message={snackbarMessage}
+                handleClose={handleCloseSnackbar}
+            />
         </Container>
     );
 }
