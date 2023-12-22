@@ -1,9 +1,15 @@
 import Button from "@mui/material/Button";
-import { TextField, Box } from "@mui/material";
+import { TextField, Box, CircularProgress, Alert } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 function UserAccountComponent({ userData, userType }) {
+  const [submitClicked, setSubmitClicked] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Error saving user");
+  const [userUpdateResult, setUserUpdateResult] = useState({
+    success: false,
+    failure: false,
+  });
   const [updatedUser, setUpdatedUser] = useState({
     firstName: userData.firstName,
     lastName: userData.lastName,
@@ -22,18 +28,37 @@ function UserAccountComponent({ userData, userType }) {
         body: JSON.stringify(userInfo),
       }
     );
-    const data = await response.json();
-    alert(data);
+    if (response.status === 409) {
+      setErrorMessage("User by that email already exists");
+      setUserUpdateResult({
+        ...userUpdateResult,
+        failure: true,
+        success: false,
+      });
+      return;
+    }
+    setUserUpdateResult({
+      ...userUpdateResult,
+      success: true,
+      failure: false,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await editUser(updatedUser);
       // user Updated!
+      setSubmitClicked(true);
+      await editUser(updatedUser);
     } catch (error) {
-      alert("error found", error);
+      //  user not Updated
+      setUserUpdateResult({
+        ...userUpdateResult,
+        failure: true,
+        success: false,
+      });
     }
+    setSubmitClicked(false);
   };
 
   const handleChange = (e) => {
@@ -47,6 +72,12 @@ function UserAccountComponent({ userData, userType }) {
     <div className="general-box">
       {userData.firstName ? (
         <>
+          {userUpdateResult.success && (
+            <Alert severity="success">User updated successfully!</Alert>
+          )}
+          {userUpdateResult.failure && (
+            <Alert severity="error">{errorMessage}</Alert>
+          )}
           <h2>Edit Account</h2>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -96,9 +127,13 @@ function UserAccountComponent({ userData, userType }) {
                 width: 300,
               }}
             >
-              <Button variant="contained" type="submit">
-                Submit
-              </Button>
+              {!submitClicked ? (
+                <Button variant="contained" type="submit">
+                  Submit
+                </Button>
+              ) : (
+                <CircularProgress />
+              )}
               <Button component={Link} to="/resetPassword" variant="contained">
                 Reset Password
               </Button>
