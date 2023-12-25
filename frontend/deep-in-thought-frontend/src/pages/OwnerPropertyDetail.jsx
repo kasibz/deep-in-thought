@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Container, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, CircularProgress, Container, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import PaymentHistoryDialog from "../components/dialogs/PaymentHistoryDialog";
@@ -96,8 +96,12 @@ const OwnerPropertyDetail = () => {
 
     // display none when loading variable is true
     if (isLoading) {
-        return <div></div>;
-    }
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <CircularProgress />
+          </Box>
+        );
+      }
 
     return (
         <Container>

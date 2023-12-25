@@ -1,4 +1,4 @@
-import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem } from '@mui/material';
+import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem, Box, CircularProgress } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMyPropertyContext } from './../context/PropertyContext';
@@ -100,8 +100,12 @@ const OwnerPropertyComponent = () => {
     };
     // display none when loading variable is true
     if (isLoading) {
-        return <div></div>;
-    }
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <CircularProgress />
+          </Box>
+        );
+      }
 
     return (
         <Container>
