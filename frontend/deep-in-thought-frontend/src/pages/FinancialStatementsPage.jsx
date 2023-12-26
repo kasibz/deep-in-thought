@@ -10,6 +10,7 @@ const FinancialStatementsPage = () => {
     const { user } = UserContext();
     const onwerId = user[0].ownerId
 
+    // get all payment history for owner
     useEffect(() => {
         const getAllPaymentHistoryForOwner = async () => {
             try {
