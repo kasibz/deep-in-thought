@@ -4,7 +4,6 @@ import { UserContextProvider } from "./context/UserContext";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Tenant from "./pages/Tenant";
-import TenantPayment from "./pages/TenantPayment";
 import OwnerPropertyDetail from "./pages/OwnerPropertyDetail";
 import { PropertyProvider } from "./context/PropertyContext";
 import Layout from "./components/layout/Layout";
@@ -13,6 +12,7 @@ import EditAccountPage from "./pages/EditAccountPage";
 import ResetPassword from "./pages/ResetPassword";
 import FinancialStatements from "./pages/FinancialStatementsPage";
 import FinancialStatementsPage from "./pages/FinancialStatementsPage";
+import TenantPaymentHistoryPage from "./pages/TenantPaymentHistoryPage";
 
 function App() {
   const ownerId = localStorage.getItem("ownerId");
@@ -47,7 +47,7 @@ function App() {
         { path: "/resetPassword", element: <ResetPassword /> },
         { path: "/signup", element: <Signup /> },
         { path: "/tenant", element: <Tenant /> },
-        { path: "/tenantPayment", element: <TenantPayment /> },
+        { path: "/tenantPayment", element: <TenantPaymentHistoryPage /> },
         { path: "/editAccount", element: <EditAccountPage /> },
       ],
     },
