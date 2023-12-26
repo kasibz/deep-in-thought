@@ -1,9 +1,7 @@
-import { useContext, useState, useEffect } from "react";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import tenantService from "../utilities/tenantService";
 import CreditCardPaymentDialog from "../components/dialogs/CreditCardPaymentDialog";
 import RentPaymentDialog from "../components/dialogs/RentPaymentDialog";
 import PayByCreditCardDialog from "../components/dialogs/PayByCreditCardDialog";
@@ -16,63 +14,63 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
-import TenantAccountComponent from "../components/tenant/TenantAccountComponent";
-import TenantHistoryComponent from "../components/tenant/TenantHistoryComponent";
 import api from "../utilities/axiosConfig";
-
-function getDate() {
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
-  const date = today.getDate();
-  return `${month}/${date}/${year}`;
-}
-
-function rentDueDate() {
-  const today = new Date();
-  let month = today.getMonth() + 2;
-  const year = today.getFullYear() + 1;
-  let date = 1;
-
-  const formattedDate = date < 10 ? `0${date}` : date;
-  // Adjust the month if it's greater than 11
-  if (month > 11) {
-    month = month % 12; // Get the remainder after dividing by 12
-  }
-
-  // Convert month to a string with leading zero if needed
-  const formattedMonth = month < 10 ? `0${month}` : month;
-  return `${formattedMonth}/${formattedDate}/${year}`;
-}
+import paymentService from "./../utilities/paymentService";
+import { CircularProgress } from "@mui/material";
 
 const Tenant = () => {
-  const { addUser, user } = UserContext();
-  const [open, setOpen] = React.useState(true);
+  const { user } = UserContext();
+  const [open, setOpen] = useState(true);
   const [tenantData, setTenantData] = useState([]);
-  const [currentBalance, setCurrentBalance] = useState([]);
-  const [creditcardNumber, setCreditCardNumber] = useState("");
-  const [value, setValue] = React.useState("Home");
+  const [currentContract, setCurrentContract] = useState([]);
   const [isCreditCardDialogOpen, setIsCreditCardDialogOpen] = useState(false);
   const [isRentDialogOpen, setIsRentDialogOpen] = useState(false);
   const [isPayByCreditCardDialogOpen, setIsPayByCreditCardDialogOpen] =
     useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [paymentInfo, setPaymentInfo] = useState([]);
 
-  const [currentDate, setCurrentDate] = useState(getDate());
-  const [rentDate, setRentDate] = useState(rentDueDate());
+  //Payment History by tenantId
+  const [existingPayments, setExistingPayments] = useState([]);
+  //Payment due state variables
+  const [paymentDueInfo, setPaymentDueInfo] = useState([]);
+  const [currentDate, setCurrentDate] = useState("");
+  const [rentDate, setRentDate] = useState("");
 
+  // helper functions
+  function getDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    setCurrentDate(`${month}/${date}/${year}`);
+  }
+
+  function rentDueDate() {
+    const today = new Date();
+    let month = today.getMonth() + 2;
+    const year = today.getFullYear() + 1;
+    let date = 1;
+
+    const formattedDate = date < 10 ? `0${date}` : date;
+    // Adjust the month if it's greater than 11
+    if (month > 11) {
+      month = month % 12; // Get the remainder after dividing by 12
+    }
+
+    // Convert month to a string with leading zero if needed
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    setRentDate(`${formattedMonth}/${formattedDate}/${year}`);
+  }
+
+  // api requests
   useEffect(() => {
     const getTenantData = async () => {
       let response = await api.get(`tenant/${user[0].tenantId}`);
       let data = response.data;
       setTenantData(data);
     };
-
     getTenantData();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -85,36 +83,39 @@ const Tenant = () => {
 
   // add in contract by ID to display current rent
   useEffect(() => {
+    getDate();
+    rentDueDate();
     const getCurrentBalance = async () => {
-      let response = await api.get(`tenant/${user[0].tenantId}/contract`);
-      let paymentData = response.data;
-      setCurrentBalance(paymentData);
+      try {
+        let response = await api.get(`tenant/${user[0].tenantId}/contract`);
+        let paymentData = response.data;
+        //set contract info
+        console.log(response.data);
+        setCurrentContract(paymentData);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    console.log(paymentInfo);
+
     getCurrentBalance();
-  }, []);
+  }, [user]);
 
   //get payments by tenant ID
   useEffect(() => {
     const getPaymentInfo = async () => {
-      let response = await api.get(`payment/tenant/${user[0].tenantId}`);
-      let balanceData = response.data;
-
-      //if payment date is in table that is the current month
-      // then set current balance to 0
-      setCurrentBalance(balanceData);
+      try {
+        let response = await api.get(`payment/tenant/${user[0].tenantId}`);
+        setExistingPayments(response.data);
+        console.log(response.data);
+        // so now amount_paid and rent_due are in existingPayments
+        // order the data by date_paid??
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getPaymentInfo();
-  }, []);
-
-  {
-    /* GET request for getting user information that is signed in */
-  }
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  }, [user]);
 
   const onClickOpenCreditCardDialog = () => {
     setIsCreditCardDialogOpen(true);
@@ -124,13 +125,13 @@ const Tenant = () => {
     setIsCreditCardDialogOpen(false);
   };
 
-  const onClickOpenRentPaymentDialog = () => {
-    setIsRentDialogOpen(true);
-  };
+  // const onClickOpenRentPaymentDialog = () => {
+  //   setIsRentDialogOpen(true);
+  // };
 
-  const onClickCloseRentPaymentDialog = () => {
-    setIsRentDialogOpen(false);
-  };
+  // const onClickCloseRentPaymentDialog = () => {
+  //   setIsRentDialogOpen(false);
+  // };
 
   const onClickOpenPayByCreditCardDialog = () => {
     setIsPayByCreditCardDialogOpen(true);
@@ -141,7 +142,7 @@ const Tenant = () => {
   };
 
   return (
-    <div>
+    <div className="tenant-container">
       <header>
         {showAlert && (
           <div className="alert">
@@ -170,62 +171,92 @@ const Tenant = () => {
           </div>
         )}
       </header>
+      <div className="general-box">
+        {/* Display welcome message for user*/}
+        {tenantData.firstName ? (
+          <h1>
+            Welcome {tenantData.firstName} {tenantData.lastName}
+          </h1>
+        ) : (
+          <CircularProgress />
+        )}
 
-      {/* Display welcome message for user*/}
-      <h1>
-        Welcome {tenantData.firstName} {tenantData.lastName}
-      </h1>
-      <h2>Today's Date: {currentDate}</h2>
+        {/* Display user balance information*/}
+        {/* If there is no contract, then display no balance due*/}
+        {currentContract.rent ? (
+          <>
+            <h2>Today&apos;s Date: {currentDate}</h2>
+            <div className="account-balance">
+              {existingPayments[existingPayments.length - 1]?.date_paid ? (
+                <>
+                  <h3>
+                    Current Account Rent Due: $
+                    {existingPayments[existingPayments.length - 1].rent_due -
+                      existingPayments[existingPayments.length - 1].amount_paid}
+                  </h3>
+                  <h3 className="payment-received">
+                    Payment received on{" "}
+                    {existingPayments[existingPayments.length - 1].date_paid}{" "}
+                    Thank You!
+                  </h3>
+                </>
+              ) : (
+                <>
+                  <h3>Current Account Rent Due: ${currentContract.rent}</h3>
+                  <h3>Rent Due on: {rentDate}</h3>
+                </>
+              )}
+              <h3>
+                Number of months remaining for payment: {currentContract.length}
+              </h3>
 
-      {/* Display user balance information*/}
-      {value === "Home" ? (
-        <>
-          <div className="account-balance">
-            Current Account Balance:
-            <h3>${currentBalance.rent}</h3>
-            <h3>Rent Due on: {rentDate}</h3>
-            <p>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={onClickOpenCreditCardDialog}
-              >
-                Add Card
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={onClickOpenPayByCreditCardDialog}
-              >
-                Pay Rent
-              </Button>
-              {/* <Button variant="outlined" fullWidth onClick={onClickOpenRentPaymentDialog}>Pay Rent</Button> */}
-            </p>
-          </div>
+              <p>
+                <Box
+                  display="flex"
+                  width={500}
+                  justifyContent="space-around" // Add border for visualization
+                  margin={2}
+                  paddingTop={2} // Add padding for visualization
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={onClickOpenCreditCardDialog}
+                    style={{ width: "200px" }}
+                  >
+                    Add Card
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={onClickOpenPayByCreditCardDialog}
+                    style={{ width: "200px" }}
+                  >
+                    Pay Rent
+                  </Button>
+                </Box>
+              </p>
+            </div>
+          </>
+        ) : (
+          <CircularProgress />
+        )}
+      </div>
+      <CreditCardPaymentDialog
+        open={isCreditCardDialogOpen}
+        onClose={onClickCloseCreditCardDialog}
+      />
 
-          <CreditCardPaymentDialog
-            open={isCreditCardDialogOpen}
-            onClose={onClickCloseCreditCardDialog}
-          />
-
-          {/* <RentPaymentDialog
+      {/* <RentPaymentDialog
                     open={isRentDialogOpen}
                     onClose={onClickCloseRentPaymentDialog}
                     /> */}
 
-          <PayByCreditCardDialog
-            open={isPayByCreditCardDialogOpen}
-            onClose={onClickClosePayByCreditCardDialog}
-          />
-        </>
-      ) : value === "Account" && tenantData ? (
-        <TenantAccountComponent tenantData={tenantData} />
-      ) : (
-        <TenantHistoryComponent />
-      )}
+      <PayByCreditCardDialog
+        open={isPayByCreditCardDialogOpen}
+        onClose={onClickClosePayByCreditCardDialog}
+      />
 
       <Box sx={{ width: "100%" }}>
-        <BottomNavigation
+        {/* <BottomNavigation
           showLabels
           value={value}
           onChange={(event, newValue) => {
@@ -247,7 +278,7 @@ const Tenant = () => {
             value="History"
             icon={<ReceiptLongOutlinedIcon />}
           />
-        </BottomNavigation>
+        </BottomNavigation> */}
       </Box>
     </div>
   );

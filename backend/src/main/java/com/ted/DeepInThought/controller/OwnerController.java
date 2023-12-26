@@ -73,6 +73,8 @@ public class OwnerController extends BaseController<Owner, String> {
             return new ResponseEntity<>(updatedOwner, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (DuplicateKeyException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 

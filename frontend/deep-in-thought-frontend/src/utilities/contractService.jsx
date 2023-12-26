@@ -1,10 +1,10 @@
 import api from "./axiosConfig";
-import { UserContext } from "../context/UserContext";
 
-
-// const { addUser, user } = UserContext() 
+// const { addUser, user } = UserContext()
 const contractService = {
-    createContract: (contractInfo) => api.post('/contract', contractInfo),
-  };
+  createContract: (contractInfo) => api.post("/contract", contractInfo),
+  editContract: (contractId, contractInfo) =>
+    api.put(`/contract/${contractId}`, contractInfo),
+};
 
-export default contractService
+export default contractService;

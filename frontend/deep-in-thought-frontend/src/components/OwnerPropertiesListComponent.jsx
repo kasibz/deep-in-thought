@@ -1,10 +1,11 @@
-import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem } from '@mui/material';
+import { Container, List, ListItemButton, ListItemText, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, ListItem, Box, CircularProgress } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMyPropertyContext } from './../context/PropertyContext';
 import AddPropertyDialog from './dialogs/AddPropertyDialog';
 import propertyService from '../utilities/propertyService';
 import { UserContext } from './../context/UserContext';
+import SuccessSnackBar from './snackbar/SuccessSnackBar';
 
 const OwnerPropertyComponent = () => {
     // calling user context
@@ -29,7 +30,6 @@ const OwnerPropertyComponent = () => {
 
     // calling property context state variables
     const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
-
     //loading variable 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -70,12 +70,26 @@ const OwnerPropertyComponent = () => {
         setNewProperty({ ...newProperty, [e.target.name]: e.target.value });
     };
 
+    //snack bar state variables
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    //snack bar on close function
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
     const onSubmitAddProproperty = async () => {
         console.log(newProperty);
         try {
             const addPropertyResponse = await propertyService.addProperty(newProperty);
             console.log(addPropertyResponse)
             if (addPropertyResponse.status === 201) {
+                //snack bar message
+                setSnackbarMessage('Property added successfully!');
+                //set true to open snack bar
+                setSnackbarOpen(true);
+                // close dialog
                 setOpen(false);
             } else {
                 alert('something is wrong. This need to be changed')
@@ -86,31 +100,48 @@ const OwnerPropertyComponent = () => {
     };
     // display none when loading variable is true
     if (isLoading) {
-        return <div></div>; 
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress />
+            </Box>
+        );
     }
 
     return (
-        <Container>
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-                My Properties
-            </Typography>
-            <List>
+        <Container className='container' sx={{ maxWidth: '600px' }}>
+            <List className='general-box' sx={{ maxHeight: '600px', overflowY: 'auto' }}>
+                <ListItem>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', gap: 6 }}>
+                        <Typography variant="h4">
+                            My properties
+                        </Typography>
+                        <Button size='small' onClick={onClickOpenDialog} variant="contained">
+                            Add Property
+                        </Button>
+                    </Box>
+                </ListItem>
                 {ownerProperties && ownerProperties.length > 0 ? ownerProperties.map((property, index) => (
-                    <Fragment key={property.id}>
+                    <Box key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
-                            <ListItemText
-                                primary={property.name}
-                                secondary={`Type: ${property.type} - Address: ${property.streetAddress} ${property.city} ${property.state} ${property.zipcode}`}
+                            <ListItemText sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}
+                                primary={
+                                    <Typography variant="h6">
+                                        {`Property : ${property.name}`}
+                                    </Typography>}
+                                secondary={
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                        <Typography component="span" variant="body1" color="textPrimary">
+                                            Type: {property.type}
+                                        </Typography>
+                                        <Typography component="span" variant="body1" color="textPrimary">
+                                            Address: {property.streetAddress} {property.city} {property.state} {property.zipcode}
+                                        </Typography>
+                                    </Box>}
                             />
                         </ListItemButton>
                         {index !== ownerProperties.length - 1 && <Divider />}
-                    </Fragment>
+                    </Box>
                 )) : <div>You currently have no properties listed. Click here to add your first property</div>}
-                <ListItem>
-                    <Button onClick={onClickOpenDialog} variant="outlined" fullWidth>
-                        Add Property
-                    </Button>
-                </ListItem>
             </List>
 
             {/* Add Property Dialog */}
@@ -120,6 +151,11 @@ const OwnerPropertyComponent = () => {
                 newProperty={newProperty}
                 onChange={onChangeAddPropertyTextField}
                 onSubmit={onSubmitAddProproperty}
+            />
+            <SuccessSnackBar
+                open={snackbarOpen}
+                message={snackbarMessage}
+                handleClose={handleCloseSnackbar}
             />
         </Container>
     );

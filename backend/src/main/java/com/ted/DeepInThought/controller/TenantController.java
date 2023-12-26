@@ -80,6 +80,8 @@ public class TenantController extends BaseController<Tenant, String> {
             return new ResponseEntity<>(tenantService.editTenant(id, tenantRequest), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (DuplicateKeyException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 

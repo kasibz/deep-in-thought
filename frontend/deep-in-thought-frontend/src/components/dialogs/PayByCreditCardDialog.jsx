@@ -5,6 +5,9 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Select,
+  MenuItem,
+  ListItemIcon,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -12,6 +15,7 @@ import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import ErrorSnackBar from "../snackbar/ErrorSnackBar";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -32,8 +36,12 @@ import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import { blue } from "@mui/material/colors";
+import { flexbox } from "@mui/system";
+import contractService from "../../utilities/contractService";
+import { useNavigate } from "react-router-dom";
 
 const PayByCreditCardDialog = (props) => {
+  const navigate = useNavigate();
   const { addUser, user } = UserContext();
   const { onClose, selectedValue, open } = props;
 
@@ -69,41 +77,104 @@ const PayByCreditCardDialog = (props) => {
     const formattedMonth = month < 10 ? `0${month}` : month;
     return `${year}-${formattedMonth}-${formattedDate}`;
   }
+  //function to get the last of the month
+  function getLastDayOfMonthFormatted() {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
 
+    // First day of the next month
+    const firstDayNextMonth = new Date(currentYear, currentMonth + 1, 1);
 
-  //this function gets the contract data for the tenant 
+    // Last day of the current month
+    const lastDayThisMonth = new Date(firstDayNextMonth - 1);
+
+    // Formatting year, month, and date
+    const year = lastDayThisMonth.getFullYear();
+    const month = lastDayThisMonth.getMonth() + 1; // getMonth() returns 0-11
+    const date = lastDayThisMonth.getDate();
+
+    // Ensuring month and date are in 'MM' and 'DD' format
+    const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+    const formattedDate = date < 10 ? `0${date}` : `${date}`;
+
+    return `${year}-${formattedMonth}-${formattedDate}`;
+  }
+  //function to get current day
+  function getTodaysDateFormatted() {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // getMonth() returns 0-11
+    const date = today.getDate();
+
+    // Ensuring month and date are in 'MM' and 'DD' format
+    const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+    const formattedDate = date < 10 ? `0${date}` : `${date}`;
+
+    return `${year}-${formattedMonth}-${formattedDate}`;
+  }
+  // calling above functions
+  const formattedToday = getTodaysDateFormatted();
+  const formattedEndOfMonth = getLastDayOfMonthFormatted();
+
+  //this function gets the contract data for the tenant
   useEffect(() => {
     const getContractData = async () => {
       let response = await api.get(`tenant/${user[0].tenantId}/contract`);
       let balanceData = response.data;
       setContractData(balanceData);
+      setPaymentAmount(balanceData.rent);
 
-      console.log("Contract data: ", balanceData);
+      // console.log("Contract data: ", balanceData);
     };
-    setPaymentAmount(contractData.rent);
 
     getContractData();
   }, []);
 
+  // listen for the openDialogChange and edit the contract as needed to reflect the payment maid
 
-  //this function passes the post request to post a payment in the database
-  const addPayment = async (e) => {
+  const editContract = async () => {
     try {
-      e.preventDefault();
-      let response = await api.post("/payment", {
-        datePaid: datePaid,
-        dateDue: dateDue,
-        amount: Number(paymentAmount),
-        paid: paid,
-        creditCardId: creditCardId,
-      });
-      let newPayment = response.data;
+      const updatedContract = {
+        length: contractData.length - 1,
+      };
+      let response = await contractService.editContract(
+        contractData.contract_id,
+        updatedContract
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  //these all handle the open and close of the dialog box based on if cancel or submit are clicked 
+  //this function passes the post request to post a payment in the database
+  const addPayment = async (e) => {
+    try {
+      e.preventDefault();
+      const paymentData = {
+        datePaid: formattedToday,
+        dateDue: formattedEndOfMonth,
+        amount: Number(paymentAmount),
+        paid: paid,
+        creditCardId: creditCardId,
+      };
+      let response = await api.post("/payment", paymentData);
+      if (response.status === 201) {
+        setOpenDialog(true);
+      }
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // handle on amount
+  const handleAmountChange = (event) => {
+    setPaymentAmount(event.target.value);
+  };
+
+  //these all handle the open and close of the dialog box based on if cancel or submit are clicked
   const handleErrorClickOpen = () => {
     setOpenDialog(true);
   };
@@ -147,7 +218,7 @@ const PayByCreditCardDialog = (props) => {
     getCreditCard();
   }, []);
 
-  //closes dialog box 
+  //closes dialog box
   const handleClose = () => {
     onClose(selectedValue);
   };
@@ -158,30 +229,31 @@ const PayByCreditCardDialog = (props) => {
     <>
       <Dialog open={open} onClose={handleClose} fullWidth={fullWidth}>
         <DialogTitle>Pay Rent</DialogTitle>
-        <List sx={{ pt: 1 }}>
-          {creditCardData.map((card, index) => (
-            //this list item pulls all the credit cards and displays the last four digits along with a number logo
-            <ListItem disableGutters key={index}>
-              <ListItemButton
-                onClick={() => {
-                  setCreditCardId(card.id);
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                    <AttachMoneyOutlinedIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={String(card.cardNumber).substring(
-                    String(card.cardNumber).length - 5,
-                    String(card.cardNumber).length - 1
-                  )}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        <FormControl fullWidth>
+          <InputLabel>Credit Card</InputLabel>
+          <Select
+            value={creditCardId}
+            label="Credit Card"
+            onChange={(event) => {
+              setCreditCardId(event.target.value);
+            }}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            {creditCardData.map((card, index) => (
+              <MenuItem key={index} value={card.id}>
+                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                  <AttachMoneyOutlinedIcon />
+                </Avatar>
+                <ListItemText primary={String(card.cardNumber).slice(-4)} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         {/* sets the amount value to the rent, can't be changed */}
         <FormControl fullWidth sx={{ m: 1 }}>
@@ -189,11 +261,11 @@ const PayByCreditCardDialog = (props) => {
           <Input
             id="standard-adornment-amount"
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            onChange={handleAmountChange}
             value={paymentAmount}
           />
         </FormControl>
-        
-        <TextField
+        {/* <TextField
           autoFocus
           required
           margin="dense"
@@ -213,7 +285,7 @@ const PayByCreditCardDialog = (props) => {
           variant="standard"
           helperText="Select Today's Date"
           onChange={(e) => setDatePaid(e.target.value)}
-        />
+        /> */}
 
         {/* This handles the open and close dialog when clicking submit or cancel */}
         <DialogActions>
@@ -231,6 +303,10 @@ const PayByCreditCardDialog = (props) => {
               onClose();
               handleSuccessCancel();
               addPayment(e);
+              editContract();
+              setTimeout(() => {
+                navigate(0);
+              }, 2000);
             }}
             color="success"
           >
@@ -238,7 +314,7 @@ const PayByCreditCardDialog = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      
+
       {/* snackbar pop ups along with alerts  */}
       <Snackbar
         open={errorSnackbar}
@@ -260,6 +336,7 @@ const PayByCreditCardDialog = (props) => {
         open={successSnackbar}
         autoHideDuration={3000}
         onClose={handleSuccessCloseSnackbar}
+        className="snackbar"
       >
         <MuiAlert
           elevation={6}

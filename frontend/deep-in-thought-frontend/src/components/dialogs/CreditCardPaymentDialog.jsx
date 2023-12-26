@@ -48,9 +48,8 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     return false;
   }
 
-  const addCreditCard = async (e) => {
+  const addCreditCard = async () => {
     console.log("Add credit card started...");
-    e.preventDefault();
 
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
@@ -70,18 +69,29 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         console.log(response);
         setCreditCardAdd(newCard);
         alert("Success");
+        onClose();
+        return;
       } catch (error) {
         console.log(error);
         console.log("Post request error");
       }
     }
     setSuccessSnackbar(false);
+    handleErrorCancel();
     alert("Invalid Credit Card");
   };
 
-  useEffect(() => {
-    console.log("Credit Cards: ", creditCardAdd);
-  }, [creditCardAdd]);
+  const handleSubmitCreditCardClick = () => {
+    try {
+      addCreditCard();
+      clearFields();
+    } catch (error) {
+      alert(error.message);
+      handleErrorCancel();
+    }
+  };
+
+  useEffect(() => {}, [creditCardAdd]);
 
   const clearFields = () => {
     setName("");
@@ -221,15 +231,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           >
             Cancel
           </Button>
-          <Button
-            onClick={(e) => {
-              onClose();
-              handleSuccessCancel();
-              addCreditCard(e);
-              clearFields();
-            }}
-            color="success"
-          >
+          <Button onClick={handleSubmitCreditCardClick} color="success">
             Submit
           </Button>
         </DialogActions>

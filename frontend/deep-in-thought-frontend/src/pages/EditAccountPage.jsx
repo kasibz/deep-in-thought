@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import UserAccountComponent from "../components/user/UserAccountComponent";
 import { UserContext } from "../context/UserContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function EditAccountPage() {
   const { user } = UserContext();
@@ -23,12 +24,11 @@ function EditAccountPage() {
   }, [userId, userType]);
 
   return (
-    <div>
-      <h2>Edit Account</h2>
+    <div className="container">
       {userData ? (
         <UserAccountComponent userData={userData} userType={userType} />
       ) : (
-        <p>Data loading...</p>
+        <CircularProgress />
       )}
     </div>
   );
