@@ -1,12 +1,10 @@
 body {
   margin: 0 auto;
   padding: 0 auto;
-  background-image: url('https://cdn3.vox-cdn.com/uploads/chorus_asset/file/7760139/60th_Floor_South_View.jpg'); /* Adjust the path as necessary */
+  background-image: url("https://cdn3.vox-cdn.com/uploads/chorus_asset/file/7760139/60th_Floor_South_View.jpg"); /* Adjust the path as necessary */
   background-size: cover; /* Cover the entire page */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent repeating the image */
-  height: 100vh; /* Full height */
-  width: 100vw; /* Full width */
 }
 
 .payment-received {
