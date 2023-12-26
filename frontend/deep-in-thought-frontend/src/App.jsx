@@ -11,6 +11,8 @@ import Layout from "./components/layout/Layout";
 import CreateResident from "./pages/CreateResident";
 import EditAccountPage from "./pages/EditAccountPage";
 import ResetPassword from "./pages/ResetPassword";
+import FinancialStatements from "./pages/FinancialStatementsPage";
+import FinancialStatementsPage from "./pages/FinancialStatementsPage";
 
 function App() {
   const ownerId = localStorage.getItem("ownerId");
@@ -66,6 +68,7 @@ function App() {
         { path: "/resetPassword", element: <ResetPassword /> },
         { path: "/createResident", element: <CreateResident /> },
         { path: "/editAccount", element: <EditAccountPage /> },
+        { path: "/financialStatements", element: <FinancialStatementsPage /> },
       ],
     },
   ]);
