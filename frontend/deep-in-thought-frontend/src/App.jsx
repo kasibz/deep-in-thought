@@ -17,7 +17,7 @@ import FinancialStatementsPage from "./pages/FinancialStatementsPage";
 function App() {
   const ownerId = localStorage.getItem("ownerId");
   const tenantId = localStorage.getItem("tenantId");
-
+  console.log(ownerId)
   const defaultRouter = createBrowserRouter([
     {
       path: "/",
