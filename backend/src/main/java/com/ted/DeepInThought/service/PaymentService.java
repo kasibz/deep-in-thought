@@ -88,4 +88,8 @@ public class PaymentService extends BaseService<Payment, String> {
     public List<PaymentRepository.PaymentsByTenantId> getAllPaymentsByTenant(String tenantId) {
         return paymentRepo.findAllPaymentsByTenantId(tenantId);
     }
+
+    public List<PaymentRepository.PaymentsByOwnerId> getAllPaymentsByOwner(String ownerId) {
+        return paymentRepo.findAllPaymentsByOwnerId(ownerId);
+    }
 }
