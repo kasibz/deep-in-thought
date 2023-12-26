@@ -101,33 +101,47 @@ const OwnerPropertyComponent = () => {
     // display none when loading variable is true
     if (isLoading) {
         return (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-            <CircularProgress />
-          </Box>
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress />
+            </Box>
         );
-      }
+    }
 
     return (
-        <Container>
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-                My Properties
-            </Typography>
-            <List>
+        <Container className='container' sx={{ width: '800px', maxWidth: '400px' }}>
+            <List className='general-box'>
+                <Typography variant="h4" sx={{ m: 2 }}>
+                    My Properties
+                </Typography>
                 {ownerProperties && ownerProperties.length > 0 ? ownerProperties.map((property, index) => (
-                    <Fragment key={property.id}>
+                    <Box key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
-                            <ListItemText
-                                primary={property.name}
-                                secondary={`Type: ${property.type} - Address: ${property.streetAddress} ${property.city} ${property.state} ${property.zipcode}`}
+                            <ListItemText sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}
+                                primary={
+                                    <Typography variant="h6">
+                                        {`Property : ${property.name}`}
+                                    </Typography>}
+                                secondary={
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                        <Typography component="span" variant="body1" color="textPrimary">
+                                            Type: {property.type}
+                                        </Typography>
+                                        <Typography component="span" variant="body1" color="textPrimary">
+                                            Address: {property.streetAddress} {property.city} {property.state} {property.zipcode}
+                                        </Typography>
+                                    </Box>}
                             />
                         </ListItemButton>
                         {index !== ownerProperties.length - 1 && <Divider />}
-                    </Fragment>
+                    </Box>
                 )) : <div>You currently have no properties listed. Click here to add your first property</div>}
                 <ListItem>
-                    <Button onClick={onClickOpenDialog} variant="outlined" fullWidth>
-                        Add Property
-                    </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <Button size='small' onClick={onClickOpenDialog} variant="contained">
+                            Add Property
+                        </Button>
+                    </Box>
+
                 </ListItem>
             </List>
 
