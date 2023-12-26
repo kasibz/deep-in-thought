@@ -1,6 +1,6 @@
-import { Box, Button, Container, TextField } from "@mui/material"
+import { Box, Button, Container, TextField, Typography } from "@mui/material"
 
-const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) => {
+const SignupComponent = ({ userSingupInfo, setUserSingupInfo, registerRequest }) => {
 
     const onChangeUserSignupInfo = (e) => {
         const { name, value } = e.target;
@@ -20,8 +20,9 @@ const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) =
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container className="container" component="main" maxWidth="xs">
             <Box
+                className="general-box"
                 sx={{
                     marginTop: 8,
                     display: 'flex',
@@ -29,6 +30,7 @@ const SignupComponent = ({userSingupInfo, setUserSingupInfo, registerRequest}) =
                     alignItems: 'center',
                 }}
             >
+                <Typography variant="h6">Create your account</Typography>
                 <form onSubmit={onSubmitSignup}>
                     <TextField
                         variant="outlined"
