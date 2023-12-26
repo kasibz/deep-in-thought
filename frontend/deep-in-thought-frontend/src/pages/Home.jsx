@@ -13,6 +13,10 @@ const Home = () => {
 
   //loading variable
   const [isLoading, setIsLoading] = useState(true);
+  const [userUpdateResult, setUserUpdateResult] = useState({
+    success: false,
+    failure: false,
+  });
 
   //persist data using useEffect
   useEffect(() => {
@@ -40,16 +44,23 @@ const Home = () => {
     if (userTypeChecked) {
       try {
         const response = await authService.ownerLogin(userLoginInfo);
-        console.log(response);
         if (response.status == 200) {
           addUser({
             ownerId: response.data.ownerId,
           });
           localStorage.setItem("ownerId", response.data.ownerId);
           localStorage.removeItem("tenantId");
+          setUserUpdateResult({
+            failure: false,
+            success: true,
+          });
           setUserTypeChecked(false);
         }
       } catch (error) {
+        setUserUpdateResult({
+          failure: true,
+          success: false,
+        });
         console.log(error);
       }
     } else {
@@ -62,8 +73,16 @@ const Home = () => {
           });
           localStorage.setItem("tenantId", response.data.tenantId);
           localStorage.removeItem("ownerId");
+          setUserUpdateResult({
+            failure: false,
+            success: true,
+          });
         }
       } catch (error) {
+        setUserUpdateResult({
+          failure: true,
+          success: false,
+        });
         console.log(error);
       }
     }
@@ -82,6 +101,8 @@ const Home = () => {
           setUserLoginInfo={setUserLoginInfo}
           setUserTypeChecked={setUserTypeChecked}
           loginRequest={loginRequest}
+          setUserUpdateResult={setUserUpdateResult}
+          userUpdateResult={userUpdateResult}
         />
       ) : user[0].ownerId ? (
         <OwnerPropertyComponent />
