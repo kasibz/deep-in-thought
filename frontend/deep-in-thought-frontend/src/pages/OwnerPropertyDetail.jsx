@@ -97,7 +97,7 @@ const OwnerPropertyDetail = () => {
     // display none when loading variable is true
     if (isLoading) {
         return (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
             <CircularProgress />
           </Box>
         );
