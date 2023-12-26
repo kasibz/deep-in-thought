@@ -39,10 +39,30 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
         Long getRent_due();
     }
 
+    public interface PaymentsByOwnerId {
+        String getId();
+        LocalDate getDate_paid();
+        LocalDate getDate_due();
+        Long getAmount();
+        String getFirst_name();
+        String getLast_name();
+        String getType();
+        String getProperty_id();
+    }
+
     // get the associations
     @Query(value = "SELECT PAYMENT.ID, PAYMENT.DATE_PAID, PAYMENT.DATE_DUE, PAYMENT.AMOUNT, CREDITCARD.TYPE, TENANT.FIRST_NAME, TENANT.LAST_NAME FROM PAYMENT JOIN CREDITCARD ON PAYMENT.CREDIT_CARD_ID = CREDITCARD.ID JOIN TENANT ON CREDITCARD.TENANT_ID = TENANT.ID WHERE TENANT.PROPERTY_ID = :propertyId", nativeQuery = true)
     List<PaymentsByPropertyId> findAllPaymentsByProperty(@Param("propertyId") String id);
 
     @Query(value ="SELECT PAYMENT.ID, PAYMENT.DATE_PAID, PAYMENT.DATE_DUE, PAYMENT.AMOUNT AS AMOUNT_PAID, CREDITCARD.TYPE, CREDITCARD.CARD_NUMBER, TENANT.FIRST_NAME, TENANT.LAST_NAME, CONTRACT.START_DATE, CONTRACT.STOP_DATE, CONTRACT.RENT AS RENT_DUE FROM PAYMENT JOIN CREDITCARD ON PAYMENT.CREDIT_CARD_ID = CREDITCARD.ID JOIN TENANT ON CREDITCARD.TENANT_ID = TENANT.ID JOIN CONTRACT ON TENANT.CONTRACT_ID = CONTRACT.ID WHERE TENANT.ID = :tenantId", nativeQuery = true)
     List<PaymentsByTenantId> findAllPaymentsByTenantId(@Param("tenantId") String id);
+
+    @Query(value = "SELECT PAYMENT.ID, PAYMENT.DATE_PAID, PAYMENT.DATE_DUE, PAYMENT.AMOUNT, CREDITCARD.TYPE, " +
+            "TENANT.FIRST_NAME, TENANT.LAST_NAME, PROPERTY.ID AS PROPERTY_ID " +
+            "FROM PAYMENT " +
+            "JOIN CREDITCARD ON PAYMENT.CREDIT_CARD_ID = CREDITCARD.ID " +
+            "JOIN TENANT ON CREDITCARD.TENANT_ID = TENANT.ID " +
+            "JOIN PROPERTY ON TENANT.PROPERTY_ID = PROPERTY.ID " +
+            "WHERE PROPERTY.OWNER_ID = :ownerId", nativeQuery = true)
+    List<PaymentsByOwnerId> findAllPaymentsByOwnerId(@Param("ownerId") String id);
 }
