@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Checkbox, FormControlLabel, Link } from "@mui/material";
+import { Checkbox, FormControlLabel, Link, Typography } from "@mui/material";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -34,8 +34,9 @@ const LoginComponent = ({
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className="container" component="main" maxWidth="xs">
       <Box
+        className='general-box'
         sx={{
           marginTop: 8,
           display: "flex",
@@ -43,6 +44,9 @@ const LoginComponent = ({
           alignItems: "center",
         }}
       >
+        <Typography variant="h6">
+          Log in
+        </Typography>
         <form onSubmit={onSubmitLogin}>
           <TextField
             variant="outlined"
@@ -79,11 +83,13 @@ const LoginComponent = ({
             <CircularProgress />
           )}
         </form>
-        <FormControlLabel
-          control={<Checkbox onChange={onChangeCheckBox} />}
-          label="Check this box if you are Owner"
-        />
-        <Link href="signup">Owner Registration</Link>
+        <Box sx={{display:'flex', flexDirection:'column', gap:3}}>
+          <FormControlLabel
+            control={<Checkbox onChange={onChangeCheckBox} />}
+            label="I am a property owner."
+          />
+          <Link href="signup">Owner Registration</Link>
+        </Box>
       </Box>
     </Container>
   );

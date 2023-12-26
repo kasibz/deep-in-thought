@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { UserContext } from "../../context/UserContext";
 
 export const Navbar = () => {
@@ -18,11 +18,15 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{backgroundColor:'#1F4172'}}>
       <Toolbar>
         <Button component={Link} to="/" color="inherit">
           Deep in Thought
         </Button>
+
+        {/* divider */}
+        <Divider orientation="vertical" flexItem sx={{ mx: 2, height:25, my:'auto', backgroundColor:'white' }} />
+
         {/*check user has at least one element and then access user.tenantId*/}
         {user.length > 0 && user[0].ownerId && (
           <>
