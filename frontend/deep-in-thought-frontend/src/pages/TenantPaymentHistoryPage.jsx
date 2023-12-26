@@ -14,7 +14,7 @@ const maskCardNumber = (cardNumber) => {
   return `${'x'.repeat(String(cardNumber).length - 4)}${String(cardNumber).slice(-4)}`;
 };
 
-const TenantPayment = () => {
+const TenantPaymentHistoryPage = () => {
 
   const [paymentHistory, setPaymentHistory] = React.useState('');
   const { user } = UserContext()
@@ -64,4 +64,4 @@ const TenantPayment = () => {
     </>
   );
 }
-export default TenantPayment
+export default TenantPaymentHistoryPage

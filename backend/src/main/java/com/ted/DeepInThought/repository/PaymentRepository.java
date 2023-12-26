@@ -48,6 +48,7 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
         String getLast_name();
         String getType();
         String getProperty_id();
+        String getStreet_address();
     }
 
     // get the associations
@@ -58,7 +59,7 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
     List<PaymentsByTenantId> findAllPaymentsByTenantId(@Param("tenantId") String id);
 
     @Query(value = "SELECT PAYMENT.ID, PAYMENT.DATE_PAID, PAYMENT.DATE_DUE, PAYMENT.AMOUNT, CREDITCARD.TYPE, " +
-            "TENANT.FIRST_NAME, TENANT.LAST_NAME, PROPERTY.ID AS PROPERTY_ID " +
+            "TENANT.FIRST_NAME, TENANT.LAST_NAME, PROPERTY.ID AS PROPERTY_ID, PROPERTY.STREET_ADDRESS " +
             "FROM PAYMENT " +
             "JOIN CREDITCARD ON PAYMENT.CREDIT_CARD_ID = CREDITCARD.ID " +
             "JOIN TENANT ON CREDITCARD.TENANT_ID = TENANT.ID " +
