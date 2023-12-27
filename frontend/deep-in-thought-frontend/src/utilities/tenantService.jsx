@@ -14,7 +14,7 @@ const tenantService = {
     api.get(`/tenant/property/${propertyId}`),
   getAllTenant: () => api.get("/tenant"),
   editTenant: (tenantId, obj) => api.put(`/tenant/${tenantId}`, obj),
-  // tenantInformation: () => api.get(`/tenant/${user.tenantId}`)
+  getTenantContractInformation: (tenantId) => api.get(`/tenant/${tenantId}/contract`)
 };
 
 export default tenantService;

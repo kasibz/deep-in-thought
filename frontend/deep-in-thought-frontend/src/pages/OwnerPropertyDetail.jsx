@@ -84,9 +84,12 @@ const OwnerPropertyDetail = () => {
         const requestResidentInformationByProperty = async () => {
             try {
                 const response = await tenantService.getTenantByProperty(propertyId)
-                if (response.status === 200) {
-                    // This need to be changed if there are more than one resident. Save as response.data
+                if (response.status === 200 && response.data.length == 0) {
                     setResidentInfo(response.data[0])
+                    // This need to be changed if there are more than one resident. Save as response.data
+                }else {
+                    const contractResponse = await tenantService.getTenantContractInformation(response.data[0].id)
+                    setResidentInfo(contractResponse.data)
                 }
                 setIsLoading(false)
             } catch (error) {
