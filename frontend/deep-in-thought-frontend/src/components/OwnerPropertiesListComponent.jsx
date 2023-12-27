@@ -108,11 +108,18 @@ const OwnerPropertyComponent = () => {
     }
 
     return (
-        <Container className='container' sx={{ width: '800px', maxWidth: '400px' }}>
-            <List className='general-box'>
-                <Typography variant="h4" sx={{ m: 2 }}>
-                    My Properties
-                </Typography>
+        <Container className='container' sx={{ width:'600px', minWidth:'100px' }}>
+            <List className='general-box' sx={{ maxHeight: '600px', overflowY: 'auto' }}>
+                <ListItem>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', gap: 6 }}>
+                        <Typography variant="h4">
+                            My properties
+                        </Typography>
+                        <Button size='small' onClick={onClickOpenDialog} variant="contained">
+                            Add Property
+                        </Button>
+                    </Box>
+                </ListItem>
                 {ownerProperties && ownerProperties.length > 0 ? ownerProperties.map((property, index) => (
                     <Box key={property.id}>
                         <ListItemButton onClick={() => onClickProperty(property)}>
@@ -135,14 +142,6 @@ const OwnerPropertyComponent = () => {
                         {index !== ownerProperties.length - 1 && <Divider />}
                     </Box>
                 )) : <div>You currently have no properties listed. Click here to add your first property</div>}
-                <ListItem>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                        <Button size='small' onClick={onClickOpenDialog} variant="contained">
-                            Add Property
-                        </Button>
-                    </Box>
-
-                </ListItem>
             </List>
 
             {/* Add Property Dialog */}

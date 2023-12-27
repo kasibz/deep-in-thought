@@ -18,20 +18,30 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{backgroundColor:'#1F4172'}}>
+    <AppBar position="static" sx={{ backgroundColor: "#1F4172" }}>
       <Toolbar>
         <Button component={Link} to="/" color="inherit">
           Deep in Thought
         </Button>
-
         {/* divider */}
-        <Divider orientation="vertical" flexItem sx={{ mx: 2, height:25, my:'auto', backgroundColor:'white' }} />
-
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ mx: 2, height: 25, my: "auto", backgroundColor: "white" }}
+        />
         {/*check user has at least one element and then access user.tenantId*/}
         {user.length > 0 && user[0].ownerId && (
           <>
-        <Button component={Link} to="/createResident" color="inherit">
+            <Button component={Link} to="/createResident" color="inherit">
               Create Resident Account
+            </Button>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 2, height: 25, my: "auto", backgroundColor: "white" }}
+            />
+            <Button component={Link} to="/financialStatements" color="inherit">
+              Financial Statements
             </Button>
           </>
         )}
@@ -48,12 +58,17 @@ export const Navbar = () => {
             <Button component={Link} to="/editAccount" color="inherit">
               Edit Account
             </Button>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 2, height: 25, my: "auto", backgroundColor: "white" }}
+            />
             <Button color="inherit" onClick={onClickLogout}>
               Logout
             </Button>
           </>
         )}
-        { }
+        {}
       </Toolbar>
     </AppBar>
   );

@@ -1,22 +1,16 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import paymentService from '../utilities/paymentService';
 import { UserContext } from '../context/UserContext';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, Box } from '@mui/material';
 
 //helper function to mask all but last 4 digits
 const maskCardNumber = (cardNumber) => {
   return `${'x'.repeat(String(cardNumber).length - 4)}${String(cardNumber).slice(-4)}`;
 };
 
-const TenantPayment = () => {
+const TenantPaymentHistoryPage = () => {
 
-  const [paymentHistory, setPaymentHistory] = React.useState('');
+  const [paymentHistory, setPaymentHistory] = useState('');
   const { user } = UserContext()
   useEffect(() => {
     const getPaymentTenantHistory = async () => {
@@ -34,10 +28,17 @@ const TenantPayment = () => {
   }, []);
 
   return (
-    <>
-      {paymentHistory && <TableContainer component={Paper}>
+    <div className='container'>
+      {paymentHistory && paymentHistory.length > 0 ? <TableContainer component={Paper}>
         <Table aria-label="tenant payment history">
           <TableHead>
+            <TableRow>
+              <TableCell colSpan={5} align="center">
+                <Typography variant="h6">
+                  Payment History
+                </Typography>
+              </TableCell>
+            </TableRow>
             <TableRow>
               <TableCell>Date Paid</TableCell>
               <TableCell align="right">Amount Due</TableCell>
@@ -60,8 +61,10 @@ const TenantPayment = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>}
-    </>
+      </TableContainer> : <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
+        <CircularProgress />
+      </Box>}
+    </div>
   );
 }
-export default TenantPayment
+export default TenantPaymentHistoryPage
