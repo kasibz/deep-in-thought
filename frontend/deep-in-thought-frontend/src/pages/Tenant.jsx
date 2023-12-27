@@ -16,7 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import api from "../utilities/axiosConfig";
 import paymentService from "./../utilities/paymentService";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 
 const Tenant = () => {
   const { user } = UserContext();
@@ -35,6 +35,8 @@ const Tenant = () => {
   const [paymentDueInfo, setPaymentDueInfo] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
   const [rentDate, setRentDate] = useState("");
+
+  const [isLoading, setIsloading] = useState(true);
 
   // helper functions
   function getDate() {
@@ -83,6 +85,7 @@ const Tenant = () => {
 
   // add in contract by ID to display current rent
   useEffect(() => {
+    setIsloading(false)
     getDate();
     rentDueDate();
     const getCurrentBalance = async () => {
@@ -92,8 +95,11 @@ const Tenant = () => {
         //set contract info
         console.log(response.data);
         setCurrentContract(paymentData);
+        setIsloading(true)
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsloading(true)
       }
     };
 
@@ -140,6 +146,15 @@ const Tenant = () => {
   const onClickClosePayByCreditCardDialog = () => {
     setIsPayByCreditCardDialogOpen(false);
   };
+
+
+  if(!isLoading){
+    return (
+      <Box>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <div className="tenant-container">
@@ -209,7 +224,7 @@ const Tenant = () => {
               <h3>
                 Number of months remaining for payment: {currentContract.length}
               </h3>
-
+                
               <p>
                 <Box
                   display="flex"
@@ -237,7 +252,10 @@ const Tenant = () => {
             </div>
           </>
         ) : (
-          <CircularProgress />
+          <Box>
+            <Typography variant="h6">Not assigned to any property.</Typography>
+            <Typography variant="h6">Please Contact your property manager.</Typography>
+          </Box>
         )}
       </div>
       <CreditCardPaymentDialog
