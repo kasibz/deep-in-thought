@@ -108,7 +108,7 @@ const OwnerPropertyComponent = () => {
     }
 
     return (
-        <Container className='container' sx={{ maxWidth: '600px' }}>
+        <Container className='container' sx={{ width:'600px', minWidth:'100px' }}>
             <List className='general-box' sx={{ maxHeight: '600px', overflowY: 'auto' }}>
                 <ListItem>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', gap: 6 }}>

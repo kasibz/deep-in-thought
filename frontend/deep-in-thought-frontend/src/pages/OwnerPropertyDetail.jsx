@@ -1,12 +1,13 @@
 import { Box, Button, Card, CardContent, CircularProgress, Container, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import PaymentHistoryDialog from "../components/dialogs/PaymentHistoryDialog";
+import OwnerPaymentHistoryDialog from "../components/dialogs/OwnerPaymentHistoryDialog";
 import ResidentInformationDialog from "../components/dialogs/ResidentInformationDialog";
 import propertyService from "../utilities/propertyService";
 import paymentService from "../utilities/paymentService";
 import tenantService from "../utilities/tenantService";
 import CreateContractDialog from "../components/dialogs/CreateContractDialog";
+import HomeWorkTwoToneIcon from '@mui/icons-material/HomeWorkTwoTone';
 
 const OwnerPropertyDetail = () => {
     const { propertyId } = useParams();
@@ -97,42 +98,62 @@ const OwnerPropertyDetail = () => {
     // display none when loading variable is true
     if (isLoading) {
         return (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
-            <CircularProgress />
-          </Box>
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
+                <CircularProgress />
+            </Box>
         );
-      }
+    }
 
     return (
-        <Container>
-            <Card variant="outlined" sx={{ mb: 2 }}>
-                {property && <CardContent>
-                    <Typography variant="h5">{property.name}</Typography>
-                    <Typography>Type: {property.type}</Typography>
-                    <Typography>Street: {property.streetAddress}</Typography>
-                    <Typography>City: {property.city}</Typography>
-                    <Typography>State: {property.state}</Typography>
-                    <Typography>Zipcode: {property.zipcode}</Typography>
-                </CardContent>}
+        <Container className="container" sx={{ width: '800px', alignContent: 'center' }}>
+            <Card variant="outlined" sx={{ m: 2, p: 2, boxShadow: 2 }}>
+                {property && (
+                    <CardContent>
+                        <Typography variant="h4">
+                            Property Information
+                        </Typography>
+                        <Box sx={{ display: 'flex' }}>
+                            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                <HomeWorkTwoToneIcon sx={{ mr: 3 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                                    {property.name}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right' }}>
+                                <Typography variant="h6" >Type: {property.type}</Typography>
+                                <Typography variant="h6" >Street: {property.streetAddress}</Typography>
+                                <Typography variant="h6" >City: {property.city}</Typography>
+                                <Typography variant="h6" >State: {property.state}</Typography>
+                                <Typography variant="h6" >Zipcode: {property.zipcode}</Typography>
+                            </Box>
+                        </Box>
+                    </CardContent>
+                )}
+                <Box sx={{ '& > :not(style)': { m: 1 } }}> {/* This applies margin to each direct child */}
+                    {!residentInfo && (
+                        <Button variant="contained" size="small" onClick={onClickOpenCreateContractDialog}>
+                            Create Contract
+                        </Button>
+                    )}
+
+                    <Button variant="contained" size="small" onClick={onClickOpenResidentDialog}>
+                        View Resident Information
+                    </Button>
+
+                    <Button variant="contained" size="small" onClick={onClickOpenPaymentHistoryDialog}>
+                        View Payment History
+                    </Button>
+                </Box>
+
             </Card>
-            {!residentInfo && <Button variant="outlined" fullWidth onClick={onClickOpenCreateContractDialog}>
-            Create Contract
-            </Button>}
 
-            <Button variant="outlined" fullWidth onClick={onClickOpenResidentDialog} sx={{ mt: 2 }}>
-                View Resident Information
-            </Button>
-
-            <Button variant="outlined" fullWidth onClick={onClickOpenPaymentHistoryDialog} sx={{ mt: 2 }}>
-                View Payment History
-            </Button>
 
             {/* Dialogs */}
             <CreateContractDialog
-                open={isCreateContractDialogOpen} 
+                open={isCreateContractDialogOpen}
                 onClose={onClickCloseCreateContractDialog}
             />
-            <PaymentHistoryDialog
+            <OwnerPaymentHistoryDialog
                 open={isPaymentHistoryDialogOpen}
                 onClose={onClickClosePaymentHistoryDialog}
                 paymentHistory={paymentHistory}
