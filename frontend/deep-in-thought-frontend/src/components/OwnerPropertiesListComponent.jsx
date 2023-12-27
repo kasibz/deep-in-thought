@@ -27,6 +27,7 @@ const OwnerPropertyComponent = () => {
 
   // open and close state variable for dialog
   const [open, setOpen] = useState(false);
+  const [submitClicked, setSubmitClicked] = useState(false);
 
   // new property state variable
   const [newProperty, setNewProperty] = useState({
@@ -43,6 +44,7 @@ const OwnerPropertyComponent = () => {
   const { ownerProperties, addOwnerProperty } = useMyPropertyContext();
   //loading variable
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // get list of owner's list of properties and persist data
   useEffect(() => {
@@ -92,8 +94,10 @@ const OwnerPropertyComponent = () => {
     setSnackbarOpen(false);
   };
 
-  const onSubmitAddProproperty = async () => {
+  const onSubmitAddProproperty = async (e) => {
+    e.preventDefault();
     console.log(newProperty);
+    setSubmitClicked(true);
     try {
       const addPropertyResponse = await propertyService.addProperty(
         newProperty
@@ -110,8 +114,10 @@ const OwnerPropertyComponent = () => {
         alert("something is wrong. This need to be changed");
       }
     } catch (error) {
+      setError(error.message);
       console.log(error);
     }
+    setSubmitClicked(false);
   };
   // display none when loading variable is true
   if (isLoading) {
@@ -215,6 +221,8 @@ const OwnerPropertyComponent = () => {
         newProperty={newProperty}
         onChange={onChangeAddPropertyTextField}
         onSubmit={onSubmitAddProproperty}
+        submitClicked={submitClicked}
+        error={error}
       />
       <SuccessSnackBar
         open={snackbarOpen}
