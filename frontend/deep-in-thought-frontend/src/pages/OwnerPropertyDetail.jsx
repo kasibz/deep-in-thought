@@ -22,6 +22,31 @@ const OwnerPropertyDetail = () => {
 
     const [paymentHistory, setPaymentHistory] = useState([])
     const [residentInfo, setResidentInfo] = useState([])
+
+    const onClickOpenCreateContractDialog = () => {
+        setIsCreateContractDialogOpen(true)
+    }
+
+    const onClickCloseCreateContractDialog = () => {
+        setIsCreateContractDialogOpen(false)
+    }
+
+    const onClickOpenPaymentHistoryDialog = () => {
+        setIsPaymentHistoryDialogOpen(true);
+    };
+
+    const onClickClosePaymentHistoryDialog = () => {
+        setIsPaymentHistoryDialogOpen(false);
+    };
+
+    const onClickOpenResidentDialog = () => {
+        setIsResidentInfoDialogOpen(true);
+    };
+
+    const onClickCloseResidentDialog = () => {
+        setIsResidentInfoDialogOpen(false);
+    };
+
     useEffect(() => {
         // Fetch the property data based on the ID
         const fetchProperty = async () => {
@@ -60,7 +85,8 @@ const OwnerPropertyDetail = () => {
             try {
                 const response = await tenantService.getTenantByProperty(propertyId)
                 if (response.status === 200) {
-                    setResidentInfo(response.data[0]) // This need to be changed if there are more than one resident. Save as response.data
+                    // This need to be changed if there are more than one resident. Save as response.data
+                    setResidentInfo(response.data[0])
                 }
                 setIsLoading(false)
             } catch (error) {
@@ -69,31 +95,7 @@ const OwnerPropertyDetail = () => {
             }
         }
         requestResidentInformationByProperty()
-    }, [propertyId]);
-
-    const onClickOpenCreateContractDialog = () => {
-        setIsCreateContractDialogOpen(true)
-    }
-
-    const onClickCloseCreateContractDialog = () => {
-        setIsCreateContractDialogOpen(false)
-    }
-
-    const onClickOpenPaymentHistoryDialog = () => {
-        setIsPaymentHistoryDialogOpen(true);
-    };
-
-    const onClickClosePaymentHistoryDialog = () => {
-        setIsPaymentHistoryDialogOpen(false);
-    };
-
-    const onClickOpenResidentDialog = () => {
-        setIsResidentInfoDialogOpen(true);
-    };
-
-    const onClickCloseResidentDialog = () => {
-        setIsResidentInfoDialogOpen(false);
-    };
+    }, [propertyId, onClickCloseCreateContractDialog]); // trigger when there is a change in value
 
     // display none when loading variable is true
     if (isLoading) {
@@ -129,13 +131,12 @@ const OwnerPropertyDetail = () => {
                         </Box>
                     </CardContent>
                 )}
-                <Box sx={{ '& > :not(style)': { m: 1 } }}> {/* This applies margin to each direct child */}
+                <Box sx={{ '& > :not(style)': { m: 1 } }}>
                     {!residentInfo && (
                         <Button variant="contained" size="small" onClick={onClickOpenCreateContractDialog}>
                             Create Contract
                         </Button>
                     )}
-
                     <Button variant="contained" size="small" onClick={onClickOpenResidentDialog}>
                         View Resident Information
                     </Button>
@@ -144,9 +145,7 @@ const OwnerPropertyDetail = () => {
                         View Payment History
                     </Button>
                 </Box>
-
             </Card>
-
 
             {/* Dialogs */}
             <CreateContractDialog
