@@ -8,6 +8,8 @@ import paymentService from "../utilities/paymentService";
 import tenantService from "../utilities/tenantService";
 import CreateContractDialog from "../components/dialogs/CreateContractDialog";
 import HomeWorkTwoToneIcon from '@mui/icons-material/HomeWorkTwoTone';
+import TextField from '@mui/material/TextField';
+
 
 const OwnerPropertyDetail = () => {
     const { propertyId } = useParams();
@@ -106,26 +108,66 @@ const OwnerPropertyDetail = () => {
 
     return (
         <Container className="container" sx={{ width: '800px', alignContent: 'center' }}>
-            <Card variant="outlined" sx={{ m: 2, p: 2, boxShadow: 2 }}>
+          
+            <Card variant="outlined" sx={{ m: 2, p: 2, boxShadow: 2}}>
                 {property && (
-                    <CardContent>
-                        <Typography variant="h4">
-                            Property Information
+                    <CardContent sx={{ m: 2, p: 2}}>
+                        <Box sx={{ border: 1, borderRadius: '10px', m:1, p:2}}>
+                        <HomeWorkTwoToneIcon />
+                        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                            {property.name}
                         </Typography>
-                        <Box sx={{ display: 'flex' }}>
-                            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                <HomeWorkTwoToneIcon sx={{ mr: 3 }} />
-                                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                    {property.name}
-                                </Typography>
-                            </Box>
-                            <Box sx={{ textAlign: 'right' }}>
-                                <Typography variant="h6" >Type: {property.type}</Typography>
-                                <Typography variant="h6" >Street: {property.streetAddress}</Typography>
+                        <Typography variant="h10" >Type: {property.type}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent:'center' }}>
+                                    <Box sx={{'& .MuiTextField-root': {width: '150px', m:2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}}>
+                                <div>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        label="street address"
+                                        variant="standard"
+                                        defaultValue={property.streetAddress}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        />
+                                </div>
+                                <div>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        label="city"
+                                        variant="standard"
+                                        defaultValue={property.city}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        />
+                                        <TextField
+                                        id="outlined-read-only-input"
+                                        label="state"
+                                        variant="standard"
+                                        defaultValue={property.state}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        />
+                                        <TextField
+                                        id="outlined-read-only-input"
+                                        label="zipcode"
+                                        variant="standard"
+                                        defaultValue={property.zipcode}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        />
+                                </div>
+                                {/* <Typography variant="h6" >Street: {property.streetAddress}</Typography>
                                 <Typography variant="h6" >City: {property.city}</Typography>
                                 <Typography variant="h6" >State: {property.state}</Typography>
-                                <Typography variant="h6" >Zipcode: {property.zipcode}</Typography>
+                                <Typography variant="h6" >Zipcode: {property.zipcode}</Typography> */}
+                           
                             </Box>
+                            
                         </Box>
                     </CardContent>
                 )}
