@@ -1,8 +1,16 @@
-import { Button, TextField, Container, Typography, Box } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Container,
+  Typography,
+  Box,
+  Alert,
+} from "@mui/material";
 import { useState } from "react";
 import tenantService from "../utilities/tenantService";
 import { useNavigate } from "react-router-dom";
 import SuccessSnackBar from "../components/snackbar/SuccessSnackBar";
+import emailjs from "@emailjs/browser";
 
 const CreateResident = () => {
   // resident register information
@@ -39,6 +47,27 @@ const CreateResident = () => {
     try {
       const response = await tenantService.register(resident);
       if (response.status === 201) {
+        var templateParams = {
+          email: resident.email,
+          password: resident.password,
+        };
+
+        // consider env variables
+        emailjs
+          .send(
+            "service_ra3ekaj",
+            "template_f01y6xj",
+            templateParams,
+            "L6pFCLq28Efxgtlr_"
+          )
+          .then(
+            function (response) {
+              console.log("SUCCESS!", response.status, response.text);
+            },
+            function (error) {
+              console.log("FAILED...", error);
+            }
+          );
         // set success snack bar
         setSnackbarMessage("Successfully Created new resident user");
         // open snack bar
@@ -49,7 +78,17 @@ const CreateResident = () => {
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      error.message.includes("409")
+        ? setResidentRegisterResponse({
+            ...residentRegisterResponse,
+            message: "User by that email already exists",
+            failure: true,
+          })
+        : setResidentRegisterResponse({
+            ...residentRegisterResponse,
+            message: error.message,
+            failure: true,
+          });
     }
   };
 
