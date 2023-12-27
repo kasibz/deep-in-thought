@@ -10,9 +10,13 @@ import { useState } from "react";
 import tenantService from "../utilities/tenantService";
 import { useNavigate } from "react-router-dom";
 import SuccessSnackBar from "../components/snackbar/SuccessSnackBar";
+import emailjs from "@emailjs/browser";
 
 const CreateResident = () => {
   // resident register information
+  const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
+  const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
+  const PUBLIC_KEY = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
   const [resident, setResident] = useState({
     firstName: "",
     lastName: "",
@@ -46,6 +50,20 @@ const CreateResident = () => {
     try {
       const response = await tenantService.register(resident);
       if (response.status === 201) {
+        var templateParams = {
+          email: resident.email,
+          password: resident.password,
+        };
+
+        // consider env variables
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY).then(
+          function (response) {
+            console.log("SUCCESS!", response.status, response.text);
+          },
+          function (error) {
+            console.log("FAILED...", error);
+          }
+        );
         // set success snack bar
         setSnackbarMessage("Successfully Created new resident user");
         // open snack bar
@@ -67,7 +85,6 @@ const CreateResident = () => {
             message: error.message,
             failure: true,
           });
-      console.log(error);
     }
   };
 

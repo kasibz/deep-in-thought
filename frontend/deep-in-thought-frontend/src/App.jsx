@@ -14,6 +14,7 @@ import PrivateRoutesOwner from "./utilities/PrivateRoutesOwner";
 import PrivateRoutesTenant from "./utilities/PrivateRoutesTenant";
 import FinancialStatementsPage from "./pages/FinancialStatementsPage";
 import TenantPaymentHistoryPage from "./pages/TenantPaymentHistoryPage";
+import PrivateRoutesUser from "./utilities/PrivateRoutesUser";
 
 function App() {
   return (
@@ -23,11 +24,15 @@ function App() {
           <PropertyProvider>
             <Layout>
               <Routes>
+                {/* Route for both Users */}
+                <Route element={<PrivateRoutesUser />}>
+                  <Route path="/resetPassword" element={<ResetPassword />} />
+                  <Route path="/editAccount" element={<EditAccountPage />} />
+                </Route>
                 {/* Owner Routes  */}
                 <Route element={<PrivateRoutesOwner />}>
                   <Route path="/createResident" element={<CreateResident />} />
-                  <Route path="/resetPassword" element={<ResetPassword />} />
-                  <Route path="/editAccount" element={<EditAccountPage />} />
+
                   <Route
                     path="/property/:propertyId"
                     element={<OwnerPropertyDetail />}
@@ -45,8 +50,6 @@ function App() {
                     path="/tenantPayment"
                     element={<TenantPaymentHistoryPage />}
                   />
-                  <Route path="/resetPassword" element={<ResetPassword />} />
-                  <Route path="/editAccount" element={<EditAccountPage />} />
                 </Route>
 
                 {/* unprotected routes */}
