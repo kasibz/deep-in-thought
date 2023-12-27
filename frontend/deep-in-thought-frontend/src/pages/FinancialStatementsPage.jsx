@@ -30,7 +30,7 @@ const FinancialStatementsPage = () => {
             {propertiesData ? (
                 <FinancialStatementsComponent propertiesData={propertiesData} />
             ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
                     <CircularProgress />
                 </Box>
             )}
