@@ -1,6 +1,6 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Container, TextField, Typography } from "@mui/material"
 
-const SignupComponent = ({ userSingupInfo, setUserSingupInfo, registerRequest }) => {
+const SignupComponent = ({ userSingupInfo, setUserSingupInfo, registerRequest, setIsLoading, isLoading }) => {
 
     const onChangeUserSignupInfo = (e) => {
         const { name, value } = e.target;
@@ -97,6 +97,21 @@ const SignupComponent = ({ userSingupInfo, setUserSingupInfo, registerRequest })
                     </Button>
                 </form>
             </Box>
+                {isLoading &&
+                    <Box sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1,
+                    }}>
+                        <CircularProgress />
+                    </Box>
+                }
         </Container>
     )
 }
