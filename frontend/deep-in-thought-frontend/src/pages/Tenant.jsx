@@ -113,7 +113,6 @@ const Tenant = () => {
         console.log(error);
       }
     };
-
     getPaymentInfo();
   }, [user]);
 
