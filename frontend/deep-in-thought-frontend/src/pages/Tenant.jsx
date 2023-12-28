@@ -31,7 +31,7 @@ const Tenant = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [rentDate, setRentDate] = useState("");
 
-  const [isLoading, setIsloading] = useState(true);
+  const [noContract, setNoContract] = useState(false);
 
   // helper functions
   function getDate() {
@@ -80,7 +80,6 @@ const Tenant = () => {
 
   // add in contract by ID to display current rent
   useEffect(() => {
-    setIsloading(false);
     getDate();
     rentDueDate();
     const getCurrentBalance = async () => {
@@ -90,11 +89,11 @@ const Tenant = () => {
         //set contract info
         console.log(response.data);
         setCurrentContract(paymentData);
-        setIsloading(true);
+        if (response.status == 204) {
+          setNoContract(true);
+        }
       } catch (error) {
         console.log(error);
-      } finally {
-        setIsloading(true);
       }
     };
 
@@ -134,7 +133,7 @@ const Tenant = () => {
     setIsPayByCreditCardDialogOpen(false);
   };
 
-  if (!currentContract && tenantData.firstName) {
+  if (noContract) {
     return (
       <div className="tenant-container">
         <div className="general-box">
@@ -192,6 +191,8 @@ const Tenant = () => {
             <Typography sx={{ m: 5 }}>
               Today&apos;s Date: {currentDate}{" "}
             </Typography>
+            {/* Display user balance information*/}
+            {/* If there is no contract, then display no balance due*/}
             <div className="account-balance">
               {existingPayments[existingPayments.length - 1]?.date_paid ? (
                 <>
@@ -249,9 +250,6 @@ const Tenant = () => {
             <CircularProgress />
           </Box>
         )}
-
-        {/* Display user balance information*/}
-        {/* If there is no contract, then display no balance due*/}
       </div>
       <CreditCardPaymentDialog
         open={isCreditCardDialogOpen}
