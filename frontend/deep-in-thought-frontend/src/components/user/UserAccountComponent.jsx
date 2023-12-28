@@ -31,14 +31,12 @@ function UserAccountComponent({ userData, userType }) {
     if (response.status === 409) {
       setErrorMessage("User by that email already exists");
       setUserUpdateResult({
-        ...userUpdateResult,
         failure: true,
         success: false,
       });
       return;
     }
     setUserUpdateResult({
-      ...userUpdateResult,
       failure: false,
       success: true,
     });
