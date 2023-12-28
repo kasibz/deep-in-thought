@@ -13,12 +13,11 @@ import api from "../utilities/axiosConfig";
 import paymentService from "./../utilities/paymentService";
 import { CircularProgress, Typography } from "@mui/material";
 
-
 const Tenant = () => {
   const { user } = UserContext();
   const [open, setOpen] = useState(true);
   const [tenantData, setTenantData] = useState([]);
-  const [currentContract, setCurrentContract] = useState([]);
+  const [currentContract, setCurrentContract] = useState(null);
   const [isCreditCardDialogOpen, setIsCreditCardDialogOpen] = useState(false);
   const [isRentDialogOpen, setIsRentDialogOpen] = useState(false);
   const [isPayByCreditCardDialogOpen, setIsPayByCreditCardDialogOpen] =
@@ -81,7 +80,7 @@ const Tenant = () => {
 
   // add in contract by ID to display current rent
   useEffect(() => {
-    setIsloading(false)
+    setIsloading(false);
     getDate();
     rentDueDate();
     const getCurrentBalance = async () => {
@@ -91,11 +90,11 @@ const Tenant = () => {
         //set contract info
         console.log(response.data);
         setCurrentContract(paymentData);
-        setIsloading(true)
+        setIsloading(true);
       } catch (error) {
         console.log(error);
       } finally {
-        setIsloading(true)
+        setIsloading(true);
       }
     };
 
@@ -135,13 +134,19 @@ const Tenant = () => {
     setIsPayByCreditCardDialogOpen(false);
   };
 
-
-  if(!isLoading){
+  if (!currentContract && tenantData.firstName) {
     return (
-      <Box>
-        <CircularProgress />
-      </Box>
-    )
+      <div className="tenant-container">
+        <div className="general-box">
+          <Box>
+            <Typography variant="h6">Not assigned to any property.</Typography>
+            <Typography variant="h6">
+              Please Contact your property manager.
+            </Typography>
+          </Box>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -176,31 +181,26 @@ const Tenant = () => {
       </header>
       <div className="general-box">
         {/* Display welcome message for user*/}
-        {tenantData.firstName ? (
-          <Box sx={{ border: 1, borderRadius: '10px', m:1, p:2}}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold'}}>
-            Welcome {tenantData.firstName} {tenantData.lastName}
-          </Typography>
-          </Box>
-        ) : (
-          <CircularProgress />
-        )}
-
-        {/* Display user balance information*/}
-        {/* If there is no contract, then display no balance due*/}
-        {currentContract.rent ? (
+        {/* should consider checking tenantdata and contract data together since we'll just have user infor in nav bar */}
+        {tenantData.firstName && currentContract?.rent ? (
           <>
-            
-            <Typography sx={{ m:5}}>Today&apos;s Date: {currentDate} </Typography>
+            <Box sx={{ border: 1, borderRadius: "10px", m: 1, p: 2 }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                Welcome {tenantData.firstName} {tenantData.lastName}
+              </Typography>
+            </Box>
+            <Typography sx={{ m: 5 }}>
+              Today&apos;s Date: {currentDate}{" "}
+            </Typography>
             <div className="account-balance">
               {existingPayments[existingPayments.length - 1]?.date_paid ? (
                 <>
-                  <Typography sx={{m:1}}>
+                  <Typography sx={{ m: 1 }}>
                     Current Account Rent Due: $
                     {existingPayments[existingPayments.length - 1].rent_due -
                       existingPayments[existingPayments.length - 1].amount_paid}
                   </Typography>
-                  <Typography sx={{color:"green", m:1}}>
+                  <Typography sx={{ color: "green", m: 1 }}>
                     Payment received on{" "}
                     {existingPayments[existingPayments.length - 1].date_paid}{" "}
                     Thank You!
@@ -208,17 +208,16 @@ const Tenant = () => {
                 </>
               ) : (
                 <>
-                  <Typography sx={{m:1}}>Current Account Rent Due: ${currentContract.rent}</Typography>
-                  <Typography sx={{m:1}}>Rent Due on: {rentDate}</Typography>
+                  <Typography sx={{ m: 1 }}>
+                    Current Account Rent Due: ${currentContract.rent}
+                  </Typography>
+                  <Typography sx={{ m: 1 }}>Rent Due on: {rentDate}</Typography>
                 </>
               )}
-              <Typography sx={{m:5}}>
+              <Typography sx={{ m: 5 }}>
                 Number of months remaining for payment: {currentContract.length}
-
               </Typography>
 
-
-          
               <p>
                 <Box
                   display="flex"
@@ -247,10 +246,12 @@ const Tenant = () => {
           </>
         ) : (
           <Box>
-            <Typography variant="h6">Not assigned to any property.</Typography>
-            <Typography variant="h6">Please Contact your property manager.</Typography>
+            <CircularProgress />
           </Box>
         )}
+
+        {/* Display user balance information*/}
+        {/* If there is no contract, then display no balance due*/}
       </div>
       <CreditCardPaymentDialog
         open={isCreditCardDialogOpen}
