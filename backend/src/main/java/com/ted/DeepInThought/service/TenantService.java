@@ -138,10 +138,10 @@ public class TenantService extends BaseService<Tenant, String>{
 
     // retrieving an associated contract with a tenant
     public TenantRepository.TenantWithContract getContractByTenantId(String tenantId) {
-        TenantRepository.TenantWithContract tenantWithContract = tenantRepo.findContractByTenantId(tenantId);
-        if (tenantWithContract != null) {
-            return tenantWithContract;
+        Optional<TenantRepository.TenantWithContract> tenantWithContractData = tenantRepo.findContractByTenantId(tenantId);
+        if (tenantWithContractData.isEmpty()) {
+            throw new EntityNotFoundException("No Contract found for Tenant with Id " + tenantId);
         }
-        throw new EntityNotFoundException("No Contract found for Tenant with Id " + tenantId);
+        return tenantWithContractData.get();
     }
 }

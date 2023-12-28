@@ -29,7 +29,7 @@ public interface TenantRepository extends JpaRepository<Tenant, String>{
     }
 
     @Query(value ="SELECT TENANT.ID AS TENANT_ID, TENANT.FIRST_NAME, TENANT.LAST_NAME, TENANT.EMAIL, TENANT.PHONE_NUMBER, CONTRACT.ID AS CONTRACT_ID, CONTRACT.LENGTH, CONTRACT.START_DATE, CONTRACT.STOP_DATE, CONTRACT.RENT FROM TENANT JOIN CONTRACT ON TENANT.CONTRACT_ID = CONTRACT.ID WHERE TENANT.ID = :tenantId", nativeQuery = true)
-    TenantWithContract findContractByTenantId(@Param("tenantId") String id);
+    Optional<TenantWithContract> findContractByTenantId(@Param("tenantId") String id);
 
     // I need to make the signature return an optional if I want to handle errors better
     // for my custom queries
