@@ -26,6 +26,8 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import { blue } from "@mui/material/colors";
 import contractService from "../../utilities/contractService";
 import { useNavigate } from "react-router-dom";
+import ErrorSnackBar from "../snackbar/ErrorSnackBar";
+import SuccessSnackBar from "../snackbar/SuccessSnackBar";
 
 const PayByCreditCardDialog = (props) => {
   const navigate = useNavigate();
@@ -105,6 +107,24 @@ const PayByCreditCardDialog = (props) => {
   const formattedToday = getTodaysDateFormatted();
   const formattedEndOfMonth = getLastDayOfMonthFormatted();
 
+  //snack bar state variables
+  const [errorSnackbarOpen, seteErrorSnackbarOpen] = useState(false);
+  const [errorSnackbarMessage, setErrorSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseErrorSnackbar = () => {
+    seteErrorSnackbarOpen(false);
+  };
+
+  //snack bar state variables
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   //this function gets the contract data for the tenant
   useEffect(() => {
     const getContractData = async () => {
@@ -143,11 +163,21 @@ const PayByCreditCardDialog = (props) => {
         paid: paid,
         creditCardId: creditCardId,
       };
-      let response = await api.post("/payment", paymentData);
-      if (response.status === 201) {
-        setOpenDialog(true);
+      if (creditCardId) {
+        let response = await api.post("/payment", paymentData);
+        if (response.status === 201) {
+          //set true to open snack bar
+          setSnackbarOpen(true);
+          setSnackbarMessage('Your rent payment has been successfully processed. Thank you!')
+          setTimeout(() => {
+            navigate(0);
+          }, 2000);
+          // setOpenDialog(true);
+        }
+      } else {
+        seteErrorSnackbarOpen(true)
+        setErrorSnackbarMessage('Unable to pay rent. Please check your details and try again.')
       }
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -207,7 +237,7 @@ const PayByCreditCardDialog = (props) => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value) => {};
+  const handleListItemClick = (value) => { };
   const [fullWidth, setFullWidth] = React.useState(true);
   return (
     <>
@@ -297,13 +327,8 @@ const PayByCreditCardDialog = (props) => {
           </Button>
           <Button
             onClick={(e) => {
-              onClose();
-              handleSuccessCancel();
               addPayment(e);
               editContract();
-              setTimeout(() => {
-                navigate(0);
-              }, 2000);
             }}
             color="success"
           >
@@ -345,6 +370,16 @@ const PayByCreditCardDialog = (props) => {
           Success
         </MuiAlert>
       </Snackbar>
+      <SuccessSnackBar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        handleClose={handleCloseSnackbar}
+      />
+      <ErrorSnackBar
+        open={errorSnackbarOpen}
+        message={errorSnackbarMessage}
+        handleClose={handleCloseErrorSnackbar}
+      />
     </>
   );
 };
