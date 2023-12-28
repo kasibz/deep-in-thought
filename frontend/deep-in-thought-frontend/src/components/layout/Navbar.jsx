@@ -14,6 +14,7 @@ export const Navbar = () => {
   const onClickLogout = () => {
     //clear localStorage
     localStorage.clear();
+    setTenatInfo([])
     //empty user state variable
     deleteUser();
     //navigate to home page
@@ -31,8 +32,8 @@ export const Navbar = () => {
         console.log(error);
       }
     }
-      getTenantInfo()
-    }, []);
+    getTenantInfo()
+  }, [user]);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1F4172" }}>
@@ -73,7 +74,7 @@ export const Navbar = () => {
         {user.length !== 0 && (
           <>
             <Button component={Link} to="/editAccount" color="inherit">
-             {tenantInfo.firstName} {tenantInfo.lastName} 
+              {tenantInfo.firstName} {tenantInfo.lastName}
             </Button>
             <Divider
               orientation="vertical"
@@ -85,7 +86,7 @@ export const Navbar = () => {
             </Button>
           </>
         )}
-        {}
+        { }
       </Toolbar>
     </AppBar>
   );

@@ -133,15 +133,6 @@ const Tenant = () => {
     setIsPayByCreditCardDialogOpen(false);
   };
 
-
-  // if(isLoading){
-  //   return (
-  //     <Box>
-  //       <CircularProgress />
-  //     </Box>
-  //   )
-  // }
-
   return (
     <div className="tenant-container">
       <header>

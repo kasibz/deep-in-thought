@@ -20,12 +20,13 @@ import { UserContext } from "../../context/UserContext";
 import States from "../../data/states.json";
 import SuccessSnackBar from './../snackbar/SuccessSnackBar';
 import ErrorSnackBar from './../snackbar/ErrorSnackBar';
+import { useNavigate } from "react-router-dom";
 
 const CreditCardPaymentDialog = ({ open, onClose }) => {
   const { addUser, user } = UserContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState(false);
-
+  const navigate = useNavigate()
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
@@ -94,6 +95,8 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           setSnackbarOpen(true);
           setSnackbarMessage('Successfully added credit card information.')
           clearFields();
+          // hard refresh to update credit card information. May need to re-do in the future.
+          navigate(0)
           onClose();
         }
         return;
