@@ -10,7 +10,7 @@ export default function SuccessSnackBar({ open, message, handleClose }) {
       autoHideDuration={6000}
       onClose={handleClose}
       anchorOrigin={{
-        vertical: "center",
+        vertical: "top",
         horizontal: "center",
       }} // Centering the Snackbar
     >
