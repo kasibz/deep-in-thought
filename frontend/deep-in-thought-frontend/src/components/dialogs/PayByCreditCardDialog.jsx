@@ -15,28 +15,15 @@ import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import ErrorSnackBar from "../snackbar/ErrorSnackBar";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import Input from "@mui/material/Input";
-import Slide from "@mui/material/Slide";
-
-import PropTypes from "prop-types";
-
 import Avatar from "@mui/material/Avatar";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-
-import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import { blue } from "@mui/material/colors";
-import { flexbox } from "@mui/system";
 import contractService from "../../utilities/contractService";
 import { useNavigate } from "react-router-dom";
 
@@ -125,15 +112,12 @@ const PayByCreditCardDialog = (props) => {
       let balanceData = response.data;
       setContractData(balanceData);
       setPaymentAmount(balanceData.rent);
-
-      // console.log("Contract data: ", balanceData);
     };
 
     getContractData();
   }, []);
 
   // listen for the openDialogChange and edit the contract as needed to reflect the payment maid
-
   const editContract = async () => {
     try {
       const updatedContract = {
@@ -240,16 +224,50 @@ const PayByCreditCardDialog = (props) => {
             sx={{
               display: "flex",
               flexDirection: "row",
+              justifyContent: "center",
               alignItems: "center",
-              gap: 1,
+              gap: 2,
             }}
           >
             {creditCardData.map((card, index) => (
-              <MenuItem key={index} value={card.id}>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <AttachMoneyOutlinedIcon />
+              <MenuItem
+                key={index}
+                value={card.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center", // Center the content vertically
+                  width: "300px", // Adjust the width as needed
+                  margin: "auto",
+                  borderBottom: "1px solid #ccc",
+                }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: blue[100],
+                    color: blue[600],
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    margin: "auto",
+                  }}
+                >
+                  <AttachMoneyOutlinedIcon
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  />
                 </Avatar>
-                <ListItemText primary={String(card.cardNumber).slice(-4)} />
+                <Typography>
+                  <ListItemText
+                    sx={{ p: 1, textAlign: "center", alignContent: "center" }}
+                    primary={
+                      "XXXX-XXXX-XXXX-" + String(card.cardNumber).slice(-4)
+                    }
+                  />
+                </Typography>
               </MenuItem>
             ))}
           </Select>
@@ -265,27 +283,6 @@ const PayByCreditCardDialog = (props) => {
             value={paymentAmount}
           />
         </FormControl>
-        {/* <TextField
-          autoFocus
-          required
-          margin="dense"
-          type="date"
-          fullWidth
-          variant="standard"
-          uncontrolled="true"
-          value={rentDate}
-          onChange={(e) => setRentDate(e.target.value)}
-        />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          type="date"
-          fullWidth
-          variant="standard"
-          helperText="Select Today's Date"
-          onChange={(e) => setDatePaid(e.target.value)}
-        /> */}
 
         {/* This handles the open and close dialog when clicking submit or cancel */}
         <DialogActions>
@@ -323,7 +320,7 @@ const PayByCreditCardDialog = (props) => {
       >
         <MuiAlert
           elevation={6}
-          variant="outlined"
+          variant="filled"
           color="error"
           onClose={handleErrorCloseSnackbar}
           severity="info"
@@ -340,7 +337,7 @@ const PayByCreditCardDialog = (props) => {
       >
         <MuiAlert
           elevation={6}
-          variant="outlined"
+          variant="filled"
           color="success"
           onClose={handleSuccessCloseSnackbar}
           severity="info"

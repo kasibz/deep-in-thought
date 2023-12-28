@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../utilities/axiosConfig";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { Box, Button, Divider } from "@mui/material";
 import { UserContext } from "../../context/UserContext";
+import { useState, useEffect } from "react";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { deleteUser, user } = UserContext();
+  const [tenantInfo, setTenatInfo] = useState([])
 
   const onClickLogout = () => {
     //clear localStorage
@@ -16,6 +19,20 @@ export const Navbar = () => {
     //navigate to home page
     navigate("/");
   };
+
+  useEffect(() => {
+    const getTenantInfo = async () => {
+      try {
+        let response = await api.get(`tenant/${user[0].tenantId}`);
+        setTenatInfo(response.data);
+        // so now amount_paid and rent_due are in existingPayments
+        // order the data by date_paid??
+      } catch (error) {
+        console.log(error);
+      }
+    }
+      getTenantInfo()
+    }, []);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1F4172" }}>
@@ -56,7 +73,7 @@ export const Navbar = () => {
         {user.length !== 0 && (
           <>
             <Button component={Link} to="/editAccount" color="inherit">
-              Edit Account
+             {tenantInfo.firstName} {tenantInfo.lastName} 
             </Button>
             <Divider
               orientation="vertical"

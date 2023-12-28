@@ -90,7 +90,6 @@ const Tenant = () => {
         let response = await api.get(`tenant/${user[0].tenantId}/contract`);
         let paymentData = response.data;
         //set contract info
-        console.log(response.data);
         setCurrentContract(paymentData);
       } catch (error) {
         console.log(error);
@@ -108,7 +107,6 @@ const Tenant = () => {
       try {
         let response = await api.get(`payment/tenant/${user[0].tenantId}`);
         setExistingPayments(response.data);
-        console.log(response.data);
         // so now amount_paid and rent_due are in existingPayments
         // order the data by date_paid??
       } catch (error) {
@@ -215,7 +213,7 @@ const Tenant = () => {
                 </>
               )}
               <Typography sx={{m:5}}>
-                Number of months remaining for payment: {currentContract.length}
+                Number of months remaining for payment: {Math.max(0, currentContract.length)}
               </Typography>
               <p>
                 <Box
