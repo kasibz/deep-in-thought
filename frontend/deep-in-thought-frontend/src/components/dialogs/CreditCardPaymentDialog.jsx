@@ -92,7 +92,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           setCreditCardAdd(newCard);
           //set true to open snack bar
           setSnackbarOpen(true);
-          setSnackbarMessage('Successfully created contract.')
+          setSnackbarMessage('Successfully added credit card information.')
           clearFields();
           onClose();
         }
@@ -102,7 +102,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
       }
     }
     seteErrorSnackbarOpen(true)
-    setErrorSnackbarMessage('Failed')
+    setErrorSnackbarMessage('Unable to add a credit card. Please check your details and try again.')
     // handleErrorCancel();
   };
 
