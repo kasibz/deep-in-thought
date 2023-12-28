@@ -32,6 +32,8 @@ const Tenant = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [rentDate, setRentDate] = useState("");
 
+  // the component starts with the assumption that it's loading data, 
+  // and only after the data is fetched (or fails to fetch) will it update the loading state accordingly.
   const [isLoading, setIsloading] = useState(true);
 
   // helper functions
@@ -81,7 +83,6 @@ const Tenant = () => {
 
   // add in contract by ID to display current rent
   useEffect(() => {
-    setIsloading(false)
     getDate();
     rentDueDate();
     const getCurrentBalance = async () => {
@@ -91,11 +92,10 @@ const Tenant = () => {
         //set contract info
         console.log(response.data);
         setCurrentContract(paymentData);
-        setIsloading(true)
       } catch (error) {
         console.log(error);
       } finally {
-        setIsloading(true)
+        setIsloading(false)
       }
     };
 
@@ -136,13 +136,13 @@ const Tenant = () => {
   };
 
 
-  if(!isLoading){
-    return (
-      <Box>
-        <CircularProgress />
-      </Box>
-    )
-  }
+  // if(isLoading){
+  //   return (
+  //     <Box>
+  //       <CircularProgress />
+  //     </Box>
+  //   )
+  // }
 
   return (
     <div className="tenant-container">
@@ -188,7 +188,9 @@ const Tenant = () => {
 
         {/* Display user balance information*/}
         {/* If there is no contract, then display no balance due*/}
-        {currentContract.rent ? (
+        {isLoading ? (
+          <CircularProgress />
+        ) : currentContract && currentContract.rent ? (
           <>
             
             <Typography sx={{ m:5}}>Today&apos;s Date: {currentDate} </Typography>
@@ -214,11 +216,7 @@ const Tenant = () => {
               )}
               <Typography sx={{m:5}}>
                 Number of months remaining for payment: {currentContract.length}
-
               </Typography>
-
-
-          
               <p>
                 <Box
                   display="flex"
