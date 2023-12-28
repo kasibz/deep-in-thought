@@ -11,6 +11,7 @@ import com.ted.DeepInThought.repository.TenantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -46,7 +47,11 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setId(uuid);
         newTenant.setFirstName(tenantRequest.getFirstName());
         newTenant.setLastName(tenantRequest.getLastName());
-        newTenant.setPassword(tenantRequest.getPassword());
+        // hash password
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        String hash = bcrypt.encode(tenantRequest.getPassword());
+        newTenant.setPassword(hash);
+
         newTenant.setEmail(tenantRequest.getEmail());
         newTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
 
