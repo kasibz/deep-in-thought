@@ -8,11 +8,13 @@ import com.ted.DeepInThought.repository.OwnerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OwnerService extends BaseService<Owner, String> {
@@ -27,13 +29,28 @@ public class OwnerService extends BaseService<Owner, String> {
         super(ownerRepository);
     }
 
+    BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
     public Owner save(Owner owner) {
         // check if email is unique
         Optional<Owner> ownerData = ownerRepo.findByEmail(owner.getEmail());
         if (ownerData.isPresent()) {
             throw new DuplicateKeyException(owner.getEmail() + " owner already exists");
         }
-        return ownerRepo.save(owner);
+        Owner newOwner = new Owner();
+        String uuid = UUID.randomUUID().toString();
+        newOwner.setId(uuid);
+        newOwner.setFirstName(owner.getFirstName());
+        newOwner.setLastName(owner.getLastName());
+
+        // hash password
+        String hash = bcrypt.encode(owner.getPassword());
+        newOwner.setPassword(hash);
+
+        newOwner.setEmail(owner.getEmail());
+        newOwner.setPhoneNumber(owner.getPhoneNumber());
+
+        return ownerRepo.save(newOwner);
     }
 
     // make the service for all properties here as in the logic
@@ -50,7 +67,8 @@ public class OwnerService extends BaseService<Owner, String> {
                 existingOwner.setLastName(ownerRequest.getLastName());
             }
             if (ownerRequest.getPassword() != null) {
-                existingOwner.setPassword(ownerRequest.getPassword());
+                String hash = bcrypt.encode(ownerRequest.getPassword());
+                existingOwner.setPassword(hash);
             }
             if (ownerRequest.getPhoneNumber() != null) {
                 existingOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
@@ -91,7 +109,7 @@ public class OwnerService extends BaseService<Owner, String> {
         if (ownerData.isPresent()) {
             Owner existingOwner = ownerData.get();
 
-            if (ownerRequest.getPassword().equals(existingOwner.getPassword())) {
+            if (bcrypt.matches(ownerRequest.getPassword(), existingOwner.getPassword())) {
                 responseBody.put("message", "User is authenticated");
                 responseBody.put("ownerId", existingOwner.getId());
                 return responseBody;

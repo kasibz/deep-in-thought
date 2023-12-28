@@ -11,6 +11,7 @@ import com.ted.DeepInThought.repository.TenantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -33,6 +34,8 @@ public class TenantService extends BaseService<Tenant, String>{
         super(tenantRepository);
     }
 
+    BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
     public Tenant saveFromTenantDTO(TenantRequest tenantRequest) {
         // check if email is unique
         Optional<Tenant> tenantData = tenantRepo.findByEmail(tenantRequest.getEmail());
@@ -46,7 +49,11 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setId(uuid);
         newTenant.setFirstName(tenantRequest.getFirstName());
         newTenant.setLastName(tenantRequest.getLastName());
-        newTenant.setPassword(tenantRequest.getPassword());
+
+        // hash password
+        String hash = bcrypt.encode(tenantRequest.getPassword());
+        newTenant.setPassword(hash);
+
         newTenant.setEmail(tenantRequest.getEmail());
         newTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
 
@@ -75,7 +82,8 @@ public class TenantService extends BaseService<Tenant, String>{
                 existingTenant.setLastName(tenantRequest.getLastName());
             }
             if (tenantRequest.getPassword() != null) {
-                existingTenant.setPassword(tenantRequest.getPassword());
+                String hash = bcrypt.encode(tenantRequest.getPassword());
+                existingTenant.setPassword(hash);
             }
             if (tenantRequest.getPhoneNumber() != null) {
                 existingTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
@@ -121,7 +129,7 @@ public class TenantService extends BaseService<Tenant, String>{
         if (tenantData.isPresent()) {
             Tenant existingTenant = tenantData.get();
 
-            if (tenantRequest.getPassword().equals(existingTenant.getPassword())) {
+            if (bcrypt.matches(tenantRequest.getPassword(), existingTenant.getPassword())) {
                 responseBody.put("message", "User is authenticated");
                 responseBody.put("tenantId", existingTenant.getId());
                 return responseBody;
