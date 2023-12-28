@@ -1,10 +1,15 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -12,12 +17,13 @@ import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
+import States from "../../data/states.json";
+import SuccessSnackBar from './../snackbar/SuccessSnackBar';
 
 const CreditCardPaymentDialog = ({ open, onClose }) => {
   const { addUser, user } = UserContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState(false);
-  const [successSnackbar, setSuccessSnackbar] = useState(false);
 
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -48,9 +54,16 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     return false;
   }
 
-  const addCreditCard = async () => {
-    console.log("Add credit card started...");
+  //snack bar state variables
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  //snack bar on close function
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  const addCreditCard = async () => {
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
       console.log("Card is valid and submitting post");
@@ -65,18 +78,21 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           zip: zip,
           tenantId: user[0].tenantId,
         });
-        let newCard = response.data;
-        console.log(response);
-        setCreditCardAdd(newCard);
-        alert("Success");
-        onClose();
+        if (response.status === 201) {
+          let newCard = response.data;
+          setCreditCardAdd(newCard);
+          //set true to open snack bar
+          setSnackbarOpen(true);
+          setSnackbarMessage('Successfully created contract.')
+          clearFields();
+          onClose();
+        }
         return;
       } catch (error) {
         console.log(error);
         console.log("Post request error");
       }
     }
-    setSuccessSnackbar(false);
     handleErrorCancel();
     alert("Invalid Credit Card");
   };
@@ -84,14 +100,13 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
   const handleSubmitCreditCardClick = () => {
     try {
       addCreditCard();
-      clearFields();
     } catch (error) {
       alert(error.message);
       handleErrorCancel();
     }
   };
 
-  useEffect(() => {}, [creditCardAdd]);
+  useEffect(() => { }, [creditCardAdd]);
 
   const clearFields = () => {
     setName("");
@@ -126,14 +141,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
 
   const handleSuccessCloseDialog = () => {
     setOpenDialog(false);
-  };
-
-  const handleSuccessCancel = () => {
-    setSuccessSnackbar(true);
-  };
-
-  const handleSuccessCloseSnackbar = () => {
-    setSuccessSnackbar(false);
   };
 
   return (
@@ -174,7 +181,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             value={streetAddress}
             onChange={(e) => setStreetAddress(e.target.value)}
           />
-
           <TextField
             autoFocus
             required
@@ -186,28 +192,41 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             value={cvv}
             onChange={(e) => setCvv(e.target.value)}
           />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="City"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="State"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          />
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="City"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+            <FormControl sx={{ m: 1, minWidth: 80 }}>
+              <InputLabel id="demo-simple-select-helper-label">
+                State
+              </InputLabel>
+              <Select
+                required
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={state}
+                name="state"
+                label="States"
+                onChange={(e) => setState(e.target.value)}
+              >
+                {States.map((state, idx) => {
+                  return (
+                    <MenuItem key={idx} value={state}>
+                      {state}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
           <TextField
             autoFocus
             required
@@ -251,21 +270,11 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           Credit Card Not Saved
         </MuiAlert>
       </Snackbar>
-      <Snackbar
-        open={successSnackbar}
-        autoHideDuration={3000}
-        onClose={handleSuccessCloseSnackbar}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="outlined"
-          color="success"
-          onClose={handleSuccessCloseSnackbar}
-          severity="info"
-        >
-          Credit Card Added
-        </MuiAlert>
-      </Snackbar>
+      <SuccessSnackBar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        handleClose={handleCloseSnackbar}
+      />
     </>
   );
 };
