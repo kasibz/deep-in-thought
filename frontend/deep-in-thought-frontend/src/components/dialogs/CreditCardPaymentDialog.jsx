@@ -18,12 +18,12 @@ import Snackbar from "@mui/material/Snackbar";
 import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import States from "../../data/states.json";
+import SuccessSnackBar from './../snackbar/SuccessSnackBar';
 
 const CreditCardPaymentDialog = ({ open, onClose }) => {
   const { addUser, user } = UserContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState(false);
-  const [successSnackbar, setSuccessSnackbar] = useState(false);
 
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -53,6 +53,16 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     }
     return false;
   }
+
+  //snack bar state variables
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   const addCreditCard = async () => {
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
@@ -68,10 +78,12 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           zip: zip,
           tenantId: user[0].tenantId,
         });
-        if(response.status === 201){
+        if (response.status === 201) {
           let newCard = response.data;
           setCreditCardAdd(newCard);
-          alert("Success");
+          //set true to open snack bar
+          setSnackbarOpen(true);
+          setSnackbarMessage('Successfully created contract.')
           clearFields();
           onClose();
         }
@@ -81,7 +93,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         console.log("Post request error");
       }
     }
-    setSuccessSnackbar(false);
     handleErrorCancel();
     alert("Invalid Credit Card");
   };
@@ -130,14 +141,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
 
   const handleSuccessCloseDialog = () => {
     setOpenDialog(false);
-  };
-
-  const handleSuccessCancel = () => {
-    setSuccessSnackbar(true);
-  };
-
-  const handleSuccessCloseSnackbar = () => {
-    setSuccessSnackbar(false);
   };
 
   return (
@@ -189,7 +192,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             value={cvv}
             onChange={(e) => setCvv(e.target.value)}
           />
-          <Box sx={{display:'flex', flexDirection:'row', justifyContent:"space-between"}}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
             <TextField
               autoFocus
               required
@@ -267,25 +270,11 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           Credit Card Not Saved
         </MuiAlert>
       </Snackbar>
-      <Snackbar
-        open={successSnackbar}
-        autoHideDuration={3000}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }} // Centering the Snackbar
-        onClose={handleSuccessCloseSnackbar}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="outlined"
-          color="success"
-          onClose={handleSuccessCloseSnackbar}
-          severity="info"
-        >
-          Credit Card Added
-        </MuiAlert>
-      </Snackbar>
+      <SuccessSnackBar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        handleClose={handleCloseSnackbar}
+      />
     </>
   );
 };
