@@ -1,10 +1,15 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -12,6 +17,7 @@ import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
+import States from "../../data/states.json";
 
 const CreditCardPaymentDialog = ({ open, onClose }) => {
   const { addUser, user } = UserContext();
@@ -47,10 +53,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     }
     return false;
   }
-
   const addCreditCard = async () => {
-    console.log("Add credit card started...");
-
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
       console.log("Card is valid and submitting post");
@@ -91,7 +94,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     }
   };
 
-  useEffect(() => {}, [creditCardAdd]);
+  useEffect(() => { }, [creditCardAdd]);
 
   const clearFields = () => {
     setName("");
@@ -174,7 +177,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             value={streetAddress}
             onChange={(e) => setStreetAddress(e.target.value)}
           />
-
           <TextField
             autoFocus
             required
@@ -186,18 +188,19 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             value={cvv}
             onChange={(e) => setCvv(e.target.value)}
           />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="City"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <TextField
+          <Box sx={{display:'flex', flexDirection:'row', justifyContent:"space-between"}}>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="City"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+            {/* <TextField
             autoFocus
             required
             margin="dense"
@@ -207,7 +210,30 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             variant="standard"
             value={state}
             onChange={(e) => setState(e.target.value)}
-          />
+          /> */}
+            <FormControl sx={{ m: 1, minWidth: 80 }}>
+              <InputLabel id="demo-simple-select-helper-label">
+                State
+              </InputLabel>
+              <Select
+                required
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={state}
+                name="state"
+                label="States"
+                onChange={(e) => setState(e.target.value)}
+              >
+                {States.map((state, idx) => {
+                  return (
+                    <MenuItem key={idx} value={state}>
+                      {state}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
           <TextField
             autoFocus
             required
