@@ -19,6 +19,7 @@ import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import States from "../../data/states.json";
 import SuccessSnackBar from './../snackbar/SuccessSnackBar';
+import ErrorSnackBar from './../snackbar/ErrorSnackBar';
 
 const CreditCardPaymentDialog = ({ open, onClose }) => {
   const { addUser, user } = UserContext();
@@ -63,10 +64,18 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     setSnackbarOpen(false);
   };
 
+  //snack bar state variables
+  const [errorSnackbarOpen, seteErrorSnackbarOpen] = useState(false);
+  const [errorSnackbarMessage, setErrorSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseErrorSnackbar = () => {
+    seteErrorSnackbarOpen(false);
+  };
+
   const addCreditCard = async () => {
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
-      console.log("Card is valid and submitting post");
       try {
         let response = await api.post("/creditcard", {
           name: name,
@@ -90,11 +99,11 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         return;
       } catch (error) {
         console.log(error);
-        console.log("Post request error");
       }
     }
-    handleErrorCancel();
-    alert("Invalid Credit Card");
+    seteErrorSnackbarOpen(true)
+    setErrorSnackbarMessage('Failed')
+    // handleErrorCancel();
   };
 
   const handleSubmitCreditCardClick = () => {
@@ -118,10 +127,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     setZip("");
   };
 
-  const handleErrorClickOpen = () => {
-    setOpenDialog(true);
-  };
-
   const handleErrorCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -133,14 +138,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
 
   const handleErrorCloseSnackbar = () => {
     setErrorSnackbar(false);
-  };
-
-  const handleSuccessClickOpen = () => {
-    setOpenDialog(true);
-  };
-
-  const handleSuccessCloseDialog = () => {
-    setOpenDialog(false);
   };
 
   return (
@@ -262,7 +259,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
       >
         <MuiAlert
           elevation={6}
-          variant="outlined"
+          variant="filled"
           color="error"
           onClose={handleErrorCloseSnackbar}
           severity="info"
@@ -274,6 +271,11 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
         open={snackbarOpen}
         message={snackbarMessage}
         handleClose={handleCloseSnackbar}
+      />
+      <ErrorSnackBar
+        open={errorSnackbarOpen}
+        message={errorSnackbarMessage}
+        handleClose={handleCloseErrorSnackbar}
       />
     </>
   );
