@@ -5,6 +5,7 @@ import {
   Typography,
   Box,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useState } from "react";
 import tenantService from "../utilities/tenantService";
@@ -34,6 +35,7 @@ const CreateResident = () => {
   //snack bar state variables
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [submitClicked, setSubmitClicked] = useState(false);
   const [residentRegisterResponse, setResidentRegisterResponse] = useState({
     message: "",
     failure: false,
@@ -46,7 +48,7 @@ const CreateResident = () => {
 
   const onSubmitRegister = async (e) => {
     e.preventDefault();
-
+    setSubmitClicked(true);
     try {
       const response = await tenantService.register(resident);
       if (response.status === 201) {
@@ -86,6 +88,7 @@ const CreateResident = () => {
             failure: true,
           });
     }
+    setSubmitClicked(false);
   };
 
   return (
@@ -146,14 +149,18 @@ const CreateResident = () => {
               justifyContent: "center",
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "20px" }}
-              type="submit"
-            >
-              Submit
-            </Button>
+            {submitClicked ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "20px" }}
+                type="submit"
+              >
+                Submit
+              </Button>
+            )}
           </Box>
         </form>
         <SuccessSnackBar

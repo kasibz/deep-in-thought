@@ -1,8 +1,7 @@
-import React from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Alert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
 
 export default function SuccessSnackBar({ open, message, handleClose }) {
   return (
@@ -11,14 +10,14 @@ export default function SuccessSnackBar({ open, message, handleClose }) {
       autoHideDuration={6000}
       onClose={handleClose}
       anchorOrigin={{
-        vertical: 'center',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
       }} // Centering the Snackbar
     >
-      <Alert 
-        onClose={handleClose} 
-        severity="success" 
-        sx={{ width: '100%' }}
+      <Alert
+        onClose={handleClose}
+        severity="success"
+        sx={{ width: "100%" }}
         action={
           <IconButton
             size="small"

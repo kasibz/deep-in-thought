@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
+import { Alert, CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -11,7 +12,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import authService from "../utilities/authService";
-// import UpdatePasswordComponent from "../components/user/UpdatePasswordComponent";
 
 function Copyright(props) {
   return (
@@ -35,12 +35,24 @@ export default function ResetPassword() {
     password: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [submitClicked, setSubmitClicked] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setSubmitClicked(true);
     if (password.password !== confirmPassword) {
-      alert("Passwords don't match.");
+      setErrorMessage("Passwords don't match.");
+      setPassword({ password: "" });
+      setConfirmPassword("");
+      setSubmitClicked(false);
+      return;
+    }
+
+    if (password.password == "" || confirmPassword == "") {
+      setErrorMessage("Both fields require input.");
+      setSubmitClicked(false);
       return;
     }
     const ownerExists = localStorage.getItem("ownerId") !== null;
@@ -62,13 +74,15 @@ export default function ResetPassword() {
         userRole
       );
       if (response.status === 200) {
-        alert("Password reset successfully.");
-        document.location.href = "/";
+        setSuccess(true);
+        setTimeout(() => {
+          document.location.href = "/";
+        }, 1500);
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+      setErrorMessage(error.message);
     }
+    setSubmitClicked(false);
   };
 
   return (
@@ -90,6 +104,10 @@ export default function ResetPassword() {
               "rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px",
           }}
         >
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+          {success && (
+            <Alert severity="success">Password changed Successfully</Alert>
+          )}
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -130,14 +148,20 @@ export default function ResetPassword() {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Reset Password
-            </Button>
+            {submitClicked ? (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </div>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Reset Password
+              </Button>
+            )}
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} style={{ color: "#ebebeb" }} />

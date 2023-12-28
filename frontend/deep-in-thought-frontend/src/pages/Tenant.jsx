@@ -3,20 +3,16 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import CreditCardPaymentDialog from "../components/dialogs/CreditCardPaymentDialog";
-import RentPaymentDialog from "../components/dialogs/RentPaymentDialog";
 import PayByCreditCardDialog from "../components/dialogs/PayByCreditCardDialog";
 import { UserContext } from "../context/UserContext";
 import Box from "@mui/material/Box";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import api from "../utilities/axiosConfig";
 import paymentService from "./../utilities/paymentService";
 import { CircularProgress, Typography } from "@mui/material";
+
 
 const Tenant = () => {
   const { user } = UserContext();
@@ -131,14 +127,6 @@ const Tenant = () => {
     setIsCreditCardDialogOpen(false);
   };
 
-  // const onClickOpenRentPaymentDialog = () => {
-  //   setIsRentDialogOpen(true);
-  // };
-
-  // const onClickCloseRentPaymentDialog = () => {
-  //   setIsRentDialogOpen(false);
-  // };
-
   const onClickOpenPayByCreditCardDialog = () => {
     setIsPayByCreditCardDialogOpen(true);
   };
@@ -189,9 +177,11 @@ const Tenant = () => {
       <div className="general-box">
         {/* Display welcome message for user*/}
         {tenantData.firstName ? (
-          <h1>
+          <Box sx={{ border: 1, borderRadius: '10px', m:1, p:2}}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold'}}>
             Welcome {tenantData.firstName} {tenantData.lastName}
-          </h1>
+          </Typography>
+          </Box>
         ) : (
           <CircularProgress />
         )}
@@ -202,31 +192,31 @@ const Tenant = () => {
           <CircularProgress />
         ) : currentContract && currentContract.rent ? (
           <>
-            <h2>Today&apos;s Date: {currentDate}</h2>
+            
+            <Typography sx={{ m:5}}>Today&apos;s Date: {currentDate} </Typography>
             <div className="account-balance">
               {existingPayments[existingPayments.length - 1]?.date_paid ? (
                 <>
-                  <h3>
+                  <Typography sx={{m:1}}>
                     Current Account Rent Due: $
                     {existingPayments[existingPayments.length - 1].rent_due -
                       existingPayments[existingPayments.length - 1].amount_paid}
-                  </h3>
-                  <h3 className="payment-received">
+                  </Typography>
+                  <Typography sx={{color:"green", m:1}}>
                     Payment received on{" "}
                     {existingPayments[existingPayments.length - 1].date_paid}{" "}
                     Thank You!
-                  </h3>
+                  </Typography>
                 </>
               ) : (
                 <>
-                  <h3>Current Account Rent Due: ${currentContract.rent}</h3>
-                  <h3>Rent Due on: {rentDate}</h3>
+                  <Typography sx={{m:1}}>Current Account Rent Due: ${currentContract.rent}</Typography>
+                  <Typography sx={{m:1}}>Rent Due on: {rentDate}</Typography>
                 </>
               )}
-              <h3>
+              <Typography sx={{m:5}}>
                 Number of months remaining for payment: {currentContract.length}
-              </h3>
-
+              </Typography>
               <p>
                 <Box
                   display="flex"
@@ -265,41 +255,10 @@ const Tenant = () => {
         onClose={onClickCloseCreditCardDialog}
       />
 
-      {/* <RentPaymentDialog
-                    open={isRentDialogOpen}
-                    onClose={onClickCloseRentPaymentDialog}
-                    /> */}
-
       <PayByCreditCardDialog
         open={isPayByCreditCardDialogOpen}
         onClose={onClickClosePayByCreditCardDialog}
       />
-
-      <Box sx={{ width: "100%" }}>
-        {/* <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-        >
-          <BottomNavigationAction
-            label="Home"
-            value="Home"
-            icon={<HomeOutlinedIcon />}
-          />
-          <BottomNavigationAction
-            label="Account"
-            value="Account"
-            icon={<PermIdentityOutlinedIcon />}
-          />
-          <BottomNavigationAction
-            label="History"
-            value="History"
-            icon={<ReceiptLongOutlinedIcon />}
-          />
-        </BottomNavigation> */}
-      </Box>
     </div>
   );
 };

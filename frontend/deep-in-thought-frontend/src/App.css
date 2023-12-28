@@ -28,6 +28,8 @@ body {
   padding: 3rem 4rem;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  text-align: center;
+  
 }
 
 .tenant-container {
@@ -37,6 +39,11 @@ body {
   margin: auto;
 }
 
+
+
 button {
+
   margin: 0 1rem;
+
 }
+
