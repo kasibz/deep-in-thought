@@ -34,6 +34,8 @@ public class TenantService extends BaseService<Tenant, String>{
         super(tenantRepository);
     }
 
+    BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
     public Tenant saveFromTenantDTO(TenantRequest tenantRequest) {
         // check if email is unique
         Optional<Tenant> tenantData = tenantRepo.findByEmail(tenantRequest.getEmail());
@@ -47,8 +49,8 @@ public class TenantService extends BaseService<Tenant, String>{
         newTenant.setId(uuid);
         newTenant.setFirstName(tenantRequest.getFirstName());
         newTenant.setLastName(tenantRequest.getLastName());
+
         // hash password
-        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         String hash = bcrypt.encode(tenantRequest.getPassword());
         newTenant.setPassword(hash);
 
@@ -80,7 +82,8 @@ public class TenantService extends BaseService<Tenant, String>{
                 existingTenant.setLastName(tenantRequest.getLastName());
             }
             if (tenantRequest.getPassword() != null) {
-                existingTenant.setPassword(tenantRequest.getPassword());
+                String hash = bcrypt.encode(tenantRequest.getPassword());
+                existingTenant.setPassword(hash);
             }
             if (tenantRequest.getPhoneNumber() != null) {
                 existingTenant.setPhoneNumber(tenantRequest.getPhoneNumber());
@@ -126,7 +129,7 @@ public class TenantService extends BaseService<Tenant, String>{
         if (tenantData.isPresent()) {
             Tenant existingTenant = tenantData.get();
 
-            if (tenantRequest.getPassword().equals(existingTenant.getPassword())) {
+            if (bcrypt.matches(tenantRequest.getPassword(), existingTenant.getPassword())) {
                 responseBody.put("message", "User is authenticated");
                 responseBody.put("tenantId", existingTenant.getId());
                 return responseBody;
