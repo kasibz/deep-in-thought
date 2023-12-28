@@ -29,7 +29,7 @@ const TenantPaymentHistoryPage = () => {
 
   return (
     <div className='container'>
-      {paymentHistory && paymentHistory.length > 0 ? <TableContainer component={Paper}>
+      {paymentHistory ? <TableContainer component={Paper}>
         <Table aria-label="tenant payment history">
           <TableHead>
             <TableRow>
