@@ -68,11 +68,13 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           zip: zip,
           tenantId: user[0].tenantId,
         });
-        let newCard = response.data;
-        console.log(response);
-        setCreditCardAdd(newCard);
-        alert("Success");
-        onClose();
+        if(response.status === 201){
+          let newCard = response.data;
+          setCreditCardAdd(newCard);
+          alert("Success");
+          clearFields();
+          onClose();
+        }
         return;
       } catch (error) {
         console.log(error);
@@ -87,7 +89,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
   const handleSubmitCreditCardClick = () => {
     try {
       addCreditCard();
-      clearFields();
     } catch (error) {
       alert(error.message);
       handleErrorCancel();
@@ -200,17 +201,6 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
-            {/* <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="State"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          /> */}
             <FormControl sx={{ m: 1, minWidth: 80 }}>
               <InputLabel id="demo-simple-select-helper-label">
                 State
@@ -280,6 +270,10 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
       <Snackbar
         open={successSnackbar}
         autoHideDuration={3000}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }} // Centering the Snackbar
         onClose={handleSuccessCloseSnackbar}
       >
         <MuiAlert
