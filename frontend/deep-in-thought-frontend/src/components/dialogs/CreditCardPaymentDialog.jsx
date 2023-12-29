@@ -109,7 +109,8 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     // handleErrorCancel();
   };
 
-  const handleSubmitCreditCardClick = () => {
+  const handleSubmitCreditCardClick = (e) => {
+    e.preventDefault()
     try {
       addCreditCard();
     } catch (error) {
@@ -146,114 +147,116 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
   return (
     <>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Credit Card Information</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="Credit Card Number"
-            type="string"
-            fullWidth
-            variant="standard"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="Street Address"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={streetAddress}
-            onChange={(e) => setStreetAddress(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="CVV"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={cvv}
-            onChange={(e) => setCvv(e.target.value)}
-          />
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+        <form onSubmit={handleSubmitCreditCardClick}>
+          <DialogTitle>Credit Card Information</DialogTitle>
+          <DialogContent>
             <TextField
               autoFocus
               required
               margin="dense"
-              label="City"
+              label="Name"
               type="text"
               fullWidth
               variant="standard"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-            <FormControl sx={{ m: 1, minWidth: 80 }}>
-              <InputLabel id="demo-simple-select-helper-label">
-                State
-              </InputLabel>
-              <Select
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="Credit Card Number"
+              type="string"
+              fullWidth
+              variant="standard"
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="Street Address"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={streetAddress}
+              onChange={(e) => setStreetAddress(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="CVV"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={cvv}
+              onChange={(e) => setCvv(e.target.value)}
+            />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+              <TextField
+                autoFocus
                 required
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={state}
-                name="state"
-                label="States"
-                onChange={(e) => setState(e.target.value)}
-              >
-                {States.map((state, idx) => {
-                  return (
-                    <MenuItem key={idx} value={state}>
-                      {state}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </Box>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            label="Zipcode"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={zip}
-            onChange={(e) => setZip(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={(e) => {
-              onClose();
-              handleErrorCancel();
-              clearFields();
-            }}
-            color="error"
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleSubmitCreditCardClick} color="success">
-            Submit
-          </Button>
-        </DialogActions>
+                margin="dense"
+                label="City"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <FormControl sx={{ m: 1, minWidth: 80 }}>
+                <InputLabel id="demo-simple-select-helper-label">
+                  State
+                </InputLabel>
+                <Select
+                  required
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={state}
+                  name="state"
+                  label="States"
+                  onChange={(e) => setState(e.target.value)}
+                >
+                  {States.map((state, idx) => {
+                    return (
+                      <MenuItem key={idx} value={state}>
+                        {state}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Box>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="Zipcode"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={zip}
+              onChange={(e) => setZip(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={(e) => {
+                onClose();
+                handleErrorCancel();
+                clearFields();
+              }}
+              color="error"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" color="success">
+              Submit
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
       <Snackbar
         open={errorSnackbar}
