@@ -10,6 +10,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -74,7 +75,11 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     seteErrorSnackbarOpen(false);
   };
 
+  //circular progress variables
+  const [isLoading, setIsLoading] = useState(false);
+
   const addCreditCard = async () => {
+    setIsLoading(true)
     //uses the isValidCard function and creates a post request if the functions is true
     if (isValidCard(cardNumber)) {
       try {
@@ -89,6 +94,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
           tenantId: user[0].tenantId,
         });
         if (response.status === 201) {
+          setIsLoading(false)
           let newCard = response.data;
           setCreditCardAdd(newCard);
           //set true to open snack bar
@@ -255,6 +261,22 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
             <Button type="submit" color="success">
               Submit
             </Button>
+            {isLoading && (
+              <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                zIndex: 1,
+              }}>
+                <CircularProgress />
+              </Box>
+            )}
           </DialogActions>
         </form>
       </Dialog>
