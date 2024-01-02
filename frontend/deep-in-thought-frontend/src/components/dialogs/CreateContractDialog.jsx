@@ -89,6 +89,7 @@ const CreateContractDialog = ({ open, onClose }) => {
             }
         } catch (error) {
             console.log(error)
+            setIsSubmitting(false);
         }
     }
 
