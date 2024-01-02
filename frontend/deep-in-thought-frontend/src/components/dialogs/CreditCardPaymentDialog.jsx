@@ -112,7 +112,7 @@ const CreditCardPaymentDialog = ({ open, onClose }) => {
     }
     seteErrorSnackbarOpen(true)
     setErrorSnackbarMessage('Unable to add a credit card. Please check your details and try again.')
-    // handleErrorCancel();
+    setIsLoading(false)
   };
 
   const handleSubmitCreditCardClick = (e) => {
