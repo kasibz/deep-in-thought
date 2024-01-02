@@ -1,53 +1,36 @@
-import { Button } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
-import * as React from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import Slide from '@mui/material/Slide';
-import {useState, useEffect } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
 
-
-function TransitionLeft(props) {
-    return <Slide {...props} direction="left" />;
-  }
-
-const ErrorSnackBar = ({open, onClose}) => {
-
-    const [errorSnackbar, setErrorSnackbar] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-
-    const handleErrorClickOpen = () => {
-        setOpenDialog(true);
-    };
-
-    const handleErrorCloseDialog = () => {
-        setOpenDialog(false);
-    };
-
-    const handleErrorCancel = () => {
-        setErrorSnackbar(true);
-        handleErrorCloseDialog();
-    };
-
-    const handleErrorCloseSnackbar = () => {
-        setErrorSnackbar(false);
-        onClose();
-    };
-
-
-  return(<>
-    <Button onClick={()=>{
-        
-        handleErrorCancel();
-        onClose();
-        }} color="error">Cancel</Button>
-
-
-  <Snackbar open={errorSnackbar}  onClose={handleErrorCloseSnackbar}>
-                <MuiAlert elevation={6} variant="outlined" color="error" onClose={handleErrorCloseSnackbar} severity="info">
-                    Payment Not Processed
-                </MuiAlert>
-        </Snackbar>
-    </>);
-
+export default function ErrorSnackBar({ open, message, handleClose }) {
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={6000}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }} // Centering the Snackbar
+    >
+      <Alert
+        onClose={handleClose}
+        severity="info"
+        color="error"
+        sx={{ width: "100%" }}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            onClick={handleClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      >
+        {message}
+      </Alert>
+    </Snackbar>
+  );
 }
-export default ErrorSnackBar

@@ -81,7 +81,7 @@ const CreateContractDialog = ({ open, onClose }) => {
                     setIsSubmitting(false);
                     //set true to open snack bar
                     setSnackbarOpen(true);
-                    setSnackbarMessage('successfully created contract and updated tenant table with proper propertId and contractId')
+                    setSnackbarMessage('Successfully created contract.')
                     setTimeout(() => {
                         onClose()
                     }, 2000);
@@ -89,16 +89,17 @@ const CreateContractDialog = ({ open, onClose }) => {
             }
         } catch (error) {
             console.log(error)
+            setIsSubmitting(false);
         }
     }
 
-    if (isLoading) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-                <CircularProgress />
-            </Box>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    //             <CircularProgress />
+    //         </Box>
+    //     );
+    // }
 
     return (
         <>

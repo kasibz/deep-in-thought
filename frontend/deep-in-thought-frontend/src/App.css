@@ -1,7 +1,7 @@
 body {
   margin: 0 auto;
   padding: 0 auto;
-  background-image: url('https://cdn3.vox-cdn.com/uploads/chorus_asset/file/7760139/60th_Floor_South_View.jpg'); /* Adjust the path as necessary */
+  background-image: url("https://cdn3.vox-cdn.com/uploads/chorus_asset/file/7760139/60th_Floor_South_View.jpg"); /* Adjust the path as necessary */
   background-size: cover; /* Cover the entire page */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent repeating the image */
@@ -28,6 +28,8 @@ body {
   padding: 3rem 4rem;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  text-align: center;
+  
 }
 
 .tenant-container {
@@ -37,6 +39,11 @@ body {
   margin: auto;
 }
 
+
+
 button {
+
   margin: 0 1rem;
+
 }
+

@@ -34,7 +34,7 @@ public class TenantController extends BaseController<Tenant, String> {
     public ResponseEntity<Tenant> create(@RequestBody TenantRequest tenantRequest) {
         try {
             Tenant newTenant = tenantService.saveFromTenantDTO(tenantRequest);
-            return new ResponseEntity<>(newTenant, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (DuplicateKeyException e) {

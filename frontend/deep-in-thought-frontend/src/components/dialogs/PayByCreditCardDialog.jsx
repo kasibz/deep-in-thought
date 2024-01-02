@@ -8,6 +8,8 @@ import {
   Select,
   MenuItem,
   ListItemIcon,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -15,30 +17,19 @@ import api from "../../utilities/axiosConfig";
 import { UserContext } from "../../context/UserContext";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import ErrorSnackBar from "../snackbar/ErrorSnackBar";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import Input from "@mui/material/Input";
-import Slide from "@mui/material/Slide";
-
-import PropTypes from "prop-types";
-
 import Avatar from "@mui/material/Avatar";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-
-import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import { blue } from "@mui/material/colors";
-import { flexbox } from "@mui/system";
 import contractService from "../../utilities/contractService";
 import { useNavigate } from "react-router-dom";
+import ErrorSnackBar from "../snackbar/ErrorSnackBar";
+import SuccessSnackBar from "../snackbar/SuccessSnackBar";
 
 const PayByCreditCardDialog = (props) => {
   const navigate = useNavigate();
@@ -118,6 +109,24 @@ const PayByCreditCardDialog = (props) => {
   const formattedToday = getTodaysDateFormatted();
   const formattedEndOfMonth = getLastDayOfMonthFormatted();
 
+  //snack bar state variables
+  const [errorSnackbarOpen, seteErrorSnackbarOpen] = useState(false);
+  const [errorSnackbarMessage, setErrorSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseErrorSnackbar = () => {
+    seteErrorSnackbarOpen(false);
+  };
+
+  //snack bar state variables
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  //snack bar on close function
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   //this function gets the contract data for the tenant
   useEffect(() => {
     const getContractData = async () => {
@@ -125,15 +134,12 @@ const PayByCreditCardDialog = (props) => {
       let balanceData = response.data;
       setContractData(balanceData);
       setPaymentAmount(balanceData.rent);
-
-      // console.log("Contract data: ", balanceData);
     };
 
     getContractData();
   }, []);
 
   // listen for the openDialogChange and edit the contract as needed to reflect the payment maid
-
   const editContract = async () => {
     try {
       const updatedContract = {
@@ -148,8 +154,12 @@ const PayByCreditCardDialog = (props) => {
     }
   };
 
+  //circular progress variables
+  const [isLoading, setIsLoading] = useState(false);
+
   //this function passes the post request to post a payment in the database
   const addPayment = async (e) => {
+    setIsLoading(true)
     try {
       e.preventDefault();
       const paymentData = {
@@ -159,11 +169,22 @@ const PayByCreditCardDialog = (props) => {
         paid: paid,
         creditCardId: creditCardId,
       };
-      let response = await api.post("/payment", paymentData);
-      if (response.status === 201) {
-        setOpenDialog(true);
+      if (creditCardId) {
+        let response = await api.post("/payment", paymentData);
+        if (response.status === 201) {
+          setIsLoading(false)
+          //set true to open snack bar
+          setSnackbarOpen(true);
+          setSnackbarMessage('Your rent payment has been successfully processed. Thank you!')
+          setTimeout(() => {
+            navigate(0);
+          }, 2000);
+          // setOpenDialog(true);
+        }
+      } else {
+        seteErrorSnackbarOpen(true)
+        setErrorSnackbarMessage('Unable to pay rent. Please check your details and try again.')
       }
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -223,7 +244,7 @@ const PayByCreditCardDialog = (props) => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value) => {};
+  const handleListItemClick = (value) => { };
   const [fullWidth, setFullWidth] = React.useState(true);
   return (
     <>
@@ -240,16 +261,50 @@ const PayByCreditCardDialog = (props) => {
             sx={{
               display: "flex",
               flexDirection: "row",
+              justifyContent: "center",
               alignItems: "center",
-              gap: 1,
+              gap: 2,
             }}
           >
             {creditCardData.map((card, index) => (
-              <MenuItem key={index} value={card.id}>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <AttachMoneyOutlinedIcon />
+              <MenuItem
+                key={index}
+                value={card.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center", // Center the content vertically
+                  width: "300px", // Adjust the width as needed
+                  margin: "auto",
+                  borderBottom: "1px solid #ccc",
+                }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: blue[100],
+                    color: blue[600],
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    margin: "auto",
+                  }}
+                >
+                  <AttachMoneyOutlinedIcon
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  />
                 </Avatar>
-                <ListItemText primary={String(card.cardNumber).slice(-4)} />
+                <Typography>
+                  <ListItemText
+                    sx={{ p: 1, textAlign: "center", alignContent: "center" }}
+                    primary={
+                      "XXXX-XXXX-XXXX-" + String(card.cardNumber).slice(-4)
+                    }
+                  />
+                </Typography>
               </MenuItem>
             ))}
           </Select>
@@ -265,27 +320,6 @@ const PayByCreditCardDialog = (props) => {
             value={paymentAmount}
           />
         </FormControl>
-        {/* <TextField
-          autoFocus
-          required
-          margin="dense"
-          type="date"
-          fullWidth
-          variant="standard"
-          uncontrolled="true"
-          value={rentDate}
-          onChange={(e) => setRentDate(e.target.value)}
-        />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          type="date"
-          fullWidth
-          variant="standard"
-          helperText="Select Today's Date"
-          onChange={(e) => setDatePaid(e.target.value)}
-        /> */}
 
         {/* This handles the open and close dialog when clicking submit or cancel */}
         <DialogActions>
@@ -300,18 +334,29 @@ const PayByCreditCardDialog = (props) => {
           </Button>
           <Button
             onClick={(e) => {
-              onClose();
-              handleSuccessCancel();
               addPayment(e);
               editContract();
-              setTimeout(() => {
-                navigate(0);
-              }, 2000);
             }}
             color="success"
           >
             Submit
           </Button>
+          {isLoading && (
+            <Box sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              zIndex: 1,
+            }}>
+              <CircularProgress />
+            </Box>
+          )}
         </DialogActions>
       </Dialog>
 
@@ -323,7 +368,7 @@ const PayByCreditCardDialog = (props) => {
       >
         <MuiAlert
           elevation={6}
-          variant="outlined"
+          variant="filled"
           color="error"
           onClose={handleErrorCloseSnackbar}
           severity="info"
@@ -340,7 +385,7 @@ const PayByCreditCardDialog = (props) => {
       >
         <MuiAlert
           elevation={6}
-          variant="outlined"
+          variant="filled"
           color="success"
           onClose={handleSuccessCloseSnackbar}
           severity="info"
@@ -348,6 +393,16 @@ const PayByCreditCardDialog = (props) => {
           Success
         </MuiAlert>
       </Snackbar>
+      <SuccessSnackBar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        handleClose={handleCloseSnackbar}
+      />
+      <ErrorSnackBar
+        open={errorSnackbarOpen}
+        message={errorSnackbarMessage}
+        handleClose={handleCloseErrorSnackbar}
+      />
     </>
   );
 };

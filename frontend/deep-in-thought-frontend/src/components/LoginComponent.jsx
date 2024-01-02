@@ -2,7 +2,13 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Checkbox, FormControlLabel, Link, Typography } from "@mui/material";
+import {
+  Checkbox,
+  FormControlLabel,
+  Link,
+  Typography,
+  Alert,
+} from "@mui/material";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -11,6 +17,7 @@ const LoginComponent = ({
   setUserLoginInfo,
   setUserTypeChecked,
   loginRequest,
+  userUpdateResult,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +43,7 @@ const LoginComponent = ({
   return (
     <Container className="container" component="main" maxWidth="xs">
       <Box
-        className='general-box'
+        className="general-box"
         sx={{
           marginTop: 8,
           display: "flex",
@@ -44,9 +51,10 @@ const LoginComponent = ({
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">
-          Log in
-        </Typography>
+        {userUpdateResult.failure && (
+          <Alert severity="error">Username or Password incorrect</Alert>
+        )}
+        <Typography variant="h6">Log in</Typography>
         <form onSubmit={onSubmitLogin}>
           <TextField
             variant="outlined"
@@ -83,7 +91,7 @@ const LoginComponent = ({
             <CircularProgress />
           )}
         </form>
-        <Box sx={{display:'flex', flexDirection:'column', gap:3}}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <FormControlLabel
             control={<Checkbox onChange={onChangeCheckBox} />}
             label="I am a property owner."
