@@ -3,7 +3,6 @@ import SignupComponent from "../components/SignupComponent";
 import authService from "../utilities/authService";
 import { useNavigate } from "react-router-dom";
 import SuccessSnackBar from "./../components/snackbar/SuccessSnackBar";
-import { Alert } from "@mui/material";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -63,16 +62,13 @@ const Signup = () => {
 
   return (
     <>
-      {" "}
-      {residentRegisterResponse.failure && (
-        <Alert severity="error">{residentRegisterResponse.message}</Alert>
-      )}
       <SignupComponent
         userSingupInfo={userSingupInfo}
         setUserSingupInfo={setUserSingupInfo}
         registerRequest={registerRequest}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
+        residentRegisterResponse={residentRegisterResponse}
       />
       <SuccessSnackBar
         open={snackbarOpen}
