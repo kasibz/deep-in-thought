@@ -113,7 +113,6 @@ const Tenant = () => {
         console.log(error);
       }
     };
-
     getPaymentInfo();
   }, [user]);
 
@@ -132,15 +131,6 @@ const Tenant = () => {
   const onClickClosePayByCreditCardDialog = () => {
     setIsPayByCreditCardDialogOpen(false);
   };
-
-
-  // if(isLoading){
-  //   return (
-  //     <Box>
-  //       <CircularProgress />
-  //     </Box>
-  //   )
-  // }
 
   return (
     <div className="tenant-container">

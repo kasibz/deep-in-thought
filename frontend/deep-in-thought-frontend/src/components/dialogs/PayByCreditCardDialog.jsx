@@ -8,6 +8,8 @@ import {
   Select,
   MenuItem,
   ListItemIcon,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -152,8 +154,12 @@ const PayByCreditCardDialog = (props) => {
     }
   };
 
+  //circular progress variables
+  const [isLoading, setIsLoading] = useState(false);
+
   //this function passes the post request to post a payment in the database
   const addPayment = async (e) => {
+    setIsLoading(true)
     try {
       e.preventDefault();
       const paymentData = {
@@ -166,6 +172,7 @@ const PayByCreditCardDialog = (props) => {
       if (creditCardId) {
         let response = await api.post("/payment", paymentData);
         if (response.status === 201) {
+          setIsLoading(false)
           //set true to open snack bar
           setSnackbarOpen(true);
           setSnackbarMessage('Your rent payment has been successfully processed. Thank you!')
@@ -334,6 +341,22 @@ const PayByCreditCardDialog = (props) => {
           >
             Submit
           </Button>
+          {isLoading && (
+            <Box sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              zIndex: 1,
+            }}>
+              <CircularProgress />
+            </Box>
+          )}
         </DialogActions>
       </Dialog>
 

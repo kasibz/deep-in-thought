@@ -29,7 +29,7 @@ const TenantPaymentHistoryPage = () => {
 
   return (
     <div className='container'>
-      {paymentHistory ? <TableContainer component={Paper}>
+      {paymentHistory ? <TableContainer component={Paper} sx={{maxHeight:540}}>
         <Table aria-label="tenant payment history">
           <TableHead>
             <TableRow>

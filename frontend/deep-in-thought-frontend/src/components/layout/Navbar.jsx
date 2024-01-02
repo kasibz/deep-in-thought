@@ -5,15 +5,17 @@ import Toolbar from "@mui/material/Toolbar";
 import { Box, Button, Divider } from "@mui/material";
 import { UserContext } from "../../context/UserContext";
 import { useState, useEffect } from "react";
+import ownerService from "../../utilities/ownerService";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { deleteUser, user } = UserContext();
-  const [tenantInfo, setTenatInfo] = useState([])
-
+  const [userInfo, setUserInfo] = useState([])
+  console.log(user)
   const onClickLogout = () => {
     //clear localStorage
     localStorage.clear();
+    setUserInfo([])
     //empty user state variable
     deleteUser();
     //navigate to home page
@@ -21,18 +23,35 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    const getTenantInfo = async () => {
-      try {
-        let response = await api.get(`tenant/${user[0].tenantId}`);
-        setTenatInfo(response.data);
-        // so now amount_paid and rent_due are in existingPayments
-        // order the data by date_paid??
-      } catch (error) {
-        console.log(error);
+    // check whether user array is not empty, then
+    if (user && user.length > 0) {
+      // check attempt to access properties
+      if (user[0].hasOwnProperty('tenantId')) {
+        const getTenantInfo = async () => {
+          try {
+            let response = await api.get(`tenant/${user[0].tenantId}`);
+            setUserInfo(response.data)
+          } catch (error) {
+            console.error("Error fetching tenant data:", error);
+          }
+        };
+        getTenantInfo();
+      } else if (user[0].hasOwnProperty('ownerId')) {
+        const getOwnerInfo = async () => {
+          try {
+            let response = await ownerService.getOwnerById(user[0].ownerId);
+            setUserInfo(response.data);
+          } catch (error) {
+            console.error("Error fetching owner data:", error);
+          }
+        };
+        getOwnerInfo();
       }
+    } else {
+      console.log("User array is empty or not loaded yet");
     }
-      getTenantInfo()
-    }, []);
+  }, [user]);
+  
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1F4172" }}>
@@ -73,7 +92,7 @@ export const Navbar = () => {
         {user.length !== 0 && (
           <>
             <Button component={Link} to="/editAccount" color="inherit">
-             {tenantInfo.firstName} {tenantInfo.lastName} 
+              {userInfo.firstName} {userInfo.lastName}
             </Button>
             <Divider
               orientation="vertical"
@@ -85,7 +104,7 @@ export const Navbar = () => {
             </Button>
           </>
         )}
-        {}
+        { }
       </Toolbar>
     </AppBar>
   );
