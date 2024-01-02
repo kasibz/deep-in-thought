@@ -48,7 +48,7 @@ const Tenant = () => {
   function rentDueDate() {
     const today = new Date();
     let month = today.getMonth() + 2;
-    const year = today.getFullYear() + 1;
+    const year = today.getFullYear();
     let date = 1;
 
     const formattedDate = date < 10 ? `0${date}` : date;
