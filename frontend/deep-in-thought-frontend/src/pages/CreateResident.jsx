@@ -76,7 +76,7 @@ const CreateResident = () => {
         }, 2000);
       }
     } catch (error) {
-      error.message.includes("409")
+      error.message?.includes("409")
         ? setResidentRegisterResponse({
             ...residentRegisterResponse,
             message: "User by that email already exists",
