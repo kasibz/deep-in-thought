@@ -100,7 +100,7 @@ const OwnerPropertyDetail = () => {
             }
         }
         requestResidentInformationByProperty()
-    }, [propertyId, onClickCloseCreateContractDialog]); // trigger when there is a change in value
+    }, [propertyId, isCreateContractDialogOpen]); // trigger when there is a change in value
 
     // display none when loading variable is true
     if (isLoading) {
